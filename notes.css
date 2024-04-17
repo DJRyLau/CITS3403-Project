@@ -26,6 +26,8 @@ body {
   text-decoration: none;
   margin-left: 10px;
   font-size: 20px;
+  border: none !important;
+  background-color: transparent;
 }
 
 .nav-button:hover {
