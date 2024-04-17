@@ -12,6 +12,24 @@ body {
   border-radius: 10px;
 }
 
+/* navbar styles */
+.navbar {
+  display: flex;
+  justify-content: right;
+  font-size: 20px;
+}
+
+.nav-button {
+  color: #333;
+  text-decoration: none;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.nav-button:hover {
+  color: #727272
+}
+
 h1 {
   text-align: center;
   color: #333333;
