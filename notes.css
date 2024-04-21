@@ -39,7 +39,7 @@ body {
 .about-pop-up {
   max-width: 800px;
   padding: 20px;
-  background-color: rgb(231, 231, 231);
+  background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   position: absolute;
@@ -52,18 +52,24 @@ body {
 }
 
 .about-pop-up button {
-  color: #ffffff;
-  font-size: 16px;
+  color: #000000;
   font-weight: 500;
-  background-color: blue;
-  margin: 30px 0;
-  padding: 10px 50px;
-  border-radius: 50px;
+  background-color: #ffffff;
+  padding: 2px 5px;
   cursor: pointer;
   border: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
 }
 
-.display-pop-up { /* for JS */
+.about-pop-up h1 {
+  font-size: x-large;
+  font-weight: 500;
+}
+
+.display-pop-up {
   visibility: visible;
 }
 
