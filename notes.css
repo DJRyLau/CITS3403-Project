@@ -48,7 +48,10 @@ body {
   top: 70px;
   left: 0;
   right: 0;
+  opacity: 0;
+  transform: translateY(-20px);
   visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
 .about-pop-up button {
@@ -62,6 +65,13 @@ body {
   top: 20px;
   right: 20px;
   font-size: 20px;
+}
+
+.about-pop-up.display-pop-up {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
 }
 
 .about-pop-up h1 {
