@@ -80,21 +80,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const createSection = document.getElementById("create-section");
 
   if (signinBtn && createBtn && loginSection && createSection) {
-    console.log("All elements found.");
-
     signinBtn.addEventListener("click", function () {
-      console.log("SignIn clicked");
       loginSection.style.display = "block";
       createSection.style.display = "none";
     });
 
     createBtn.addEventListener("click", function () {
-      console.log("Create Account clicked");
       loginSection.style.display = "none";
       createSection.style.display = "block";
     });
-  } else {
-    console.error("Error: One or more elements are missing.");
   }
 
   // Handling the login form
