@@ -14,13 +14,11 @@
   </head>
   <body>
     <div class="container">
+      <!-- NAVBAR -->
       <header class="navbar">
-        <!-- Proposing using buttons here which show / hide popups for sections, rather than links that scroll the page -->
-        <!-- <a href="#about" class="nav-button" aria-label="About"><i class="fa fa-info-circle"></i></a> -->
         <button class="nav-button" id="about-button" aria-label="About">
           <i class="fa fa-info-circle"></i>
         </button>
-        <!-- <a href="#settings" class="nav-button" aria-label="Settings"><i class="fa fa-cog"></i></a> -->
         <button class="nav-button" id="settings-button" aria-label="Settings">
           <i class="fa fa-cog"></i>
         </button>
@@ -32,6 +30,14 @@
       </main>
     </div>
 
+    <!-- ABOUT PAGE POP-UP (when button is clicked on)-->
+    <div class="about-pop-up">
+      <h1>test</h1>
+      <p>some text</p>
+      <button>close</button>
+    </div>
+
     <script src="notes.js"></script>
+    <script src="navbar.js"></script>
   </body>
 </html>
