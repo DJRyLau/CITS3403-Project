@@ -71,3 +71,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const addButton = document.getElementById("add-button");
   addButton.addEventListener("click", createStickyNote);
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Toggle functionality for SignIn and Create Account buttons
+  const signinBtn = document.getElementById("signin-btn");
+  const createBtn = document.getElementById("create-btn");
+  const loginSection = document.getElementById("login-section");
+  const createSection = document.getElementById("create-section");
+
+  if (signinBtn && createBtn && loginSection && createSection) {
+    signinBtn.addEventListener("click", function () {
+      loginSection.style.display = "block";
+      createSection.style.display = "none";
+    });
+
+    createBtn.addEventListener("click", function () {
+      loginSection.style.display = "none";
+      createSection.style.display = "block";
+    });
+  }
+
+  // Handling the login form
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      // Yet to implement handling login  login
+    });
+  }
+
+  // Handling the create account form
+  const createForm = document.getElementById("create-form");
+  if (createForm) {
+    createForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      // Yet to implement handling account creation
+    });
+  }
+});
