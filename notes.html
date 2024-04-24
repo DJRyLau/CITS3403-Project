@@ -13,18 +13,18 @@
     <link rel="stylesheet" href="notes.css"/>
   </head>
   <body>
+    <div class="overlay"></div>
     <div class="container">
+      <!-- NAVBAR -->
       <header class="navbar">
-        <!-- Proposing using buttons here which show / hide popups for sections, rather than links that scroll the page -->
-        <!-- <a href="#about" class="nav-button" aria-label="About"><i class="fa fa-info-circle"></i></a> -->
         <button class="nav-button" id="about-button" aria-label="About">
           <i class="fa fa-info-circle"></i>
         </button>
-        <!-- <a href="#settings" class="nav-button" aria-label="Settings"><i class="fa fa-cog"></i></a> -->
         <button class="nav-button" id="settings-button" aria-label="Settings">
           <i class="fa fa-cog"></i>
         </button>
       </header>
+
       <main>
         <h1>Panel Name Placeholder</h1>
         <section id="notes-container" class="notes-container"></section>
@@ -32,6 +32,23 @@
       </main>
     </div>
 
+    <!-- ABOUT PAGE POP-UP (when about button clicked) -->
+    <div class="about-pop-up">
+      <h1>How to use</h1>
+      <b>Creating a note</b>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
+      <b>Assigning, sorting and moving notes</b>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
+      <b>FAQ</b>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
+      <b>Credits</b>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
+      <button>
+        <i class="fa fa-times" aria-label="Close"></i>
+      </button>
+    </div>
+
     <script src="notes.js"></script>
+    <script src="navbar.js"></script>
   </body>
 </html>
