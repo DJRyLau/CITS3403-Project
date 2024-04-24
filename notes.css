@@ -36,6 +36,17 @@ body {
   border-radius: 50%;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  display: none;
+}
+
 .about-pop-up {
   max-width: 800px;
   padding: 20px;
@@ -54,7 +65,7 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
-.about-pop-up button {
+.about-pop-up button { /* close button */
   color: #000000;
   font-weight: 500;
   background-color: #ffffff;
@@ -72,6 +83,7 @@ body {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+  z-index: 20;
 }
 
 .about-pop-up h1 {
