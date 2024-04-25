@@ -56,7 +56,7 @@ body {
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up {
+.about-pop-up, .settings-pop-up {
   max-width: 800px;
   width: 90%;
   padding: 20px;
@@ -76,7 +76,7 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
-.about-pop-up button { /* close button */
+.about-pop-up button, .settings-close-button { /* close button */
   color: #000000;
   font-weight: 500;
   background-color: #ffffff;
@@ -89,58 +89,22 @@ body {
   font-size: 20px;
 }
 
-.about-pop-up.display-pop-up {
+.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
   z-index: 20;
+}
+
+.scrollable-content {
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .about-pop-up h1 {
   font-size: x-large;
   font-weight: 500;
-}
-
-.settings-pop-up {
-  max-width: 800px;
-  width: 90%;
-  padding: 20px;
-  background-color: rgb(255, 255, 255);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  top: 70px;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  transform: translateY(-20px);
-  visibility: hidden;
-  z-index: 20;
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
-}
-
-.settings-close-button {
-  color: #000000;
-  font-weight: 500;
-  background-color: #ffffff;
-  padding: 2px 5px;
-  cursor: pointer;
-  border: none;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 20px;
-}
-
-.settings-pop-up.display-pop-up {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
-  z-index: 20;
 }
 
 .settings-header {
@@ -170,7 +134,7 @@ body {
   display: none;
   padding: 20px;
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 600px;
 }
 
 .settings-tab-content.active {
