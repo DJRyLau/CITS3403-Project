@@ -159,7 +159,7 @@ body {
   border: none;
   background: none;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.4s ease;
 }
 
 .settings-tab-button.active, .settings-tab-button:hover {
