@@ -58,6 +58,7 @@ body {
 
 .about-pop-up {
   max-width: 800px;
+  width: 90%;
   padding: 20px;
   background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -99,6 +100,81 @@ body {
 .about-pop-up h1 {
   font-size: x-large;
   font-weight: 500;
+}
+
+.settings-pop-up {
+  max-width: 800px;
+  width: 90%;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 70px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  visibility: hidden;
+  z-index: 20;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.settings-close-button {
+  color: #000000;
+  font-weight: 500;
+  background-color: #ffffff;
+  padding: 2px 5px;
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+}
+
+.settings-pop-up.display-pop-up {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+  z-index: 20;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.settings-tabs {
+  display: flex;
+}
+
+.settings-tab-button {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.settings-tab-button.active, .settings-tab-button:hover {
+  background-color: #e9e9e9;
+}
+
+.settings-tab-content {
+  display: none;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.settings-tab-content.active {
+  display: block;
 }
 
 .display-pop-up {
