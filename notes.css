@@ -202,7 +202,7 @@ body.auth-background {
   text-align: center;
 }
 input::placeholder {
-  color: white;
+  color: black;
   opacity: 1;
 }
 
@@ -400,8 +400,11 @@ button[type="submit"] {
   border: none;
   color: #555;
   cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0 0.5rem;
+  line-height: 1;
 }
 
 .close-btn:hover {
-  color: #222;
+  color: #d9534f;
 }
