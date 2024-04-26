@@ -391,3 +391,17 @@ button[type="submit"] {
   opacity: 1;
   max-width: 550px;
 }
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #222;
+}

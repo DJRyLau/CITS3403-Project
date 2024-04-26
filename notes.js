@@ -131,11 +131,18 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   var authContainer = document.querySelector(".auth-container");
   var aboutSection = document.querySelector(".about-section");
+  var closeButtons = document.querySelectorAll(".close-btn");
   var pageHeader = document.querySelector(".page-title");
   var signinBtn = document.getElementById("signin-btn");
   var createBtn = document.getElementById("create-btn");
   var loginSection = document.getElementById("login-section");
   var createSection = document.getElementById("create-section");
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      authContainer.style.display = "none";
+      aboutSection.style.display = "flex";
+    });
+  });
 
   function showSection(showAbout) {
     if (showAbout) {
