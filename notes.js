@@ -1,6 +1,6 @@
 // Function to create a new sticky note
 function createStickyNote() {
-  const notesContainer = document.getElementById("notes-container");
+  const board = document.getElementById("board");
   const note = document.createElement("div");
   note.classList.add("sticky-note");
   note.style.backgroundColor = getRandomColor();
@@ -34,7 +34,7 @@ function createStickyNote() {
     }
   });
 
-  notesContainer.appendChild(note);
+  board.appendChild(note);
 }
 
 // Function to add a reply to a sticky note
@@ -68,7 +68,7 @@ function getRandomColor() {
 
 // Event listener for creating a new sticky note
 document.addEventListener("DOMContentLoaded", function () {
-  const addButton = document.getElementById("add-button");
+  const addButton = document.getElementById("add-note-button");
   addButton.addEventListener("click", createStickyNote);
 });
 
