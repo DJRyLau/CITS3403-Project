@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+    rel="stylesheet"
+  />
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,17 +12,28 @@
   </head>
   <body class="auth-background">
     <h1 class="page-title">TaskHub</h1>
+<div class="about-section">
+  <div class="content">
+    <h2>About TaskHub</h2>
+    <p>Welcome to TaskHub. Here you can collaborate with others to complete your tasks in the most efficient way possible.</p>
+  </div>
+</div>
+
+    <div class="auth-nav">
+      <button id="signin-btn" class="auth-toggle-btn">Sign In</button>
+      <button id="create-btn" class="auth-toggle-btn">Create Account</button>
+    </div>
     <div class="auth-container">
-      <div class="toggle-buttons">
-        <button id="signin-btn" class="toggle-btn">Sign In</button>
-        <button id="create-btn" class="toggle-btn">Create Account</button>
-      </div>
       <section class="form-container" id="login-section">
         <h2>Sign In</h2>
         <form id="login-form">
           <input type="text" placeholder="Username" required />
           <input type="password" placeholder="Password" required />
           <button class="glow-on-hover" type="submit">Sign In</button>
+          <p class="form-footer">
+            Don't have an account?
+            <a href="#" id="show-create">Click here to sign up</a>
+          </p>
         </form>
       </section>
 
@@ -31,6 +45,10 @@
           <input type="password" placeholder="Password" required />
           <input type="password" placeholder="Confirm Password" required />
           <button class="glow-on-hover" type="submit">Create Account</button>
+          <p class="form-footer">
+            Already have an account?
+            <a href="#" id="show-signin">Click here to sign in</a>
+          </p>
         </form>
       </section>
     </div>

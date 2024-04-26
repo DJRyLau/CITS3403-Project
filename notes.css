@@ -168,6 +168,8 @@ body.auth-background {
 }
 
 .form-container {
+  width: 550px;
+
   position: relative;
   z-index: 1;
   background: rgba(255, 255, 255, 0.1);
@@ -177,7 +179,6 @@ body.auth-background {
   margin: 10px auto;
   border: 1px solid rgb(255, 255, 255);
 }
-
 
 .form-container::before {
   content: "";
@@ -196,11 +197,13 @@ body.auth-background {
 .form-container h2 {
   margin-bottom: 15px;
   color: white;
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+
   text-align: center;
 }
 input::placeholder {
   color: white;
-  opacity: 1; 
+  opacity: 1;
 }
 
 input[type="text"],
@@ -307,36 +310,6 @@ button[type="submit"] {
   }
 }
 
-.toggle-buttons {
-  position: absolute;
-  top: 20vh;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 20px;
-  z-index: 1000;
-}
-
-.toggle-btn {
-  background-color: #8c49c0;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  margin: 0 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.toggle-btn:not(:last-child) {
-  border-right: none;
-}
-
-.toggle-btn:hover {
-  background-color: #bb6bfc;
-  outline: 1px solid #fff;
-}
-
 .page-title {
   font-family: "Pacifico", cursive;
   font-size: 3rem;
@@ -344,4 +317,77 @@ button[type="submit"] {
   text-align: center;
   margin-top: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.page-title-large {
+  font-size: 4rem;
+  transition: font-size 0.5s ease;
+}
+
+.page-title-small {
+  font-size: 3rem;
+  transition: font-size 0.5s ease;
+}
+
+.form-footer {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.form-footer a {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+  color: #8c49c0;
+}
+
+/* Styles for the top right buttons */
+.auth-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+}
+
+.auth-toggle-btn {
+  padding: 10px 20px;
+  margin-left: 5px;
+  background-color: #8c49c0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.auth-toggle-btn:hover {
+  background-color: #bb6bfc;
+  outline: 1px solid #fff;
+}
+/* Styles for the about window*/
+
+.about-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 30vh;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 5;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(0);
+  opacity: 1;
+  max-width: 550px;
 }
