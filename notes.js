@@ -109,3 +109,67 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  var loginSection = document.getElementById("login-section");
+  var createSection = document.getElementById("create-section");
+  var showCreate = document.getElementById("show-create");
+  var showSignin = document.getElementById("show-signin");
+
+  showCreate.addEventListener("click", function (event) {
+    event.preventDefault();
+    loginSection.style.display = "none";
+    createSection.style.display = "block";
+  });
+  showSignin.addEventListener("click", function (event) {
+    event.preventDefault();
+    loginSection.style.display = "block";
+    createSection.style.display = "none";
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  var authContainer = document.querySelector(".auth-container");
+  var aboutSection = document.querySelector(".about-section");
+  var closeButtons = document.querySelectorAll(".close-btn");
+  var pageHeader = document.querySelector(".page-title");
+  var signinBtn = document.getElementById("signin-btn");
+  var createBtn = document.getElementById("create-btn");
+  var loginSection = document.getElementById("login-section");
+  var createSection = document.getElementById("create-section");
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      authContainer.style.display = "none";
+      aboutSection.style.display = "flex";
+    });
+  });
+
+  function showSection(showAbout) {
+    if (showAbout) {
+      aboutSection.style.display = "flex"; // Show the about section
+      authContainer.style.display = "none";
+      pageHeader.classList.add("page-title-large");
+      pageHeader.classList.remove("page-title-small");
+    } else {
+      aboutSection.style.display = "none";
+      authContainer.style.display = "flex"; // Show the auth container
+      pageHeader.classList.add("page-title-small");
+      pageHeader.classList.remove("page-title-large");
+    }
+  }
+
+  // Initially show the about section
+  showSection(true);
+
+  signinBtn.addEventListener("click", function () {
+    showSection(false);
+    loginSection.style.display = "block";
+    createSection.style.display = "none";
+  });
+
+  createBtn.addEventListener("click", function () {
+    showSection(false);
+    loginSection.style.display = "none";
+    createSection.style.display = "block";
+  });
+});
