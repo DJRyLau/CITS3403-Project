@@ -1,3 +1,7 @@
+:root { /* CSS variables */
+  --boards-sidebar-width: 32px;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f4f4f8;
@@ -6,13 +10,32 @@ body {
   box-sizing: border-box;
 }
 
-.container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+.board {
+  margin-left: var(--boards-sidebar-width);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.boards-sidebar {
+  position: fixed;
+  top: 0px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.boards-sidebar-arrow-button {
+  font-size: 32px;
+  height: 1em;
+  border: none;
+  background-color: transparent;
+  transition: color 0.05s;
+}
+
+.boards-sidebar-arrow-button:hover {
+  color: #808080;
 }
 
 .navbar {
@@ -151,12 +174,6 @@ h1 {
   font-weight: 500;
 }
 
-.notes-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
 .sticky-note {
   background-color: #f8f8f8;
   border: 1px solid #ccc;
@@ -182,20 +199,24 @@ h1 {
   overflow-y: auto;
 }
 
-.add-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 20px;
+.add-note-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 1.8em;
+  height: 1.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #5c67f2;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 32px;
 }
 
-.add-button:hover {
+.add-note-button:hover {
   background-color: #6a74fa;
 }
 
