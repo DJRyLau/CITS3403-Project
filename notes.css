@@ -202,9 +202,10 @@ h1 {
 /* styles for authentication page */
 
 body.auth-background {
-  background-color: #D9AFD9;
-  background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);
-  
+  background-image: url("https://i.postimg.cc/VN4wwyC0/44456186-d7f4-4fcf-b12d-0b6d680bb246-1.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 .auth-container {
   display: flex;
@@ -212,35 +213,63 @@ body.auth-background {
   justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
-  padding-top: 30vh;
+  padding-top: 15vh;
 }
 
 .form-container {
-  background: white;
+  width: 550px;
+
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   padding: 20px;
-  margin: 10px;
-  box-shadow: 0 0 10px rgba(196, 38, 38, 0.1);
-  border-radius: 5px;
+  margin: 10px auto;
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.form-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: inherit;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: -1;
 }
 
 .form-container h2 {
   margin-bottom: 15px;
+  color: white;
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+
+  text-align: center;
+}
+input::placeholder {
+  color: black;
+  opacity: 1;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
+  background: rgba(255, 255, 255, 0.1);
   width: calc(100% - 22px);
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff;
   border-radius: 4px;
 }
 
 button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #009f87;
+  background-color: #8c49c0;
   color: white;
   border: none;
   border-radius: 4px;
@@ -249,7 +278,7 @@ button[type="submit"] {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: #009f87;
+  background: #8c49c0;
 }
 
 .glow-on-hover {
@@ -269,15 +298,15 @@ button[type="submit"] {
   content: "";
   background: linear-gradient(
     45deg,
-    #00eeff,
-    #00f2ff,
-    #00ffdd,
-    #00ff7b,
-    #00ffd5,
+    #c800ff,
+    #6200ff,
+    #c300ff,
+    #00a2ff,
+    #00a2ff,
     #44d1ea,
-    #0db7ba,
-    #1a8674,
-    #05d694
+    #7b0dba,
+    #721a86,
+    #4405d6
   );
   position: absolute;
   top: -2px;
@@ -299,6 +328,7 @@ button[type="submit"] {
 
 .glow-on-hover:active:after {
   background: transparent;
+  outline: 1px solid #fff;
 }
 
 .glow-on-hover:hover:before {
@@ -311,7 +341,7 @@ button[type="submit"] {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #009f87;
+  background: #8c49c0;
   left: 0;
   top: 0;
   border-radius: 10px;
@@ -329,31 +359,101 @@ button[type="submit"] {
   }
 }
 
-.toggle-buttons {
-  position: absolute;
-  top: 20vh;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 20px;
-  z-index: 1000;
+.page-title {
+  font-family: "Pacifico", cursive;
+  font-size: 3rem;
+  color: #8c49c0;
+  text-align: center;
+  margin-top: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.page-title-large {
+  font-size: 4rem;
+  transition: font-size 0.5s ease;
 }
 
-.toggle-btn {
-  background-color: #009f87;
+.page-title-small {
+  font-size: 3rem;
+  transition: font-size 0.5s ease;
+}
+
+.form-footer {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.form-footer a {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+  color: #8c49c0;
+}
+
+/* Styles for the top right buttons */
+.auth-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+}
+
+.auth-toggle-btn {
+  padding: 10px 20px;
+  margin-left: 5px;
+  background-color: #8c49c0;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
-  margin: 0 5px;
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s;
 }
 
-.toggle-btn:not(:last-child) {
-  border-right: none;
+.auth-toggle-btn:hover {
+  background-color: #bb6bfc;
+  outline: 1px solid #fff;
+}
+/* Styles for the about window*/
+
+.about-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 30vh;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 5;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(0);
+  opacity: 1;
+  max-width: 550px;
 }
 
-.toggle-btn:hover {
-  background-color: #6afad8;
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0 0.5rem;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #d9534f;
 }
