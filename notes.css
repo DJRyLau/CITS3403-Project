@@ -28,12 +28,19 @@ body {
   font-size: 20px;
   border: none !important;
   background-color: transparent;
+  transition: background-color 0.3s ease, transform 0.3s ease, border-radius 0.3s ease; /* Include border-radius in the transition */
+  border-radius: 50%; /* Apply consistent border-radius */
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-button:hover {
   color: #555;
   background-color: #e9e9e9;
-  border-radius: 50%;
+  transform: scale(1.1);
 }
 
 .overlay {
@@ -45,10 +52,13 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
   display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up {
+.about-pop-up, .settings-pop-up {
   max-width: 800px;
+  width: 90%;
   padding: 20px;
   background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -62,11 +72,11 @@ body {
   opacity: 0;
   transform: translateY(-20px);
   visibility: hidden;
+  z-index: 20;
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
-.about-pop-up button {
-  /* close button */
+.about-pop-up button, .settings-close-button { /* close button */
   color: #000000;
   font-weight: 500;
   background-color: #ffffff;
@@ -79,7 +89,7 @@ body {
   font-size: 20px;
 }
 
-.about-pop-up.display-pop-up {
+.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
@@ -87,9 +97,48 @@ body {
   z-index: 20;
 }
 
+.scrollable-content {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
 .about-pop-up h1 {
   font-size: x-large;
   font-weight: 500;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.settings-tabs {
+  display: flex;
+}
+
+.settings-tab-button {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 16px;
+  transition: background-color 0.4s ease;
+}
+
+.settings-tab-button.active, .settings-tab-button:hover {
+  background-color: #e9e9e9;
+}
+
+.settings-tab-content {
+  display: none;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.settings-tab-content.active {
+  display: block;
 }
 
 .display-pop-up {
