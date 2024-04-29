@@ -1,19 +1,9 @@
 // Function to toggle the visibility of pop-ups
 function togglePopUp(popUpId, isOpen) {
 
-  if (!popUpId || popUpId === "#") {
-    console.error("Invalid pop-up ID provided:", popUpId);
-    return;  // Exit the function if no valid ID is provided
-}
-
   const popUp = document.querySelector(popUpId);
   const overlay = document.querySelector(".overlay");
-
-  if (!popUp || !overlay) {
-    console.log("Pop-up or overlay not found:", popUpId);
-    return;
-  }
-
+  
   if (isOpen) {
       overlay.style.display = "block";
       setTimeout(() => {
