@@ -1,4 +1,26 @@
 // Function to open the about pop-up box from the navbar
+function displayProfilePage() {
+  const profileBox = document.querySelector(".profile-pop-up");
+  const overlay = document.querySelector(".overlay");
+  overlay.style.display = "block";
+  setTimeout(() => { // Timeout ensures the display is set before starting opacity transition
+    overlay.style.opacity = "1";
+    profileBox.classList.add("display-pop-up");
+  }, 10);
+}
+
+// Function to close about pop-up box
+function closeProfilePage() {
+  const profileBox = document.querySelector(".profile-pop-up");
+  const overlay = document.querySelector(".overlay");
+  profileBox.classList.remove("display-pop-up");
+  overlay.style.opacity = "0";
+  setTimeout(() => { // Delay to wait for the opacity transition to finish before hiding the display
+    overlay.style.display = "none";
+  }, 300);
+}
+
+// Function to open the about pop-up box from the navbar
 function displayAboutPage() {
   const aboutBox = document.querySelector(".about-pop-up");
   const overlay = document.querySelector(".overlay");
@@ -41,6 +63,26 @@ function closeSettingsPage() {
     overlay.style.display = "none";
   }, 300);
 }
+
+// Event listener for profile button
+document.addEventListener("DOMContentLoaded", function () {
+  const profileButton = document.getElementById("profile-button");
+  profileButton.addEventListener("click", displayProfilePage);
+
+  const closeButton = document.querySelector(".profile-pop-up button");
+  closeButton.addEventListener("click", closeProfilePage);
+
+  // Close overlay when clicking on the outside of the box
+  const overlay = document.querySelector(".overlay");
+  overlay.addEventListener("click", closeProfilePage);
+
+  // Close overlay when pressing Esc key
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeProfilePage();
+    }
+  });
+});
 
 // Event listener for about button
 document.addEventListener("DOMContentLoaded", function () {

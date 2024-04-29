@@ -42,6 +42,7 @@ body {
   display: flex;
   justify-content: right;
   font-size: 20px;
+  padding-right: 10px; /* for testing purposes */
 }
 
 .nav-button {
@@ -79,7 +80,7 @@ body {
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up, .settings-pop-up {
+.about-pop-up, .settings-pop-up, .profile-pop-up {
   max-width: 800px;
   width: 90%;
   padding: 20px;
@@ -99,7 +100,7 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
-.about-pop-up button, .settings-close-button { /* close button */
+.about-pop-up button, .settings-close-button, .profile-pop-up button { /* close button */
   color: #000000;
   font-weight: 500;
   background-color: #ffffff;
@@ -112,7 +113,7 @@ body {
   font-size: 20px;
 }
 
-.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up {
+.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up, .profile-pop-up.display-pop-up {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
