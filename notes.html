@@ -14,6 +14,7 @@
   </head>
   <body>
     <div class="overlay"></div>
+
     <!-- OPTIONS NAVBAR -->
     <nav class="navbar">
       <button class="nav-button" id="profile-button" aria-label="Profile">
@@ -44,13 +45,13 @@
     </main>
 
     <!-- PROFILE PAGE POP-UP -->
-    <div class="profile-pop-up">
-      <h1>How to use</h1>
-      <button>
+    <div id="profile-pop-up", class="profile-pop-up">
+      <h1>Profile</h1>
+      <button class="close-button">
         <i class="fa fa-times" aria-label="Close"></i>
       </button>
       <div class="scrollable-content">
-        <b>Creating a note</b>
+        <b>Creating a profile</b>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
         <b>Assigning, sorting and moving notes</b>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
@@ -66,9 +67,9 @@
     </div>
 
     <!-- ABOUT PAGE POP-UP (when about button clicked) -->
-    <div class="about-pop-up">
+    <div id="about-pop-up", class="about-pop-up">
       <h1>How to use</h1>
-      <button>
+      <button class="close-button">
         <i class="fa fa-times" aria-label="Close"></i>
       </button>
       <div class="scrollable-content">
@@ -88,7 +89,7 @@
     </div>
 
     <!-- SETTINGS PAGE POP-UP -->
-    <div class="settings-pop-up">
+    <div id="settings-pop-up", class="settings-pop-up">
       <!-- SETTINGS TABS -->
       <header class="settings-header">
         <nav class="settings-tabs">
@@ -96,7 +97,8 @@
           <button class="settings-tab-button" data-tab="preferences">Preferences</button>
           <button class="settings-tab-button" data-tab="notifications">Notifications</button>
         </nav>
-        <button class="settings-close-button">
+        
+        <button class="close-button">
           <i class="fa fa-times" aria-label="Close"></i>
         </button>
       </header>
