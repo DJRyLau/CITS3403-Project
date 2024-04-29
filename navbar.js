@@ -1,108 +1,28 @@
-// Function to open the about pop-up box from the navbar
-function displayAboutPage() {
-  const aboutBox = document.querySelector(".about-pop-up");
+// Function to toggle the visibility of pop-ups
+function togglePopUp(popUpId, isOpen) {
+
+  const popUp = document.querySelector(popUpId);
   const overlay = document.querySelector(".overlay");
-  overlay.style.display = "block";
-  setTimeout(() => { // Timeout ensures the display is set before starting opacity transition
-    overlay.style.opacity = "1";
-    aboutBox.classList.add("display-pop-up");
-  }, 10);
+  
+  if (isOpen) {
+      overlay.style.display = "block";
+      setTimeout(() => {
+          overlay.style.opacity = "1";
+          popUp.classList.add("display-pop-up");
+      }, 10);
+  } else {
+      popUp.classList.remove("display-pop-up");
+      overlay.style.opacity = "0";
+      setTimeout(() => {
+          overlay.style.display = "none";
+      }, 300);
+  }
 }
 
-// Function to close about pop-up box
-function closeAboutPage() {
-  const aboutBox = document.querySelector(".about-pop-up");
-  const overlay = document.querySelector(".overlay");
-  aboutBox.classList.remove("display-pop-up");
-  overlay.style.opacity = "0";
-  setTimeout(() => { // Delay to wait for the opacity transition to finish before hiding the display
-    overlay.style.display = "none";
-  }, 300);
-}
-
-// Function to open the settings pop-up box from the navbar
-function displaySettingsPage() {
-  const settingsBox = document.querySelector(".settings-pop-up");
-  const overlay = document.querySelector(".overlay");
-  overlay.style.display = "block";
-  setTimeout(() => { // Timeout ensures the display is set before starting opacity transition
-    overlay.style.opacity = "1";
-    settingsBox.classList.add("display-pop-up");
-  }, 10);
-}
-
-// Function to close settings pop-up box
-function closeSettingsPage() {
-  const settingsBox = document.querySelector(".settings-pop-up");
-  const overlay = document.querySelector(".overlay");
-  settingsBox.classList.remove("display-pop-up");
-  overlay.style.opacity = "0";
-  setTimeout(() => { // Delay to wait for the opacity transition to finish before hiding the display
-    overlay.style.display = "none";
-  }, 300);
-}
-
-// Event listener for about button
-document.addEventListener("DOMContentLoaded", function () {
-  const aboutButton = document.getElementById("about-button");
-  aboutButton.addEventListener("click", displayAboutPage);
-
-  const closeButton = document.querySelector(".about-pop-up button");
-  closeButton.addEventListener("click", closeAboutPage);
-
-  // Close overlay when clicking on the outside of the box
-  const overlay = document.querySelector(".overlay");
-  overlay.addEventListener("click", closeAboutPage);
-
-  // Close overlay when pressing Esc key
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-      closeAboutPage();
-    }
-  });
-});
-
-// Event listener for settings button
-document.addEventListener("DOMContentLoaded", function () {
-
-  // Handling tab switching
+// Function to initialize and manage tabs in the settings pop-up
+function initializeSettingsTabs() {
   const tabs = document.querySelectorAll(".settings-tab-button");
   const tabContents = document.querySelectorAll(".settings-tab-content");
-  
-  // Function to default the settings popup to the first tab (Profile)
-  function defaultToFirstTab() {
-    // Remove 'active' class from all tabs and hide all content
-    tabs.forEach(tab => {
-      tab.classList.remove("active");
-    });
-    tabContents.forEach(content => {
-        content.style.display = 'none';
-    });
-    
-    // Add 'active' class to the first tab and display the first tab content
-    tabs[0].classList.add("active");
-    tabContents[0].style.display = 'block';
-  }
-
-  const settingsButton = document.getElementById("settings-button");
-  settingsButton.addEventListener("click", function() {
-    defaultToFirstTab();
-    displaySettingsPage();
-  });
-
-  const closeButton = document.querySelector(".settings-close-button");
-  closeButton.addEventListener("click", closeSettingsPage);
-
-  // Close overlay when clicking on the outside of the box
-  const overlay = document.querySelector(".overlay");
-  overlay.addEventListener("click", closeSettingsPage);
-
-  // Close overlay when pressing Esc key
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-      closeSettingsPage();
-    }
-  });
 
   tabs.forEach((tab, index) => {
     tab.addEventListener("click", function() {
@@ -112,8 +32,57 @@ document.addEventListener("DOMContentLoaded", function () {
       tab.classList.add("active");
       tabContents[index].style.display = 'block';
     });
-  
-  defaultToFirstTab()
+  });
 
+  // Default to the first tab on initial load
+  if (tabs.length > 0) {
+      tabs[0].click();
+  }
+}
+
+// Event listeners for pop-ups
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = {
+    "profile-button": ".profile-pop-up",
+    "about-button": ".about-pop-up",
+    "settings-button": ".settings-pop-up"
+  };
+
+  // Initialize listeners for each button
+  Object.keys(buttons).forEach(btnId => {
+    const button = document.getElementById(btnId);
+    const popUpId = buttons[btnId];
+
+    button.addEventListener("click", () => togglePopUp(popUpId, true));
+  });
+
+  const closeButtons = document.querySelectorAll(".close-button");
+  closeButtons.forEach(button => {
+    button.addEventListener("click", function() {
+      // Assuming the close function needs to close the parent pop-up of this button
+      const popUp = button.closest('.settings-pop-up, .profile-pop-up, .about-pop-up');
+      if (popUp) {
+        togglePopUp(`#${popUp.id}`, false);
+      }
+    });
+  });
+
+  // Tab handling in Settings pop-up
+  initializeSettingsTabs();
+
+  // Overlay and Escape key listeners
+  const overlay = document.querySelector(".overlay");
+  overlay.addEventListener("click", function() {
+    document.querySelectorAll('.display-pop-up').forEach(popUp => {
+      togglePopUp(`#${popUp.id}`, false);
+    });
+  });
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+      document.querySelectorAll('.display-pop-up').forEach(popUp => {
+        togglePopUp(`#${popUp.id}`, false);
+      });
+    }
   });
 });
