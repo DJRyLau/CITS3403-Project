@@ -1,4 +1,5 @@
-:root { /* CSS variables */
+:root {
+  /* CSS variables */
   --boards-sidebar-width: 32px;
 }
 
@@ -51,7 +52,8 @@ body {
   font-size: 20px;
   border: none !important;
   background-color: transparent;
-  transition: background-color 0.3s ease, transform 0.3s ease, border-radius 0.3s ease; /* Include border-radius in the transition */
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    border-radius 0.3s ease; /* Include border-radius in the transition */
   border-radius: 50%; /* Apply consistent border-radius */
   width: 30px;
   height: 30px;
@@ -79,7 +81,8 @@ body {
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up, .settings-pop-up {
+.about-pop-up,
+.settings-pop-up {
   max-width: 800px;
   width: 90%;
   padding: 20px;
@@ -99,7 +102,9 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
-.about-pop-up button, .settings-close-button { /* close button */
+.about-pop-up button,
+.settings-close-button {
+  /* close button */
   color: #000000;
   font-weight: 500;
   background-color: #ffffff;
@@ -112,7 +117,8 @@ body {
   font-size: 20px;
 }
 
-.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up {
+.about-pop-up.display-pop-up,
+.settings-pop-up.display-pop-up {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
@@ -149,7 +155,8 @@ body {
   transition: background-color 0.4s ease;
 }
 
-.settings-tab-button.active, .settings-tab-button:hover {
+.settings-tab-button.active,
+.settings-tab-button:hover {
   background-color: #e9e9e9;
 }
 
@@ -477,4 +484,27 @@ button[type="submit"] {
 
 .close-btn:hover {
   color: #d9534f;
+}
+.alert {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f44336; /* Red background for errors */
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeOut 5s 1;
+}
+
+@@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

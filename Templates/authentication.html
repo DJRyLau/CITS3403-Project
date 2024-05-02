@@ -13,10 +13,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Authentication</title>
-    <link rel="stylesheet" href="notes.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/notes.css') }}"
+    />
   </head>
   <body class="auth-background">
     <h1 class="page-title">TaskHub</h1>
+
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div id="flash-messages">
+      {% for message in messages %}
+      <div class="alert" style="display: none">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
     <div class="about-section">
       <div class="content">
         <h2>About TaskHub</h2>
@@ -35,9 +47,14 @@
       <section class="form-container" id="login-section">
         <button class="close-btn"><i class="fas fa-times"></i></button>
         <h2>Sign In</h2>
-        <form id="login-form">
-          <input type="text" placeholder="Username" required />
-          <input type="password" placeholder="Password" required />
+        <form id="login-form" action="/login" method="post">
+          <input type="email" placeholder="Email" name="email" required />
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            required
+          />
           <button class="glow-on-hover" type="submit">Sign In</button>
           <p class="form-footer">
             Don't have an account?
@@ -49,11 +66,20 @@
       <section class="form-container" id="create-section" style="display: none">
         <button class="close-btn"><i class="fas fa-times"></i></button>
         <h2>Create Account</h2>
-        <form id="create-form">
-          <input type="text" placeholder="Username" required />
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
-          <input type="password" placeholder="Confirm Password" required />
+        <form id="create-form" action="/register" method="post">
+          <input type="email" placeholder="Email" name="email" required />
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            name="confirm_password"
+            required
+          />
           <button class="glow-on-hover" type="submit">Create Account</button>
           <p class="form-footer">
             Already have an account?
@@ -62,6 +88,6 @@
         </form>
       </section>
     </div>
-    <script src="notes.js"></script>
+    <script src="{{ url_for('static', filename='js/notes.js') }}"></script>
   </body>
 </html>

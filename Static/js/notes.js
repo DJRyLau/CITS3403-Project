@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
     loginForm.addEventListener("submit", (event) => {
-      event.preventDefault();
       // Yet to implement handling login  login
     });
   }
@@ -104,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const createForm = document.getElementById("create-form");
   if (createForm) {
     createForm.addEventListener("submit", (event) => {
-      event.preventDefault();
       // Yet to implement handling account creation
     });
   }
@@ -117,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var showSignin = document.getElementById("show-signin");
 
   showCreate.addEventListener("click", function (event) {
-    event.preventDefault();
     loginSection.style.display = "none";
     createSection.style.display = "block";
   });
@@ -172,4 +169,16 @@ document.addEventListener("DOMContentLoaded", function () {
     loginSection.style.display = "none";
     createSection.style.display = "block";
   });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const alerts = document.querySelectorAll(".alert");
+  if (alerts.length > 0) {
+    alerts.forEach(function (alert) {
+      alert.style.display = "block";
+      setTimeout(function () {
+        alert.style.display = "none";
+      }, 5000);
+    });
+  }
 });
