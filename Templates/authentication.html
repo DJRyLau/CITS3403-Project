@@ -47,44 +47,28 @@
       <section class="form-container" id="login-section">
         <button class="close-btn"><i class="fas fa-times"></i></button>
         <h2>Sign In</h2>
-        <form id="login-form" action="/login" method="post">
-          <input type="email" placeholder="Email" name="email" required />
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            required
-          />
-          <button class="glow-on-hover" type="submit">Sign In</button>
-          <p class="form-footer">
-            Don't have an account?
-            <a href="#" id="show-create">Click here to sign up</a>
-          </p>
+        <form id="login-form" action="/" method="post">
+          {{ login_form.hidden_tag() }} {{
+          login_form.email(class='form-control', placeholder='Email') }} {{
+          login_form.password(class='form-control', placeholder='Password') }}
+          <button type="submit" name="login" class="glow-on-hover">
+            Sign In
+          </button>
         </form>
       </section>
 
       <section class="form-container" id="create-section" style="display: none">
         <button class="close-btn"><i class="fas fa-times"></i></button>
         <h2>Create Account</h2>
-        <form id="create-form" action="/register" method="post">
-          <input type="email" placeholder="Email" name="email" required />
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            name="confirm_password"
-            required
-          />
-          <button class="glow-on-hover" type="submit">Create Account</button>
-          <p class="form-footer">
-            Already have an account?
-            <a href="#" id="show-signin">Click here to sign in</a>
-          </p>
+        <form id="create-form" action="/" method="post">
+          {{ register_form.hidden_tag() }} {{
+          register_form.email(class='form-control', placeholder='Email') }} {{
+          register_form.password(class='form-control', placeholder='Password')
+          }} {{ register_form.confirm_password(class='form-control',
+          placeholder='Confirm Password') }}
+          <button type="submit" name="register" class="glow-on-hover">
+            Create Account
+          </button>
         </form>
       </section>
     </div>

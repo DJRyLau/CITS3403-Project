@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from models import User, db
+from forms import LoginForm, RegisterForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -13,11 +14,22 @@ db.init_app(app)
 with app.app_context():
         db.create_all()  
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def authentication():
     if 'user_id' in session:
         return redirect(url_for('notes'))
-    return render_template('authentication.html')
+
+    login_form = LoginForm()
+    register_form = RegisterForm()
+
+    if login_form.validate_on_submit() and 'login' in request.form:
+        return login_user(login_form)
+
+    if register_form.validate_on_submit() and 'register' in request.form:
+        return register_user(register_form)
+
+    return render_template('authentication.html', login_form=login_form, register_form=register_form)
+
 
 @app.route('/notes')
 def notes():
@@ -26,12 +38,9 @@ def notes():
         return redirect(url_for('authentication'))
     return render_template('notes.html')
 
-@app.route('/login', methods=['POST'])
-def login():
-    email = request.form['email']
-    password = request.form['password']
-    user = User.query.filter_by(email=email).first()
-    if user and check_password_hash(user.password, password):
+def login_user(form):
+    user = User.query.filter_by(email=form.email.data).first()
+    if user and check_password_hash(user.password, form.password.data):
         session['user_id'] = user.id
         flash('Login successful!')
         return redirect(url_for('notes'))
@@ -39,17 +48,9 @@ def login():
         flash('Invalid email or password.')
         return redirect(url_for('authentication'))
 
-@app.route('/register', methods=['POST'])
-def register():
-    email = request.form['email']
-    password = request.form['password']
-    existing_user = User.query.filter_by(email=email).first()
-    if existing_user:
-        flash('Email already exists.')
-        return redirect(url_for('register'))
-    
-    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-    new_user = User(email=email, password=hashed_password)
+def register_user(form):
+    hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
+    new_user = User(email=form.email.data, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
     flash('Account created successfully! Please log in.')
