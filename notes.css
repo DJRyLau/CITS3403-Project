@@ -80,10 +80,31 @@ body {
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up, .settings-pop-up, .profile-pop-up {
+.about-pop-up, .settings-pop-up {
   max-width: 800px;
   width: 90%;
   padding: 20px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 70px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  visibility: hidden;
+  z-index: 20;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.profile-pop-up {
+  max-width: 400px;
+  width: 90%;
+  padding: 20px;
+  padding-top: 0px;
   background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
@@ -130,6 +151,79 @@ body {
   font-size: x-large;
   font-weight: 500;
 }
+
+
+/* Profile Formatting */
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  padding-left: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.profile-settings {
+  display: flex;
+  justify-content: space-between;
+}
+
+.settings-controls {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-top: 20px;
+  margin-right: 40px;
+}
+
+.light-dark-mode, .note-colour {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.colour-selector {
+  width: 85px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-box {
+  width: 85px;
+  height: 30px;
+  border-radius: 4px;
+}
+
+.note-preview {
+  width: 250px;
+  height: 250px;
+}
+
+.note-sample {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f4f4f8;
+}
+
 
 /* Settings Tabs */
 
