@@ -485,26 +485,39 @@ button[type="submit"] {
 .close-btn:hover {
   color: #d9534f;
 }
+
 .alert {
   position: fixed;
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #f44336; /* Red background for errors */
-  color: white;
   padding: 20px;
   border-radius: 5px;
   z-index: 1000;
   display: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: fadeOut 5s 1;
+  animation: fadeInOut 5s;
 }
 
-@@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
+.alert-success {
+  color: #26b347;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-fail {
+  color: #9b0716;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
     opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
   }
 }

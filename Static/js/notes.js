@@ -134,6 +134,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var createBtn = document.getElementById("create-btn");
   var loginSection = document.getElementById("login-section");
   var createSection = document.getElementById("create-section");
+  const loginAlertFail = document.querySelector(".alert-fail");
+
   closeButtons.forEach((button) => {
     button.addEventListener("click", function () {
       authContainer.style.display = "none";
@@ -157,6 +159,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initially show the about section
   showSection(true);
+  // Retain login window if failed login
+  if (loginAlertFail) {
+    showSection(false);
+    loginSection.style.display = "block";
+    createSection.style.display = "none";
+  }
 
   signinBtn.addEventListener("click", function () {
     showSection(false);
@@ -172,13 +180,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const alerts = document.querySelectorAll(".alert");
-  if (alerts.length > 0) {
+  setTimeout(function () {
+    const alerts = document.querySelectorAll(".alert");
     alerts.forEach(function (alert) {
-      alert.style.display = "block";
-      setTimeout(function () {
-        alert.style.display = "none";
-      }, 5000);
+      alert.style.opacity = 0;
     });
-  }
+  }, 5000);
 });

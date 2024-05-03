@@ -20,11 +20,13 @@
   </head>
   <body class="auth-background">
     <h1 class="page-title">TaskHub</h1>
-
-    {% with messages = get_flashed_messages() %} {% if messages %}
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
     <div id="flash-messages">
-      {% for message in messages %}
-      <div class="alert" style="display: none">{{ message }}</div>
+      {% for category, message in messages %}
+      <div class="alert {{ category }}" style="display: block">
+        {{ message }}
+      </div>
       {% endfor %}
     </div>
     {% endif %} {% endwith %}
@@ -54,6 +56,10 @@
           <button type="submit" name="login" class="glow-on-hover">
             Sign In
           </button>
+          <p class="form-footer">
+            Don't have an account?
+            <a href="#" id="show-create">Click here to sign up</a>
+          </p>
         </form>
       </section>
 
@@ -69,6 +75,10 @@
           <button type="submit" name="register" class="glow-on-hover">
             Create Account
           </button>
+          <p class="form-footer">
+            Already have an account?
+            <a href="#" id="show-signin">Click here to sign in</a>
+          </p>
         </form>
       </section>
     </div>
