@@ -53,6 +53,7 @@ def login_user(form):
         return redirect(url_for('notes'))
     else:
         flash('Invalid email or password.', 'alert-fail')
+        print("Login failed")
         return render_template('authentication.html', login_form=form, register_form=RegisterForm(), form_type='login')
 
 def register_user(form):
