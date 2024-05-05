@@ -13,8 +13,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 csrf = CSRFProtect(app)
-
 db.init_app(app)
+
 with app.app_context():
         db.create_all()  
 
@@ -71,7 +71,7 @@ def login_user(form):
         return render_template('authentication.html', login_form=form, register_form=RegisterForm(), form_type='login')
 
 def register_user(form):
-    hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
+    hashed_password = generate_password_hash(form.password.data)
     new_user = User(email=form.email.data, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
