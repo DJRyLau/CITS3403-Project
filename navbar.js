@@ -117,3 +117,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 });
+
+// Side navbar
+function openSidenav() {
+  document.getElementById("side-navbar").style.width = "250px";
+}
+
+function closeSidenav() {
+  document.getElementById("side-navbar").style.width = "0";
+}
