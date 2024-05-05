@@ -6,10 +6,14 @@ from dotenv import load_dotenv
 load_dotenv()
 from models import User, db
 from forms import LoginForm, RegisterForm
+from flask_wtf.csrf import CSRFProtect
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
+csrf = CSRFProtect(app)
+
 db.init_app(app)
 with app.app_context():
         db.create_all()  
@@ -32,16 +36,26 @@ def authentication():
             else:
                 print("Login form validation failed.", login_form.errors)
                 return login_user(login_form)
+            
 
-        if 'register' in request.form and register_form.validate():
-            return register_user(register_form)
+        if 'register' in request.form:
+            # Check for existing user before validating form
+            existing_user = User.query.filter_by(email=register_form.email.data).first()
+            if existing_user:
+                flash('Email already registered. Please log in or use a different email.', 'alert-registerfail')
+                return render_template('authentication.html', login_form=LoginForm(), register_form=register_form, form_type='register')
+
+            if register_form.validate():
+                return register_user(register_form)
+            else:
+                print("Register form validation failed.", register_form.errors)
 
     return render_template('authentication.html', login_form=login_form, register_form=register_form, form_type=None)
 
 @app.route('/notes')
 def notes():
     if 'user_id' not in session:
-        flash('You are not logged in!', 'fail')
+        flash('You are not logged in!', 'alert-loginfail')
         return redirect(url_for('authentication'))
     return render_template('notes.html')
 
@@ -52,7 +66,7 @@ def login_user(form):
         flash('Login successful!', 'alert-success')
         return redirect(url_for('notes'))
     else:
-        flash('Invalid email or password.', 'alert-fail')
+        flash('Invalid email or password.', 'alert-loginfail')
         print("Login failed")
         return render_template('authentication.html', login_form=form, register_form=RegisterForm(), form_type='login')
 

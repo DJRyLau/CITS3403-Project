@@ -134,7 +134,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var createBtn = document.getElementById("create-btn");
   var loginSection = document.getElementById("login-section");
   var createSection = document.getElementById("create-section");
-  const loginAlertFail = document.querySelector(".alert-fail");
+  const loginAlertFail = document.querySelector(".alert-loginfail");
+  const registerAlertFail = document.querySelector(".alert-registerfail");
+
 
   closeButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -164,6 +166,11 @@ document.addEventListener("DOMContentLoaded", function () {
     showSection(false);
     loginSection.style.display = "block";
     createSection.style.display = "none";
+  }
+  if (registerAlertFail) {
+    showSection(false);
+    loginSection.style.display = "none";
+    createSection.style.display = "block";
   }
 
   signinBtn.addEventListener("click", function () {
