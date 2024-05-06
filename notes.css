@@ -42,7 +42,7 @@ body {
   display: flex;
   justify-content: right;
   font-size: 20px;
-  padding-right: 10px; /* for testing purposes */
+  padding: 10px; /* for testing purposes */
 }
 
 .nav-button {
@@ -101,7 +101,7 @@ body {
 }
 
 .profile-pop-up {
-  max-width: 400px;
+  max-width: 500px;
   width: 90%;
   padding: 20px;
   padding-top: 0px;
@@ -153,6 +153,47 @@ body {
 }
 
 
+/* Toggle Switch Formatting */
+
+.toggle-checkbox {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.toggle-label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  width: 70px;
+  height: 30px;
+  background-color: gray;
+  border-radius: 100px;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+.toggle-inner {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 100px;
+  transition: transform 0.2s;
+  background-color: #fff;
+  z-index: 3;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  background-color: rgb(95, 124, 255);
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-inner {
+  transform: translateX(40px);
+}
+
 /* Profile Formatting */
 
 .profile-header {
@@ -176,7 +217,7 @@ body {
 }
 
 .username {
-  padding-left: 10px;
+  padding-left: 15px;
   font-size: 20px;
   font-weight: bold;
 }
@@ -187,6 +228,7 @@ body {
 }
 
 .settings-controls {
+  align-items: center;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -196,7 +238,7 @@ body {
 
 .light-dark-mode, .note-colour {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 
 .colour-selector {
@@ -214,8 +256,8 @@ body {
 }
 
 .note-preview {
-  width: 250px;
-  height: 250px;
+  max-width: 250px;
+  max-height: 250px;
 }
 
 .note-sample {
