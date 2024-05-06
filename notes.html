@@ -53,34 +53,39 @@
         </button>
       </header>
       <div class="edit-profile-content">
-          <div class="profile-info">
-            <img src="justice.png" alt="Profile Picture" class="profile-picture">
-            <p class="username">RyLau</p>
+        <div class="profile-info">
+          <img src="justice.png" alt="Profile Picture" class="profile-picture">
+          <div class="username-container">
+            <span class="username" tabindex="0">RyLau</span>
+              <i class="fa fa-pencil edit-icon" aria-hidden="true"></i>
+            <input type="text" class="edit-username" value="RyLau" style="display: none;">
           </div>
-          <div class="profile-settings">
-            <div class="settings-controls">
-              <label for="toggle-theme"><b>Light/Dark Mode</b></label>
-              <div class="light-dark-mode">
-                <input type="checkbox" id="toggle-theme" class="toggle-checkbox">
-                <label class="toggle-label" for="toggle-theme">
-                    <span class="toggle-inner"></span>
-                </label>
-              </div>
-              <div class="note-colour">
-                <label for="note-colour">Note colour</label>
-                <div class="colour-selector">
-                  <div class="color-box blue" style="background-color: #ff5c5c;"></div>
-                </div>
-              </div>
+        </div>
+        <div class="profile-settings">
+          <div class="settings-controls">
+            <label for="toggle-theme"><b>Light/Dark Mode</b></label>
+            <div class="light-dark-mode">
+              <input type="checkbox" id="toggle-theme" class="toggle-checkbox">
+              <label class="toggle-label" for="toggle-theme">
+                  <span class="toggle-inner"></span>
+              </label>
             </div>
-            <div class="note-preview">
-              <label>Note preview:</label>
-              <div class="note-sample">
-                <p class="note-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <div class="note-colour">
+              <label for="note-colour">Note colour</label>
+              <div class="colour-selector">
+                <div class="color-box blue" style="background-color: #ff5c5c;"></div>
               </div>
             </div>
           </div>
+          <div class="note-preview">
+            <label>Note preview:</label>
+            <div class="note-sample">
+              <p class="note-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+        </div>
       </div>
+    
       
       
       <div class="scrollable-content">

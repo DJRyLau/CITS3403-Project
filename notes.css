@@ -267,6 +267,29 @@ body {
 }
 
 
+/* Username Editing */
+
+.username-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.edit-icon {
+  margin-left: 5px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.username-container:hover .edit-icon {
+  visibility: visible;
+}
+
+.edit-username {
+  display: none;
+  flex-grow: 1;
+}
+
 /* Settings Tabs */
 
 .settings-header {

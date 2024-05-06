@@ -86,3 +86,44 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const usernameContainer = document.querySelector('.username-container');
+  const usernameSpan = document.querySelector('.username');
+  const editIcon = document.querySelector('.edit-icon');
+  const editInput = document.querySelector('.edit-username');
+
+  usernameContainer.addEventListener('click', function() {
+      editInput.style.display = 'block';
+      usernameSpan.style.display = 'none';
+      editIcon.style.visibility = 'hidden';
+      editInput.value = usernameSpan.textContent;
+      editInput.focus();
+      document.querySelector('.settings-pop-up').removeEventListener('keydown', handlePopupKeydown);
+  });
+
+  editInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+          usernameSpan.textContent = editInput.value;
+          cancelEdit();
+      } else if (e.key === 'Escape') {
+          cancelEdit();
+      }
+  });
+
+  function cancelEdit() {
+      editInput.style.display = 'none';
+      usernameSpan.style.display = 'block';
+      editIcon.style.visibility = 'visible';
+      document.querySelector('.settings-pop-up').addEventListener('keydown', handlePopupKeydown);
+  }
+});
+
+function handlePopupKeydown(e) {
+  if (e.key === 'Escape') {
+      // TODO: Close the settings pop-up
+      // Must work together with event listener for 'escape' for closing pop-up
+      closePopUp('.settings-pop-up');
+  }
+}
