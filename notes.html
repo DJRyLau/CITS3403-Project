@@ -25,17 +25,21 @@
     </nav>
 
     <!-- BOARDS SIDEBAR -->
-    <div id="side-navbar" class="side-navbar">
-      <div class="sidebar-title">Your Boards</div>
-      <button class="close-sidebar" onclick="closeSidenav()">&times;</button>
-      <a href="#">Lorem ipsum dolor sit amet</a>
-      <a href="#">Lorem ipsum dolor sit amet</a>
-      <a href="#">Lorem ipsum dolor sit amet</a>
-      <a href="#">Board4</a>
-    </div>
     <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" onclick="openSidenav()" aria-label="Boards Sidebar">
-      <i class="fa-solid fa-chevron-right"></i>      
+      <i class="fa-solid fa-chevron-right"></i>
     </button>
+    <div id="side-navbar" class="side-navbar">
+      <button class="close-sidebar" id="close-sidebar">&times;</button>
+      <div class="draggable-bar" id="draggable-bar"></div>
+      <div class="sidebar-title">Your Boards</div>
+      <div class="boards-container" id="boards-container">
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Board4</a>
+      </div>
+    </div>
+    
 
     <!-- BOARD -->
     <main>

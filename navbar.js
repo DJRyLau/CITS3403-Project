@@ -119,10 +119,47 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Side navbar
+const openSidebarButton = document.getElementById('boards-sidebar-arrow-button');
+const closeSidebarButton = document.getElementById('close-sidebar');
+const boardsNavbar = document.getElementById('side-navbar');
+const draggableBar = document.getElementById('draggable-bar');
+
+let isResizing = false;
+
+// Event listeners for opening and closing the side navbar
+openSidebarButton.addEventListener('click', openSidenav);
+closeSidebarButton.addEventListener('click', closeSidenav);
+
 function openSidenav() {
-  document.getElementById("side-navbar").style.width = "250px";
+  isNavbarOpen = true;
+  boardsNavbar.style.width = "250px";
 }
 
 function closeSidenav() {
-  document.getElementById("side-navbar").style.width = "0";
+  isNavbarOpen = false;
+  boardsNavbar.style.width = "0";
+}
+
+draggableBar.addEventListener('mousedown', startResize);
+
+function startResize(e) {
+  e.preventDefault();
+  isResizing = true;
+  const minWidth = 140; // Minimum width
+  const startX = e.clientX;
+  const startWidth = boardsNavbar.offsetWidth;
+
+  function resizeNavbar(e) {
+    const newWidth = startWidth + e.clientX - startX;
+    boardsNavbar.style.width = `${Math.max(minWidth, newWidth)}px`;
+  }
+
+  function stopResizeNavbar() {
+    isResizing = false;
+    window.removeEventListener('mousemove', resizeNavbar);
+    window.removeEventListener('mouseup', stopResizeNavbar);
+  }
+
+  window.addEventListener('mousemove', resizeNavbar);
+  window.addEventListener('mouseup', stopResizeNavbar);
 }

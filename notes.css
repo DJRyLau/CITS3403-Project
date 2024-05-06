@@ -17,27 +17,6 @@ body {
   gap: 20px;
 }
 
-.boards-sidebar {
-  position: fixed;
-  top: 0px;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.boards-sidebar-arrow-button {
-  font-size: 32px;
-  height: 1em;
-  border: none;
-  background-color: transparent;
-  transition: color 0.05s;
-}
-
-.boards-sidebar-arrow-button:hover {
-  color: #808080;
-}
-
 .navbar {
   display: flex;
   justify-content: right;
@@ -80,6 +59,27 @@ body {
 }
 
 /* The side navigation menu */
+.boards-sidebar {
+  position: fixed;
+  top: 0px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.boards-sidebar-arrow-button {
+  font-size: 32px;
+  height: 1em;
+  border: none;
+  background-color: transparent;
+  transition: color 0.05s;
+}
+
+.boards-sidebar-arrow-button:hover {
+  color: #808080;
+}
+
 .side-navbar {
   height: 100%; 
   width: 0; 
@@ -103,7 +103,7 @@ body {
 }
 
 .side-navbar a:hover {
-  color: #f1f1f1;
+  color: #2b2b2b;
 }
 
 .side-navbar .close-sidebar {
@@ -121,15 +121,27 @@ body {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #363636;
+  color: #333;
+  font-weight: 500;
   display: block;
   transition: 0.3s;
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+.draggable-bar {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: #808080;
+}
+
+.navbar-board {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 8px 0;
 }
 
 .about-pop-up, .settings-pop-up {
