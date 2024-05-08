@@ -115,11 +115,17 @@ document.addEventListener("DOMContentLoaded", function () {
   var showSignin = document.getElementById("show-signin");
 
   showCreate.addEventListener("click", function (event) {
+    document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+      btn.classList.remove("selected", "clicked");
+    });
     loginSection.style.display = "none";
     createSection.style.display = "block";
   });
   showSignin.addEventListener("click", function (event) {
     event.preventDefault();
+    document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+      btn.classList.remove("selected", "clicked");
+    });
     loginSection.style.display = "block";
     createSection.style.display = "none";
   });
@@ -137,12 +143,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginAlertFail = document.querySelector(".alert-loginfail");
   const registerAlertFail = document.querySelector(".alert-registerfail");
 
-
   closeButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      authContainer.style.display = "none";
-      aboutSection.style.display = "flex";
-    });
+        button.addEventListener("click", () => {
+          document
+            .querySelectorAll(".auth-nav .auth-toggle-btn")
+            .forEach((btn) => {
+              btn.classList.remove("selected", "clicked");
+            });
+          authContainer.style.display = "none";
+          aboutSection.style.display = "flex";
+        });
   });
 
   function showSection(showAbout) {
@@ -193,4 +203,14 @@ document.addEventListener("DOMContentLoaded", function () {
       alert.style.opacity = 0;
     });
   }, 5000);
+});
+//toggle button effect
+document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+      btn.classList.remove("selected", "clicked");
+    });
+    button.classList.add("selected");
+    button.classList.add("clicked");
+  });
 });

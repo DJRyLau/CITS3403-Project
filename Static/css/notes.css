@@ -573,3 +573,16 @@ button[type="submit"] {
   transform: translateY(-50%);
   color: #ffffff;
 }
+
+/* toggle buttons */
+.auth-nav .auth-toggle-btn.selected {
+  color: black;
+  background: rgba(255, 255, 255, 0.742);
+  border: 1.8px solid white;
+}
+
+/* 3D effect for toggle buttons when clicked */
+.auth-nav .auth-toggle-btn.clicked {
+  transform: scale(1.1) translateZ(5px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
