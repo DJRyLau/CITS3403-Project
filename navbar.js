@@ -58,24 +58,24 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", () => togglePopUp(popUpId, true));
   });
 
+  // Close Buttons
   const closeButtons = document.querySelectorAll(".close-button");
 
   closeButtons.forEach(button => {
     button.addEventListener("click", function() {
-      // Assuming the close function needs to close the parent pop-up of this button
       const popUp = button.closest('.settings-pop-up, .profile-pop-up, .about-pop-up');
       if (popUp) {
         togglePopUp(`#${popUp.id}`, false);
         // Case for profile pop-up for editing
         if (popUp.id === "profile-pop-up") {
-          isEditingUsername = false; // Ensure to reset edit mode if closing via button
+          isEditingUsername = false; // Ensure to reset edit mode if closing via close button
         }
       }
       exitEditMode();
     });
   });
 
-  // Tab handling in Settings pop-up
+  // Tab Handling in Settings Pop-up
   initializeSettingsTabs();
 
   // Overlay and Escape key listeners
@@ -120,16 +120,53 @@ document.addEventListener("DOMContentLoaded", function () {
   function enterEditMode() {
     editInput.style.display = 'block';
     username.style.display = 'none';
-    editIcon.style.visibility = 'hidden';
+    editIcon.style.opacity = 0;
     editInput.value = username.textContent;
     editInput.focus();
-    isEditingUsername = true; // Set flag to true when entering edit mode
+    isEditingUsername = true;
   }
 
   function exitEditMode() {
     editInput.style.display = 'none';
     username.style.display = 'block';
-    editIcon.style.visibility = ''; // Clear inline style for visibility
+    editIcon.style.opacity = '';
     isEditingUsername = false;
   }
+});
+
+// File Upload
+document.addEventListener('DOMContentLoaded', function() {
+  const profileContainer = document.querySelector('.profile-picture-container');
+  const fileInput = document.getElementById('profile-picture-input');
+  const profileImage = document.querySelector('.profile-picture');
+
+  profileContainer.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  //Detects any changes within the settings
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      // Check the file size (< 100 KB) and type (image)
+      if (file.size < 102400 && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            // Check the dimensions are at least 40px by 40px
+            if (img.width >= 40 && img.height >= 40) {
+              profileImage.src = e.target.result; // Update the image src
+            } else {
+              alert('Image dimensions are too small. Minimum size is 40x40 pixels.');
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        alert('File is too large or not an image. Please select an image less than 100kb.');
+      }
+    }
+  });
 });

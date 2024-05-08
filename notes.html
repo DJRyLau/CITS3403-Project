@@ -54,11 +54,17 @@
       </header>
       <div class="edit-profile-content">
         <div class="profile-info">
-          <img src="justice.png" alt="Profile Picture" class="profile-picture">
+          <div class="profile-picture-container">
+            <img src="justice.png" alt="Profile Picture" class="profile-picture">
+            <div class="profile-picture-overlay">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </div>
+            <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+          </div>
           <div class="username-container">
             <span class="username" tabindex="0">RyLau</span>
-            <i class="fa fa-pencil username-edit-icon" aria-hidden="true"></i>
             <input type="text" class="username-edit" value="RyLau" style="display: none;">
+            <i class="fa fa-pencil username-edit-icon" aria-hidden="true"></i>
           </div>
         </div>
         <div class="profile-settings">
@@ -70,11 +76,12 @@
                   <span class="toggle-inner"></span>
               </label>
             </div>
+            <label for="note-colour"><b>Note colour</b></label>
             <div class="note-colour">
-              <label for="note-colour">Note colour</label>
               <div class="colour-selector">
                 <div class="color-box blue" style="background-color: #ff5c5c;"></div>
               </div>
+
             </div>
           </div>
           <div class="note-preview">
@@ -84,12 +91,6 @@
             </div>
           </div>
         </div>
-      </div>
-    
-      
-      
-      <div class="scrollable-content">
-
       </div>
     </div>
 
@@ -116,7 +117,7 @@
     </div>
 
     <!-- SETTINGS PAGE POP-UP -->
-    <div id="settings-pop-up", class="settings-pop-up">
+    <div id="settings-pop-up" class="settings-pop-up">
       <!-- SETTINGS TABS -->
       <header class="settings-header">
         <nav class="settings-tabs">
@@ -155,7 +156,7 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor posuere ac ut consequat semper.</p>
         </div>
       </div>
-      
+
     </div>
 
     <script src="notes.js"></script>

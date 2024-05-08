@@ -101,8 +101,9 @@ body {
 }
 
 .profile-pop-up {
-  max-width: 500px;
-  width: 90%;
+  max-width: 450px;
+  max-height: 360px;
+  width: 100%;
   padding: 20px;
   padding-top: 0px;
   background-color: rgb(255, 255, 255);
@@ -209,13 +210,6 @@ body {
   margin-bottom: 20px;
 }
 
-.profile-picture {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
 .profile-settings {
   display: flex;
   justify-content: space-between;
@@ -260,8 +254,54 @@ body {
   background-color: #f4f4f8;
 }
 
+/* Profile Picture */
 
-/* Username Editing */
+.profile-picture-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: block;
+}
+
+.profile-picture-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-picture-overlay i {
+  font-size: 24px;
+  color: black;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-picture-container:hover .profile-picture-overlay,
+.profile-picture-container:hover .profile-picture-overlay i {
+  opacity: 1;
+}
+
+
+/* Username */
 
 .username, .username-edit {
   display: block;
@@ -272,18 +312,20 @@ body {
 
 .username-container {
   position: relative;
+  cursor: pointer;
   display: flex;
   align-items: center;
 }
 
 .username-edit-icon {
-  margin-left: 5px;
+  margin-left: 10px;
   cursor: pointer;
-  visibility: hidden;
+  opacity: 0;
+  font: rob
 }
 
 .username-container:hover .username-edit-icon {
-  visibility: visible;
+  opacity: 1;
 }
 
 /* Settings Tabs */
