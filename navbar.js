@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       exitEditMode();
+      revertChanges();
     });
   });
 
@@ -85,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll('.display-pop-up').forEach(popUp => {
         togglePopUp(`#${popUp.id}`, false);
       });
+      revertChanges();
     }
   });
 
@@ -94,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
         togglePopUp(`#${popUp.id}`, false);
       });
       exitEditMode();
+      revertChanges();
     }
   });
 
@@ -126,11 +129,37 @@ document.addEventListener("DOMContentLoaded", function () {
     isEditingUsername = true;
   }
 
+  // Function to exit Edit Mode for username
   function exitEditMode() {
     editInput.style.display = 'none';
     username.style.display = 'block';
     editIcon.style.opacity = '';
     isEditingUsername = false;
+  }
+
+  // Unsaved Changes Bar
+  const inputs = document.querySelectorAll('.profile-pop-up input, .profile-pop-up select');
+  const unsavedChangesBar = document.querySelector('.unsaved-changes-bar');
+
+  //Detects any changes within the settings
+  inputs.forEach(input => {
+    input.addEventListener('change', function() {
+      unsavedChangesBar.classList.add('display');
+    }); 
+  });
+
+  document.getElementById('save-changes').addEventListener('click', saveChanges);
+
+  document.getElementById('revert-changes').addEventListener('click', revertChanges);
+
+  // Function to revert settings changes
+  function revertChanges() {
+    unsavedChangesBar.classList.remove('display');
+  }
+
+  // Function to revert settings changes
+  function saveChanges() {
+    unsavedChangesBar.classList.remove('display');
   }
 });
 

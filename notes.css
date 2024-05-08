@@ -372,6 +372,70 @@ body {
   z-index: 20;
 }
 
+
+/* Unsaved Changes Bar */
+
+.unsaved-changes-bar {
+  border-radius: 12px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-top: 2px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: visibility 0.5s, transform 0.5s ease-in;
+  visibility: hidden;
+  transform: translateY(-100px);
+  z-index: 19;
+}
+
+.unsaved-changes-bar.display {
+  visibility: visible;
+  transform: translateY(20px);
+}
+
+.unsaved-changes-bar button {
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.unsaved-changes-bar button:hover {
+  transform: scale(1.1);
+}
+
+.unsaved-changes-bar button:active {
+  transform: scale(0.95);
+}
+
+.unsaved-changes-bar button#save-changes {
+  color: white;
+  background-color: #5c67f2;
+}
+
+.unsaved-changes-bar button#save-changes:hover {
+  color: white;
+  background-color: #434ab3;
+}
+
+.unsaved-changes-bar button#revert-changes {
+  color: black;
+  background-color: white;
+}
+
+.unsaved-changes-bar button#revert-changes:hover {
+  color: black;
+  background-color: rgb(221, 221, 221);
+}
+
+
+
 h1 {
   text-align: center;
   color: #333;
