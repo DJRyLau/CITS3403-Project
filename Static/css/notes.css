@@ -316,7 +316,7 @@ input[type="password"] {
 button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #8c49c0;
+ 
   color: white;
   border: none;
   border-radius: 4px;
@@ -325,8 +325,9 @@ button[type="submit"] {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: #8c49c0;
+
 }
+
 
 .glow-on-hover {
   width: 220px;
@@ -373,7 +374,6 @@ button[type="submit"] {
 
 .glow-on-hover:active:after {
   background: transparent;
-  outline: 1px solid #fff;
 }
 
 .glow-on-hover:hover:before {
@@ -386,10 +386,11 @@ button[type="submit"] {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #8c49c0;
+  background: #2f0350;
   left: 0;
   top: 0;
   border-radius: 10px;
+  
 }
 
 @keyframes glowing {
