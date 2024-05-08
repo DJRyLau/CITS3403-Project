@@ -42,6 +42,8 @@ function initializeSettingsTabs() {
 
 // Event listeners for pop-ups
 document.addEventListener("DOMContentLoaded", function () {
+  let isEditingUsername = false;
+
   const buttons = {
     "profile-button": ".profile-pop-up",
     "about-button": ".about-pop-up",
@@ -57,12 +59,17 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const closeButtons = document.querySelectorAll(".close-button");
+
   closeButtons.forEach(button => {
     button.addEventListener("click", function() {
       // Assuming the close function needs to close the parent pop-up of this button
       const popUp = button.closest('.settings-pop-up, .profile-pop-up, .about-pop-up');
       if (popUp) {
         togglePopUp(`#${popUp.id}`, false);
+        // Case for profile pop-up for editing
+        if (popUp.id === "profile-pop-up") {
+          isEditingUsername = false; // Ensure to reset edit mode if closing via button
+        } 
       }
     });
   });
@@ -80,50 +87,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
-      document.querySelectorAll('.display-pop-up').forEach(popUp => {
-        togglePopUp(`#${popUp.id}`, false);
-      });
+      if (!isEditingUsername) { // Only close pop-ups if not editing username
+        document.querySelectorAll('.display-pop-up').forEach(popUp => {
+          togglePopUp(`#${popUp.id}`, false);
+        });
+      }
     }
   });
-});
 
-
-document.addEventListener('DOMContentLoaded', function() {
   const usernameContainer = document.querySelector('.username-container');
   const usernameSpan = document.querySelector('.username');
   const editIcon = document.querySelector('.edit-icon');
   const editInput = document.querySelector('.edit-username');
 
   usernameContainer.addEventListener('click', function() {
-      editInput.style.display = 'block';
-      usernameSpan.style.display = 'none';
-      editIcon.style.visibility = 'hidden';
-      editInput.value = usernameSpan.textContent;
-      editInput.focus();
-      document.querySelector('.settings-pop-up').removeEventListener('keydown', handlePopupKeydown);
+    editInput.style.display = 'block';
+    usernameSpan.style.display = 'none';
+    editIcon.style.visibility = 'hidden';
+    editInput.value = usernameSpan.textContent;
+    editInput.focus();
+    isEditingUsername = true; // Set flag to true when entering edit mode
   });
 
   editInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-          usernameSpan.textContent = editInput.value;
-          cancelEdit();
-      } else if (e.key === 'Escape') {
-          cancelEdit();
-      }
+    if (e.key === 'Enter') {
+      usernameSpan.textContent = editInput.value;
+      exitEditMode();
+    } else if (e.key === 'Escape') {
+      exitEditMode();
+    }
   });
 
-  function cancelEdit() {
-      editInput.style.display = 'none';
-      usernameSpan.style.display = 'block';
-      editIcon.style.visibility = 'visible';
-      document.querySelector('.settings-pop-up').addEventListener('keydown', handlePopupKeydown);
+  function exitEditMode() {
+    editInput.style.display = 'none';
+    usernameSpan.style.display = 'block';
+    editIcon.style.visibility = 'visible';
+    isEditingUsername = false; // Reset the flag when exiting edit mode
   }
 });
-
-function handlePopupKeydown(e) {
-  if (e.key === 'Escape') {
-      // TODO: Close the settings pop-up
-      // Must work together with event listener for 'escape' for closing pop-up
-      closePopUp('.settings-pop-up');
-  }
-}

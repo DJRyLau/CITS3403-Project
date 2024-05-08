@@ -187,7 +187,7 @@ body {
 }
 
 .toggle-checkbox:checked + .toggle-label {
-  background-color: rgb(95, 124, 255);
+  background-color: #5c67f2;
 }
 
 .toggle-checkbox:checked + .toggle-label .toggle-inner {
@@ -214,12 +214,6 @@ body {
   height: 80px;
   border-radius: 50%;
   margin-right: 10px;
-}
-
-.username {
-  padding-left: 15px;
-  font-size: 20px;
-  font-weight: bold;
 }
 
 .profile-settings {
@@ -269,26 +263,46 @@ body {
 
 /* Username Editing */
 
+.username {
+  display: block;
+  padding-left: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .username-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.edit-icon {
+.username-edit {
+  display: block;
+  padding-left: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.username-edit-icon {
   margin-left: 5px;
   cursor: pointer;
   visibility: hidden;
 }
 
-.username-container:hover .edit-icon {
+.username-container:hover .username-edit-icon {
   visibility: visible;
 }
 
-.edit-username {
-  display: none;
-  flex-grow: 1;
+.username-edit-border {
+  border: 3px solid #5c67f2;
+  border-radius: 4px;
+  margin: 0;
+  padding: 2px;
+  width: auto;
+  box-sizing: border-box;
 }
+
+
 
 /* Settings Tabs */
 
