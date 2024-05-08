@@ -298,7 +298,7 @@ body.auth-background {
   text-align: center;
 }
 input::placeholder {
-  color: black;
+  color: rgb(255, 255, 255);
   opacity: 1;
 }
 
@@ -405,7 +405,7 @@ button[type="submit"] {
 }
 
 .page-title {
-  font-family: "Pacifico", sans-serif; /* Ensure you specify the font fallback */
+  font-family: "Pacifico", sans-serif;
   font-size: 4rem;
   position: fixed;
   top: 20px; 
@@ -559,4 +559,16 @@ button[type="submit"] {
   90% {
     opacity: 1;
   }
+}
+/* CSS for email and password icons */
+.form-group {
+  position: relative;
+}
+
+.form-group ion-icon {
+  position: absolute;
+  top: 40%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #ffffff;
 }
