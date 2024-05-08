@@ -69,8 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Case for profile pop-up for editing
         if (popUp.id === "profile-pop-up") {
           isEditingUsername = false; // Ensure to reset edit mode if closing via button
-        } 
+        }
       }
+      exitEditMode();
     });
   });
 
@@ -80,48 +81,55 @@ document.addEventListener("DOMContentLoaded", function () {
   // Overlay and Escape key listeners
   const overlay = document.querySelector(".overlay");
   overlay.addEventListener("click", function() {
-    document.querySelectorAll('.display-pop-up').forEach(popUp => {
-      togglePopUp(`#${popUp.id}`, false);
-    });
+    if (!isEditingUsername) { // Only close pop-ups if not editing username
+      document.querySelectorAll('.display-pop-up').forEach(popUp => {
+        togglePopUp(`#${popUp.id}`, false);
+      });
+    }
   });
 
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
-      if (!isEditingUsername) { // Only close pop-ups if not editing username
-        document.querySelectorAll('.display-pop-up').forEach(popUp => {
-          togglePopUp(`#${popUp.id}`, false);
-        });
-      }
+      document.querySelectorAll('.display-pop-up').forEach(popUp => {
+        togglePopUp(`#${popUp.id}`, false);
+      });
+      exitEditMode();
     }
   });
 
   const usernameContainer = document.querySelector('.username-container');
-  const usernameSpan = document.querySelector('.username');
-  const editIcon = document.querySelector('.edit-icon');
-  const editInput = document.querySelector('.edit-username');
+  const username = document.querySelector('.username');
+  const editIcon = document.querySelector('.username-edit-icon');
+  const editInput = document.querySelector('.username-edit');
 
   usernameContainer.addEventListener('click', function() {
-    editInput.style.display = 'block';
-    usernameSpan.style.display = 'none';
-    editIcon.style.visibility = 'hidden';
-    editInput.value = usernameSpan.textContent;
-    editInput.focus();
-    isEditingUsername = true; // Set flag to true when entering edit mode
+    if (!isEditingUsername) {
+      enterEditMode();
+    }
   });
 
   editInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
-      usernameSpan.textContent = editInput.value;
+      username.textContent = editInput.value;
       exitEditMode();
     } else if (e.key === 'Escape') {
       exitEditMode();
     }
   });
 
+  function enterEditMode() {
+    editInput.style.display = 'block';
+    username.style.display = 'none';
+    editIcon.style.visibility = 'hidden';
+    editInput.value = username.textContent;
+    editInput.focus();
+    isEditingUsername = true; // Set flag to true when entering edit mode
+  }
+
   function exitEditMode() {
     editInput.style.display = 'none';
-    usernameSpan.style.display = 'block';
-    editIcon.style.visibility = 'visible';
-    isEditingUsername = false; // Reset the flag when exiting edit mode
+    username.style.display = 'block';
+    editIcon.style.visibility = ''; // Clear inline style for visibility
+    isEditingUsername = false;
   }
 });

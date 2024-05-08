@@ -263,7 +263,7 @@ body {
 
 /* Username Editing */
 
-.username {
+.username, .username-edit {
   display: block;
   padding-left: 15px;
   font-size: 20px;
@@ -276,13 +276,6 @@ body {
   align-items: center;
 }
 
-.username-edit {
-  display: block;
-  padding-left: 15px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
 .username-edit-icon {
   margin-left: 5px;
   cursor: pointer;
@@ -292,17 +285,6 @@ body {
 .username-container:hover .username-edit-icon {
   visibility: visible;
 }
-
-.username-edit-border {
-  border: 3px solid #5c67f2;
-  border-radius: 4px;
-  margin: 0;
-  padding: 2px;
-  width: auto;
-  box-sizing: border-box;
-}
-
-
 
 /* Settings Tabs */
 
