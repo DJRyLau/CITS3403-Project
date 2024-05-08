@@ -92,7 +92,7 @@ body {
   border-radius: 12px;
   position: absolute;
   margin-left: auto;
-  margin-right: autorgba(81, 19, 19, 0.5)
+  margin-right: auto;
   top: 70px;
   left: 0;
   right: 0;
@@ -231,34 +231,52 @@ h1 {
 /* styles for authentication page */
 
 body.auth-background {
-  background-image: url("https://i.postimg.cc/VN4wwyC0/44456186-d7f4-4fcf-b12d-0b6d680bb246-1.jpg");
+  background: url("../images/lake.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
 }
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
+
+
+
 
 .form-container {
   width: 550px;
   max-height: 90vh;
   overflow-y: auto;
-  position: relative;
-  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
   background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 5;
+  margin: auto;
   padding: 20px;
-  margin: 10px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(0);
+  opacity: 1;
+  max-width: 550px;
   border: 1px solid rgb(255, 255, 255);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: fadeInScale 0.5s ease forwards; 
+
 }
 
 .form-container::before {
@@ -268,10 +286,8 @@ body.auth-background {
   left: 0;
   width: 100%;
   height: 100%;
-  background: inherit;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: inherit;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
   z-index: -1;
 }
 
@@ -279,7 +295,6 @@ body.auth-background {
   margin-bottom: 15px;
   color: white;
   text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-
   text-align: center;
 }
 input::placeholder {
@@ -330,15 +345,13 @@ button[type="submit"] {
   content: "";
   background: linear-gradient(
     45deg,
-    #c800ff,
-    #6200ff,
-    #c300ff,
-    #00a2ff,
-    #00a2ff,
-    #44d1ea,
-    #7b0dba,
-    #721a86,
-    #4405d6
+    #ffffff,
+    #dbdbdb,
+    #9b9b9b,
+    #ffffff,
+    #efe8f3,
+    #f5f5f5,
+    #d5d4d8
   );
   position: absolute;
   top: -2px;
@@ -392,20 +405,28 @@ button[type="submit"] {
 }
 
 .page-title {
-  font-family: "Pacifico", cursive;
-  font-size: 3rem;
-  color: #8c49c0;
-  text-align: center;
-  margin-top: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-.page-title-large {
+  font-family: "Pacifico", sans-serif; /* Ensure you specify the font fallback */
   font-size: 4rem;
+  position: fixed;
+  top: 20px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    -1px -1px 2px #e31bdc,
+    1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
+.page-title-large {
+  font-size: 5rem;
   transition: font-size 0.5s ease;
 }
 
 .page-title-small {
-  font-size: 3rem;
+  font-size: 4rem;
   transition: font-size 0.5s ease;
 }
 
@@ -422,7 +443,7 @@ button[type="submit"] {
 
 .form-footer a:hover {
   text-decoration: underline;
-  color: #8c49c0;
+  color: #ffffff;
 }
 
 /* Styles for the top right buttons */
@@ -443,6 +464,12 @@ button[type="submit"] {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(80px);
+  -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgb(255, 255, 255);
+
+  
 }
 
 .auth-toggle-btn:hover {
@@ -455,10 +482,7 @@ button[type="submit"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 30vh;
-  left: 0;
-  right: 0;
+  position: fixed;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -471,6 +495,12 @@ button[type="submit"] {
   transform: translateY(0);
   opacity: 1;
   max-width: 550px;
+  border: 1px solid rgb(255, 255, 255);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: fadeInScale 0.5s ease forwards; 
 }
 
 .close-btn {
