@@ -68,6 +68,7 @@ body {
   transform: scale(1.1);
 }
 
+
 .overlay {
   position: fixed;
   top: 0;
@@ -91,7 +92,7 @@ body {
   border-radius: 12px;
   position: absolute;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: autorgba(81, 19, 19, 0.5)
   top: 70px;
   left: 0;
   right: 0;
@@ -238,15 +239,18 @@ body.auth-background {
 .auth-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding-top: 15vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .form-container {
   width: 550px;
-
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
   z-index: 1;
   background: rgba(255, 255, 255, 0.1);
