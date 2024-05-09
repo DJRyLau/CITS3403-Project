@@ -8,7 +8,7 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
   />
-
+<link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,7 +19,9 @@
     />
   </head>
   <body class="auth-background">
-    <h1 class="page-title">Task Pad</h1>
+    <h1 class="page-title"><i
+class="fa-solid fa-hat-wizard"
+></i>TaskHub</h1>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div id="flash-messages">
@@ -108,5 +110,6 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
+<script src="https://kit.fontawesome.com/f50ff10f1d.js" crossorigin="anonymous"></script>
   </body>
 </html>
