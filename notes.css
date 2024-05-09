@@ -59,12 +59,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1; /* ensure that nav buttons are clickable, even if they are under the overlapping side-nav (if left justified) */
 }
 
 .nav-button:hover {
   color: #555;
   background-color: #e9e9e9;
   transform: scale(1.1);
+}
+
+.left-button { /* for nav buttons to go to the left, rather than right (the default) */
+  margin-right: auto; /* pushes all other buttons to the right */
 }
 
 .overlay {
