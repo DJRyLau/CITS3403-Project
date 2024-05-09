@@ -330,8 +330,13 @@ body {
 .username, .username-edit {
   display: block;
   padding-left: 15px;
+  font-family: 'Roberto', sans-serif;
   font-size: 20px;
   font-weight: bold;
+}
+
+.username-edit {
+  transform: translateY(5px) translateX(4px)
 }
 
 .username-container {
