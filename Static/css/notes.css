@@ -43,6 +43,7 @@ body {
   display: flex;
   justify-content: right;
   font-size: 20px;
+  padding: 10px; /* for testing purposes */
 }
 
 .nav-button {
@@ -81,8 +82,10 @@ body {
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up,
-.settings-pop-up {
+
+/* Pop-ups */
+
+.about-pop-up {
   max-width: 800px;
   width: 90%;
   padding: 20px;
@@ -102,9 +105,58 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
-.about-pop-up button,
-.settings-close-button {
-  /* close button */
+.settings-pop-up {
+  max-width: 800px;
+  height: 400px;
+  width: 90%;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 70px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  visibility: hidden;
+  z-index: 20;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.profile-pop-up {
+  max-width: 450px;
+  max-height: 360px;
+  width: 100%;
+  padding: 20px;
+  padding-top: 0px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 70px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  visibility: hidden;
+  z-index: 20;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up, .profile-pop-up.display-pop-up {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+  z-index: 20;
+}
+
+.close-button {
   color: #000000;
   font-weight: 500;
   background-color: #ffffff;
@@ -117,24 +169,197 @@ body {
   font-size: 20px;
 }
 
-.about-pop-up.display-pop-up,
-.settings-pop-up.display-pop-up {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
-  z-index: 20;
-}
-
 .scrollable-content {
   max-height: 50vh;
   overflow-y: auto;
 }
 
-.about-pop-up h1 {
+.about-pop-up h1 .profile-pop-up h1 {
   font-size: x-large;
   font-weight: 500;
 }
+
+
+/* Toggle Switch Formatting */
+
+.toggle-checkbox {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.toggle-label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  width: 70px;
+  height: 30px;
+  background-color: gray;
+  border-radius: 100px;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+.toggle-inner {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 100px;
+  transition: transform 0.2s;
+  background-color: #fff;
+  z-index: 3;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #5c67f2;
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-inner {
+  transform: translateX(40px);
+}
+
+/* Profile Formatting */
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-settings {
+  display: flex;
+  justify-content: space-between;
+}
+
+.settings-controls {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-top: 20px;
+  margin-right: 40px;
+}
+
+.light-dark-mode, .note-colour {
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.colour-selector {
+  width: 85px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-box {
+  width: 85px;
+  height: 30px;
+  border-radius: 4px;
+}
+
+.note-preview {
+  max-width: 250px;
+  max-height: 250px;
+}
+
+.note-sample {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f4f4f8;
+}
+
+/* Profile Picture */
+
+.profile-picture-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: block;
+}
+
+.profile-picture-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-picture-overlay i {
+  font-size: 24px;
+  color: black;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-picture-container:hover .profile-picture-overlay,
+.profile-picture-container:hover .profile-picture-overlay i {
+  opacity: 1;
+}
+
+
+/* Username */
+
+.username, .username-edit {
+  display: block;
+  padding-left: 15px;
+  font-family: 'Roberto', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.username-edit {
+  transform: translateY(5px) translateX(4px)
+}
+
+.username-container {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.username-edit-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  opacity: 0;
+  font: rob
+}
+
+.username-container:hover .username-edit-icon {
+  opacity: 1;
+}
+
+/* Settings Tabs */
 
 .settings-header {
   display: flex;
@@ -171,9 +396,79 @@ body {
   display: block;
 }
 
-.display-pop-up {
-  visibility: visible;
+.settings-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
+
+
+/* Unsaved Changes Bar */
+
+.unsaved-changes-bar {
+  border-radius: 12px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-top: 2px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: opacity 0.5s, visibility 0.5s, transform 0.5s ease;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.unsaved-changes-bar.display {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(30px);
+}
+
+.unsaved-changes-bar button {
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.unsaved-changes-bar button:hover {
+  transform: scale(1.1);
+}
+
+.unsaved-changes-bar button:active {
+  transform: scale(0.95);
+}
+
+.unsaved-changes-bar button#profile-save-changes, button#settings-save-changes {
+  color: white;
+  background-color: #5c67f2;
+}
+
+.unsaved-changes-bar button#profile-save-changes:hover, button#settings-save-changes:hover {
+  color: white;
+  background-color: #434ab3;
+}
+
+.unsaved-changes-bar button#profile-revert-changes, button#revert-save-changes {
+  color: black;
+  background-color: white;
+}
+
+.unsaved-changes-bar button#profile-revert-changes:hover, button#revert-save-changes:hover {
+  color: black;
+  background-color: rgb(221, 221, 221);
+}
+
+
 
 h1 {
   text-align: center;

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Notes</title>
     <link
       rel="stylesheet"
@@ -15,12 +15,16 @@
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/notes.css') }}"
-    />
+    /> 
   </head>
   <body>
     <div class="overlay"></div>
+
     <!-- OPTIONS NAVBAR -->
     <nav class="navbar">
+      <button class="nav-button" id="profile-button" aria-label="Profile">
+        <i class="fa fa-user" aria-hidden="true"></i>
+      </button>
       <button class="nav-button" id="about-button" aria-label="About">
         <i class="fa fa-info-circle"></i>
       </button>
@@ -34,7 +38,8 @@
 
     <!-- BOARDS SIDEBAR -->
     <nav class="boards-sidebar">
-      <button
+      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" aria-label="Boards Sidebar">
+        <button
         class="boards-sidebar-arrow-button"
         id="boards-sidebar-arrow-button"
         aria-label="Boards Sidebar"
@@ -52,10 +57,68 @@
       </button>
     </main>
 
+    <!-- PROFILE PAGE POP-UP -->
+    <div id="profile-pop-up", class="profile-pop-up">
+      <header class="profile-header">
+        <h2>Edit Profile</h2>
+        <button class="close-button">
+          <i class="fa fa-times" aria-label="Close"></i>
+        </button>
+      </header>
+      <div class="edit-profile-content">
+        <div class="profile-info">
+          <div class="profile-picture-container">
+            <img src="{{ url_for('static', filename='images/default-avatar.jpg') }}" alt="Profile Picture" class="profile-picture">
+            <div class="profile-picture-overlay">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </div>
+            <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+          </div>
+          <div class="username-container">
+            <span class="username" tabindex="0">User</span>
+            <input type="text" class="username-edit" value="User" style="display: none;">
+            <i class="fa fa-pencil username-edit-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="profile-settings">
+          <div class="settings-controls">
+            <label for="toggle-theme"><b>Light/Dark Mode</b></label>
+            <div class="light-dark-mode">
+              <input type="checkbox" id="toggle-theme" class="toggle-checkbox">
+              <label class="toggle-label" for="toggle-theme">
+                  <span class="toggle-inner"></span>
+              </label>
+            </div>
+            <label for="note-colour"><b>Note colour</b></label>
+            <div class="note-colour">
+              <div class="colour-selector">
+                <div class="color-box blue" style="background-color: #ff5c5c;"></div>
+              </div>
+
+            </div>
+          </div>
+          <div class="note-preview">
+            <label>Note preview:</label>
+            <div class="note-sample">
+              <p class="note-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- UNSAVED CHANGES BAR -->
+      <div class="unsaved-changes-bar" id="profile-unsaved-changes-bar">
+        <p>You have unsaved changes! Would you like to keep them?</p>
+        <button id="profile-revert-changes">Revert</button>
+        <button id="profile-save-changes">Save Changes</button>
+      </div>
+
+    </div>
+
     <!-- ABOUT PAGE POP-UP (when about button clicked) -->
-    <div class="about-pop-up">
+    <div id="about-pop-up", class="about-pop-up">
       <h1>How to use</h1>
-      <button>
+      <button class="close-button">
         <i class="fa fa-times" aria-label="Close"></i>
       </button>
       <div class="scrollable-content">
@@ -146,116 +209,89 @@
     </div>
 
     <!-- SETTINGS PAGE POP-UP -->
-    <div class="settings-pop-up">
+    <div id="settings-pop-up" class="settings-pop-up">
       <!-- SETTINGS TABS -->
       <header class="settings-header">
         <nav class="settings-tabs">
-          <button class="settings-tab-button active" data-tab="profile">
-            Profile
-          </button>
-          <button class="settings-tab-button" data-tab="preferences">
-            Preferences
-          </button>
-          <button class="settings-tab-button" data-tab="notifications">
-            Notifications
-          </button>
+          <button class="settings-tab-button active" data-tab="general-tab">General</button>
+          <button class="settings-tab-button" data-tab="notifications-tab">Notifications</button>
+          <button class="settings-tab-button" data-tab="account-tab">Account</button>
         </nav>
-        <button class="settings-close-button">
+        
+        <button class="close-button">
           <i class="fa fa-times" aria-label="Close"></i>
         </button>
       </header>
-
+      
       <!-- SETTINGS CONTENT -->
-      <div class="settings-tab-content active" id="profile">
-        <h2>Profile Settings</h2>
+      <div class="settings-tab-content active" id="general-tab">
+        <h2>General Settings</h2>
         <div class="scrollable-content">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero
-            id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor
-            posuere ac ut consequat semper.
-          </p>
+          <p>Theme</p>
+          <p>Timezone</p>
         </div>
       </div>
 
-      <div class="settings-tab-content" id="preferences">
-        <h2>Preferences</h2>
+      <div class="settings-tab-content" id="notifications-tab">
+        <h2>Notification Settings</h2>
+        <div class="settings-toggle">
+          <label for="toggle-notif">Enable Email Notifications</label>
+          <input type="checkbox" id="toggle-notif" class="toggle-checkbox">
+          <label class="toggle-label" for="toggle-notif">
+              <span class="toggle-inner"></span>
+          </label>
+        </div>
+
+        <div class="settings-toggle">
+          <label for="toggle-notif-reply">Notification on Replies</label>
+          <input type="checkbox" id="toggle-notif-reply" class="toggle-checkbox">
+          <label class="toggle-label" for="toggle-notif-reply">
+              <span class="toggle-inner"></span>
+          </label>
+        </div>
+
+        <div class="settings-toggle">
+          <label for="toggle-notif-all-board">Notification on All Board Changes</label>
+          <input type="checkbox" id="toggle-notif-all-board" class="toggle-checkbox">
+          <label class="toggle-label" for="toggle-notif-all-board">
+              <span class="toggle-inner"></span>
+          </label>
+        </div>
+
+        <div class="settings-toggle">
+          <label for="toggle-notif-all-own">Notification on Owned Board Changes</label>
+          <input type="checkbox" id="toggle-notif-all-own" class="toggle-checkbox">
+          <label class="toggle-label" for="toggle-notif-all-own">
+              <span class="toggle-inner"></span>
+          </label>
+        </div>
+
+        <div class="settings-toggle">
+          <label for="toggle-notif-all-star">Notification on Starred Board Changes</label>
+          <input type="checkbox" id="toggle-notif-all-star" class="toggle-checkbox">
+          <label class="toggle-label" for="toggle-notif-all-star">
+              <span class="toggle-inner"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="settings-tab-content" id="account-tab">
+        <h2>Account Settings</h2>
         <div class="scrollable-content">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus
-            interdum posuere lorem ipsum dolor sit amet. Sem fringilla ut morbi
-            tincidunt augue interdum velit. Et odio pellentesque diam volutpat
-            commodo. Neque laoreet suspendisse interdum consectetur libero id
-            faucibus nisl. In arcu cursus euismod quis viverra nibh. Ut eu sem
-            integer vitae justo eget. Nunc lobortis mattis aliquam faucibus
-            purus in massa tempor. Facilisi etiam dignissim diam quis enim
-            lobortis scelerisque fermentum. In nulla posuere sollicitudin
-            aliquam ultrices sagittis. Sagittis id consectetur purus ut faucibus
-            pulvinar elementum. Lorem sed risus ultricies tristique nulla
-            aliquet enim tortor
-          </p>
-          <p>
-            Euismod in pellentesque massa placerat. Sed vulputate mi sit amet
-            mauris commodo. Neque volutpat ac tincidunt vitae. Integer malesuada
-            nunc vel risus commodo. Sit amet luctus venenatis lectus magna.
-            Pharetra massa massa ultricies mi quis hendrerit dolor. Quisque
-            egestas diam in arcu cursus. Volutpat est velit egestas dui id
-            ornare. Quis risus sed vulputate odio ut enim blandit volutpat. Odio
-            ut enim blandit volutpat maecenas volutpat. At volutpat diam ut
-            venenatis tellus in metus. Enim ut sem viverra aliquet eget. Viverra
-            mauris in aliquam sem fringilla ut morbi. Pretium vulputate sapien
-            nec sagittis aliquam malesuada. Consectetur adipiscing elit
-            pellentesque habitant morbi tristique senectus et netus.
-          </p>
-          <p>
-            Orci porta non pulvinar neque laoreet suspendisse interdum
-            consectetur. Arcu non sodales neque sodales ut etiam sit amet.
-            Molestie ac feugiat sed lectus. Quis vel eros donec ac odio tempor.
-            Est placerat in egestas erat imperdiet sed. Odio pellentesque diam
-            volutpat commodo. Quis viverra nibh cras pulvinar mattis. Nulla
-            aliquet porttitor lacus luctus accumsan tortor posuere ac ut.
-            Commodo odio aenean sed adipiscing. Interdum consectetur libero id
-            faucibus nisl tincidunt eget. Sit amet mauris commodo quis.
-          </p>
-          <p>
-            Ut morbi tincidunt augue interdum. Non diam phasellus vestibulum
-            lorem sed risus. Gravida arcu ac tortor dignissim convallis aenean
-            et. At imperdiet dui accumsan sit. Etiam tempor orci eu lobortis
-            elementum nibh tellus. Erat imperdiet sed euismod nisi porta. Leo
-            duis ut diam quam nulla porttitor massa id. Tempor commodo
-            ullamcorper a lacus vestibulum sed arcu. Vitae semper quis lectus
-            nulla at. Volutpat sed cras ornare arcu dui vivamus arcu.
-          </p>
-          <p>
-            Bibendum enim facilisis gravida neque convallis a. Mattis molestie a
-            iaculis at erat pellentesque adipiscing commodo elit. Lectus proin
-            nibh nisl condimentum id venenatis a condimentum vitae. Sit amet
-            cursus sit amet dictum sit amet justo. Velit egestas dui id ornare
-            arcu odio ut sem nulla. Nisi quis eleifend quam adipiscing vitae
-            proin. Ultrices gravida dictum fusce ut placerat orci nulla. Vivamus
-            at augue eget arcu dictum varius duis. Lectus nulla at volutpat diam
-            ut. Cras ornare arcu dui vivamus arcu. In egestas erat imperdiet
-            sed. Ridiculus mus mauris vitae ultricies leo. Dolor morbi non arcu
-            risus. Elementum tempus egestas sed sed. Quam lacus suspendisse
-            faucibus interdum posuere lorem ipsum dolor. Vitae proin sagittis
-            nisl rhoncus mattis rhoncus urna neque viverra. Vulputate ut
-            pharetra sit amet aliquam.
-          </p>
+          <p>Change Password</p>
+          <p>Privacy/Profile Visibility</p>
+          <p>Log Out</p>
+          <p>Delete Account</p>
         </div>
       </div>
 
-      <div class="settings-tab-content" id="notifications">
-        <h2>Notifications</h2>
-        <div class="scrollable-content">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero
-            id faucibus nisl tincidunt eget nullam non nisi est. Accumsan tortor
-            posuere ac ut consequat semper.
-          </p>
-        </div>
+      <!-- UNSAVED CHANGES BAR -->
+      <div class="unsaved-changes-bar" id="settings-unsaved-changes-bar">
+        <p>You have unsaved changes! Would you like to keep them?</p>
+        <button id="settings-revert-changes">Revert</button>
+        <button id="settings-save-changes">Save Changes</button>
       </div>
+
     </div>
 
     <script src="{{ url_for('static', filename='js/notes.js') }}"></script>
