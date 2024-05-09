@@ -80,8 +80,32 @@ body {
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
 
-.about-pop-up, .settings-pop-up {
+
+/* Pop-ups */
+
+.about-pop-up {
   max-width: 800px;
+  width: 90%;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 70px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  visibility: hidden;
+  z-index: 20;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.settings-pop-up {
+  max-width: 800px;
+  height: 400px;
   width: 90%;
   padding: 20px;
   background-color: rgb(255, 255, 255);
@@ -364,12 +388,13 @@ body {
   display: block;
 }
 
-.display-pop-up {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
-  z-index: 20;
+.settings-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 
@@ -385,15 +410,16 @@ body {
   background-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: visibility 0.5s, transform 0.5s ease-in;
+  transition: opacity 0.5s, visibility 0.5s, transform 0.5s ease;
   visibility: hidden;
-  transform: translateY(-100px);
-  z-index: 19;
+  opacity: 0;
+  transform: translateY(50px);
 }
 
 .unsaved-changes-bar.display {
   visibility: visible;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(30px);
 }
 
 .unsaved-changes-bar button {
@@ -414,22 +440,22 @@ body {
   transform: scale(0.95);
 }
 
-.unsaved-changes-bar button#save-changes {
+.unsaved-changes-bar button#profile-save-changes, button#settings-save-changes {
   color: white;
   background-color: #5c67f2;
 }
 
-.unsaved-changes-bar button#save-changes:hover {
+.unsaved-changes-bar button#profile-save-changes:hover, button#settings-save-changes:hover {
   color: white;
   background-color: #434ab3;
 }
 
-.unsaved-changes-bar button#revert-changes {
+.unsaved-changes-bar button#profile-revert-changes, button#revert-save-changes {
   color: black;
   background-color: white;
 }
 
-.unsaved-changes-bar button#revert-changes:hover {
+.unsaved-changes-bar button#profile-revert-changes:hover, button#revert-save-changes:hover {
   color: black;
   background-color: rgb(221, 221, 221);
 }

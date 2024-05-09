@@ -40,9 +40,24 @@ function initializeSettingsTabs() {
   }
 }
 
+// Function to revert or save changes
+function saveChanges(barID, save) {
+  const unsavedChangesBar = document.getElementById(barID);
+  if (save) {
+    unsavedChangesBar.classList.remove('display');
+    // Save Settings Logic
+  } else {
+    unsavedChangesBar.classList.remove('display');
+    // Revert Settings Logic
+  }
+}
+
 // Event listeners for pop-ups
 document.addEventListener("DOMContentLoaded", function () {
   let isEditingUsername = false;
+
+  // Tab Handling in Settings Pop-up
+  initializeSettingsTabs();
 
   const buttons = {
     "profile-button": ".profile-pop-up",
@@ -72,12 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       exitEditMode();
-      revertChanges();
+      saveChanges('profile-unsaved-changes-bar', false)
+      saveChanges('settings-unsaved-changes-bar', false)
     });
   });
-
-  // Tab Handling in Settings Pop-up
-  initializeSettingsTabs();
 
   // Overlay and Escape key listeners
   const overlay = document.querySelector(".overlay");
@@ -86,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll('.display-pop-up').forEach(popUp => {
         togglePopUp(`#${popUp.id}`, false);
       });
-      revertChanges();
+      saveChanges('profile-unsaved-changes-bar', false)
+      saveChanges('settings-unsaved-changes-bar', false)
     }
   });
 
@@ -96,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function () {
         togglePopUp(`#${popUp.id}`, false);
       });
       exitEditMode();
-      revertChanges();
+      saveChanges('profile-unsaved-changes-bar', false)
+      saveChanges('settings-unsaved-changes-bar', false)
     }
   });
 
@@ -138,29 +153,31 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Unsaved Changes Bar
-  const inputs = document.querySelectorAll('.profile-pop-up input, .profile-pop-up select');
-  const unsavedChangesBar = document.querySelector('.unsaved-changes-bar');
+  const profileInputs = document.querySelectorAll('.profile-pop-up input, .profile-pop-up select');
+  const settingsInputs = document.querySelectorAll('.settings-pop-up input, .settings-pop-up select');
+  
+  const profileUnsavedChangesBar = document.querySelector('.unsaved-changes-bar#profile-unsaved-changes-bar');
+  const settingsUnsavedChangesBar = document.querySelector('.unsaved-changes-bar#settings-unsaved-changes-bar');
 
-  //Detects any changes within the settings
-  inputs.forEach(input => {
+  //Detects any changes within the profile
+  profileInputs.forEach(input => {
     input.addEventListener('change', function() {
-      unsavedChangesBar.classList.add('display');
+      profileUnsavedChangesBar.classList.add('display');
     }); 
   });
 
-  document.getElementById('save-changes').addEventListener('click', saveChanges);
+  //Detects any changes within the settings
+  settingsInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      settingsUnsavedChangesBar.classList.add('display');
+    }); 
+  });
 
-  document.getElementById('revert-changes').addEventListener('click', revertChanges);
-
-  // Function to revert settings changes
-  function revertChanges() {
-    unsavedChangesBar.classList.remove('display');
-  }
-
-  // Function to revert settings changes
-  function saveChanges() {
-    unsavedChangesBar.classList.remove('display');
-  }
+  // Save or Revert Changes
+  document.getElementById('profile-save-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', true));
+  document.getElementById('profile-revert-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', false));
+  document.getElementById('settings-save-changes').addEventListener('click', () => saveChanges('settings-unsaved-changes-bar', true));
+  document.getElementById('settings-revert-changes').addEventListener('click', () => saveChanges('settings-unsaved-changes-bar', false));
 });
 
 // File Upload
