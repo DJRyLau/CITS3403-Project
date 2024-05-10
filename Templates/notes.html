@@ -16,6 +16,9 @@
     <div class="overlay"></div>
     <!-- OPTIONS NAVBAR -->
     <nav class="navbar">
+      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" onclick="openSidenav()" aria-label="Boards Sidebar">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
       <button class="nav-button" id="about-button" aria-label="About">
         <i class="fa fa-info-circle"></i>
       </button>
@@ -25,13 +28,10 @@
     </nav>
 
     <!-- BOARDS SIDEBAR -->
-    <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" onclick="openSidenav()" aria-label="Boards Sidebar">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
     <div id="side-navbar" class="side-navbar">
       <button class="close-sidebar" id="close-sidebar">&times;</button>
       <div class="draggable-bar" id="draggable-bar"></div>
-      <div class="sidebar-title">Your Boards</div>
+      <div class="sidebar-title">Boards</div>
       <div class="boards-container" id="boards-container">
         <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
         <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>

@@ -19,8 +19,10 @@ body {
 
 .navbar {
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
+  align-items: center;
   font-size: 20px;
+  padding: 10px 20px;
 }
 
 .nav-button {
@@ -60,12 +62,10 @@ body {
 
 /* The side navigation menu */
 .boards-sidebar {
-  position: fixed;
-  top: 0px;
-  height: 100vh;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .boards-sidebar-arrow-button {
@@ -74,6 +74,7 @@ body {
   border: none;
   background-color: transparent;
   transition: color 0.05s;
+  margin-right: auto; /* Keep sidenav button on the left */
 }
 
 .boards-sidebar-arrow-button:hover {
