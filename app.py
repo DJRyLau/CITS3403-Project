@@ -83,5 +83,11 @@ def logout():
     flash('You have been logged out.', 'alert-success')
     return redirect(url_for('authentication'))
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash('You must be logged in to view that page.', 'alert-error')
+    return redirect(url_for('authentication'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
