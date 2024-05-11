@@ -39,16 +39,17 @@
     </nav>
 
     <!-- BOARDS SIDEBAR -->
-    <nav class="boards-sidebar">
-      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" aria-label="Boards Sidebar">
-        <button
-        class="boards-sidebar-arrow-button"
-        id="boards-sidebar-arrow-button"
-        aria-label="Boards Sidebar"
-      >
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    </nav>
+    <div id="side-navbar" class="side-navbar">
+      <button class="close-sidebar" id="close-sidebar">&times;</button>
+      <div class="draggable-bar" id="draggable-bar"></div>
+      <div class="sidebar-title">Boards</div>
+      <div class="boards-container" id="boards-container">
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Board4</a>
+      </div>
+    </div>
     <!-- BOARD -->
 <main>
     <h1>Your Notes</h1>
