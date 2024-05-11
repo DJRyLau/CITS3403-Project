@@ -18,6 +18,15 @@ body {
   gap: 20px;
 }
 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  padding: 10px 20px;
+
+/* Side navigation bar */
+  
 .boards-sidebar {
   position: fixed;
   top: 0px;
@@ -39,13 +48,6 @@ body {
   color: #808080;
 }
 
-.navbar {
-  display: flex;
-  justify-content: right;
-  font-size: 20px;
-  padding: 10px; /* for testing purposes */
-}
-
 .nav-button {
   color: #333;
   text-decoration: none;
@@ -54,7 +56,7 @@ body {
   border: none !important;
   background-color: transparent;
   transition: background-color 0.3s ease, transform 0.3s ease,
-    border-radius 0.3s ease; /* Include border-radius in the transition */
+  border-radius 0.3s ease; /* Include border-radius in the transition */
   border-radius: 50%; /* Apply consistent border-radius */
   width: 30px;
   height: 30px;
@@ -81,10 +83,93 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease; /* Smooth transition for the opacity */
 }
+  
+/* The side navigation menu */
+.boards-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
+.boards-sidebar-arrow-button {
+  font-size: 32px;
+  height: 1em;
+  border: none;
+  background-color: transparent;
+  transition: color 0.05s;
+  margin-right: auto; /* Keep sidenav button on the left */
+}
+
+.boards-sidebar-arrow-button:hover {
+  color: #808080;
+}
+
+.side-navbar {
+  height: 100%; 
+  width: 0; 
+  position: fixed; 
+  z-index: 1; 
+  top: 0;
+  left: 0;
+  background-color: #d3d3d3;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
+}
+
+.side-navbar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.side-navbar a:hover {
+  color: #2b2b2b;
+}
+
+.side-navbar .close-sidebar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 36px;
+  margin-left: 50px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+  cursor: pointer;
+}
+
+.sidebar-title {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #333;
+  font-weight: 500;
+  display: block;
+  transition: 0.3s;
+}
+
+.draggable-bar {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: #808080;
+}
+
+.navbar-board {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 8px 0;
+}
 
 /* Pop-ups */
-
 .about-pop-up {
   max-width: 800px;
   width: 90%;
@@ -169,6 +254,14 @@ body {
   font-size: 20px;
 }
 
+.about-pop-up.display-pop-up, .settings-pop-up.display-pop-up {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+  z-index: 20;
+}
+
 .scrollable-content {
   max-height: 50vh;
   overflow-y: auto;
@@ -178,7 +271,6 @@ body {
   font-size: x-large;
   font-weight: 500;
 }
-
 
 /* Toggle Switch Formatting */
 
@@ -326,7 +418,6 @@ body {
   opacity: 1;
 }
 
-
 /* Username */
 
 .username, .username-edit {
@@ -394,6 +485,10 @@ body {
 
 .settings-tab-content.active {
   display: block;
+}
+
+.display-pop-up {
+  visibility: visible;
 }
 
 .settings-toggle {
@@ -468,8 +563,6 @@ body {
   background-color: rgb(221, 221, 221);
 }
 
-
-
 h1 {
   text-align: center;
   color: #333;
@@ -527,10 +620,12 @@ h1 {
 
 body.auth-background {
   background: url("../images/3dnotes.webp");
+
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
 }
+  
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -588,6 +683,7 @@ body.auth-background {
   text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+  
 input::placeholder {
   color: rgb(255, 255, 255);
   opacity: 1;
@@ -607,7 +703,6 @@ input[type="password"] {
 button[type="submit"] {
   width: 100%;
   padding: 10px;
-
   color: white;
   border: none;
   border-radius: 4px;
@@ -617,6 +712,7 @@ button[type="submit"] {
   justify-content: center;
   align-items: center;
 }
+  
 .glow-on-hover {
     position: relative;
     display: inline-block;
@@ -641,6 +737,7 @@ button[type="submit"] {
                 0 0 15px #bb6bfc,
                 0 0 25px #bb6bfc;
 }
+  
 .glow-on-hover:active {
     background-color: transparent;
     color: black;

@@ -216,3 +216,41 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+// Event listeners for opening and closing the side navbar
+openSidebarButton.addEventListener('click', openSidenav);
+closeSidebarButton.addEventListener('click', closeSidenav);
+
+function openSidenav() {
+  isNavbarOpen = true;
+  boardsNavbar.style.width = "250px";
+}
+
+function closeSidenav() {
+  isNavbarOpen = false;
+  boardsNavbar.style.width = "0";
+}
+
+draggableBar.addEventListener('mousedown', startResize);
+
+function startResize(e) {
+  e.preventDefault();
+  isResizing = true;
+  const minWidth = 140; // Minimum width
+  const startX = e.clientX;
+  const startWidth = boardsNavbar.offsetWidth;
+
+  function resizeNavbar(e) {
+    const newWidth = startWidth + e.clientX - startX;
+    boardsNavbar.style.width = `${Math.max(minWidth, newWidth)}px`;
+  }
+
+  function stopResizeNavbar() {
+    isResizing = false;
+    window.removeEventListener('mousemove', resizeNavbar);
+    window.removeEventListener('mouseup', stopResizeNavbar);
+  }
+
+  window.addEventListener('mousemove', resizeNavbar);
+  window.addEventListener('mouseup', stopResizeNavbar);
+}

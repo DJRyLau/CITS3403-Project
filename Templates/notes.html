@@ -15,13 +15,15 @@
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/notes.css') }}"
-    /> 
+    />
   </head>
   <body>
     <div class="overlay"></div>
-
     <!-- OPTIONS NAVBAR -->
     <nav class="navbar">
+      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" onclick="openSidenav()" aria-label="Boards Sidebar">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
       <button class="nav-button" id="profile-button" aria-label="Profile">
         <i class="fa fa-user" aria-hidden="true"></i>
       </button>
@@ -35,18 +37,19 @@
         <i class="fa fa-sign-out-alt"></i>
       </a>
     </nav>
-
+    
     <!-- BOARDS SIDEBAR -->
-    <nav class="boards-sidebar">
-      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" aria-label="Boards Sidebar">
-        <button
-        class="boards-sidebar-arrow-button"
-        id="boards-sidebar-arrow-button"
-        aria-label="Boards Sidebar"
-      >
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    </nav>
+    <div id="side-navbar" class="side-navbar">
+      <button class="close-sidebar" id="close-sidebar">&times;</button>
+      <div class="draggable-bar" id="draggable-bar"></div>
+      <div class="sidebar-title">Boards</div>
+      <div class="boards-container" id="boards-container">
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Board4</a>
+      </div>
+    </div>
 
     <!-- BOARD -->
     <main>
@@ -56,7 +59,7 @@
         <i class="fa-solid fa-note-sticky"></i>
       </button>
     </main>
-
+    
     <!-- PROFILE PAGE POP-UP -->
     <div id="profile-pop-up", class="profile-pop-up">
       <header class="profile-header">
