@@ -109,8 +109,9 @@ def unauthorized():
 @login_required
 def add_note():
     content = request.form['content']
+    colour = request.form.get('color', '#ffffff')
     if content:
-        note = Note(content=content, user_id=current_user.id)
+        note = Note(content=content, color=colour, user_id=current_user.id)
         db.session.add(note)
         db.session.commit()
         flash('Note added successfully!', 'alert-success')

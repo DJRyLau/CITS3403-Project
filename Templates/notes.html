@@ -54,18 +54,18 @@
     <h1>Your Notes</h1>
     <section id="board" class="board">
         {% for note in notes %}
-        <div class="sticky-note">
-    <div class="sticky-note-header">
-        <img src="user-photo.jpg" alt="Profile Photo">
-        <span>Name</span>
-    </div>
-    <div class="sticky-note-content">{{ note.content }}</div>
-    <form action="{{ url_for('delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="delete-note-button">X</button>
-    </form>
-    <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
-</div>
+        <div class="sticky-note" style="background-color: {{ note.color }};">
+            <div class="sticky-note-header">
+                <img src="user-photo.jpg" alt="Profile Photo">
+                <span>Name</span>
+                <form action="{{ url_for('delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="delete-note-button">X</button>
+                </form>
+            </div>
+            <div class="sticky-note-content">{{ note.content }}</div>
+            <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+        </div>
         {% else %}
         <p>No notes yet.</p>
         {% endfor %}
@@ -74,6 +74,7 @@
         <i class="fa-solid fa-note-sticky"></i>
     </button>
 </main>
+
     <!-- PROFILE PAGE POP-UP -->
     <div id="profile-pop-up", class="profile-pop-up">
       <header class="profile-header">

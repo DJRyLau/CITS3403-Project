@@ -15,20 +15,35 @@ function createStickyNote() {
   note.setAttribute("contenteditable", "true");
   note.textContent = "Write your note here...";
 
+  // Create and append the color picker
+  const colorPicker = document.createElement("input");
+  colorPicker.type = "color";
+  colorPicker.value = "#ffffff"; 
+  colorPicker.style.position = "absolute";
+  colorPicker.style.right = "5px";
+  colorPicker.style.top = "5px";
+
+  colorPicker.addEventListener("input", function () {
+    note.style.backgroundColor = colorPicker.value; 
+  });
+
+  note.appendChild(colorPicker);
+
   note.addEventListener("keypress", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); 
-      saveNote(note.textContent.trim()); 
-      note.setAttribute("contenteditable", "false"); 
-      note.blur(); 
+      e.preventDefault();
+      saveNote(note.textContent.trim(), colorPicker.value); 
+      note.setAttribute("contenteditable", "false");
+      note.removeChild(colorPicker);
+      note.blur();
     }
   });
 
   board.appendChild(note);
 }
 
-function saveNote(content) {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').content; 
+function saveNote(content, color) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
   fetch("/notes/add", {
     method: "POST",
@@ -36,21 +51,24 @@ function saveNote(content) {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-CSRF-Token": csrfToken,
     },
-    body: `content=${encodeURIComponent(content)}`,
+    body: `content=${encodeURIComponent(content)}&color=${encodeURIComponent(
+      color
+    )}`,
   })
     .then((response) => {
       if (!response.ok) throw new Error("Failed to save note");
-      window.location.href = "/notes"; 
+      window.location.href = "/notes"; // Refresh the page to show all notes
     })
     .catch((error) => {
       console.error("Error saving note:", error);
     });
 }
+
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".delete-note-button").forEach((button) => {
     button.addEventListener("click", function (e) {
       if (!confirm("Are you sure you want to delete this note?")) {
-        e.preventDefault(); 
+        e.preventDefault();
       }
     });
   });
