@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
     loginForm.addEventListener("submit", (event) => {
-      event.preventDefault();
       // Yet to implement handling login  login
     });
   }
@@ -104,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const createForm = document.getElementById("create-form");
   if (createForm) {
     createForm.addEventListener("submit", (event) => {
-      event.preventDefault();
       // Yet to implement handling account creation
     });
   }
@@ -117,12 +115,17 @@ document.addEventListener("DOMContentLoaded", function () {
   var showSignin = document.getElementById("show-signin");
 
   showCreate.addEventListener("click", function (event) {
-    event.preventDefault();
+    document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+      btn.classList.remove("selected", "clicked");
+    });
     loginSection.style.display = "none";
     createSection.style.display = "block";
   });
   showSignin.addEventListener("click", function (event) {
     event.preventDefault();
+    document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+      btn.classList.remove("selected", "clicked");
+    });
     loginSection.style.display = "block";
     createSection.style.display = "none";
   });
@@ -137,11 +140,19 @@ document.addEventListener("DOMContentLoaded", function () {
   var createBtn = document.getElementById("create-btn");
   var loginSection = document.getElementById("login-section");
   var createSection = document.getElementById("create-section");
+  const loginAlertFail = document.querySelector(".alert-loginfail");
+  const registerAlertFail = document.querySelector(".alert-registerfail");
+
   closeButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      authContainer.style.display = "none";
-      aboutSection.style.display = "flex";
-    });
+        button.addEventListener("click", () => {
+          document
+            .querySelectorAll(".auth-nav .auth-toggle-btn")
+            .forEach((btn) => {
+              btn.classList.remove("selected", "clicked");
+            });
+          authContainer.style.display = "none";
+          aboutSection.style.display = "flex";
+        });
   });
 
   function showSection(showAbout) {
@@ -160,6 +171,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initially show the about section
   showSection(true);
+  // Retain login window if failed login
+  if (loginAlertFail) {
+    showSection(false);
+    loginSection.style.display = "block";
+    createSection.style.display = "none";
+  }
+  if (registerAlertFail) {
+    showSection(false);
+    loginSection.style.display = "none";
+    createSection.style.display = "block";
+  }
 
   signinBtn.addEventListener("click", function () {
     showSection(false);
@@ -171,5 +193,24 @@ document.addEventListener("DOMContentLoaded", function () {
     showSection(false);
     loginSection.style.display = "none";
     createSection.style.display = "block";
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  setTimeout(function () {
+    const alerts = document.querySelectorAll(".alert");
+    alerts.forEach(function (alert) {
+      alert.style.opacity = 0;
+    });
+  }, 5000);
+});
+//toggle button effect
+document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+      btn.classList.remove("selected", "clicked");
+    });
+    button.classList.add("selected");
+    button.classList.add("clicked");
   });
 });
