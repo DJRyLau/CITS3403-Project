@@ -1,41 +1,84 @@
 // Function to create a new sticky note
+document.addEventListener("DOMContentLoaded", function () {
+  var addNoteButton = document.getElementById("add-note-button");
+  if (addNoteButton) {
+    addNoteButton.addEventListener("click", createStickyNote);
+  }
+});
+
 function createStickyNote() {
   const board = document.getElementById("board");
+  if (!board) return;
+
   const note = document.createElement("div");
   note.classList.add("sticky-note");
-  note.style.backgroundColor = getRandomColor();
+  note.setAttribute("contenteditable", "true");
+  note.textContent = "Write your note here...";
 
-  // Add header with user and photo
-  const header = document.createElement("div");
-  header.classList.add("sticky-note-header");
-  header.innerHTML = `
-    <img src="user-photo.jpg" alt="Profile Photo">
-    <span>Name</span>
-  `;
-  note.appendChild(header);
-
-  // Add content
-  const content = document.createElement("div");
-  content.classList.add("sticky-note-content");
-  content.setAttribute("contenteditable", "true");
-  content.textContent = "Write your note here...";
-  note.appendChild(content);
-
-  // Add replies container
-  const repliesContainer = document.createElement("div");
-  repliesContainer.classList.add("sticky-note-replies");
-  note.appendChild(repliesContainer);
-
-  // Event listener for adding replies
-  content.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      addReply(note, content.textContent.trim());
-      content.textContent = ""; // Clears input after adding response
+  note.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); 
+      saveNote(note.textContent.trim()); 
+      note.setAttribute("contenteditable", "false"); 
+      note.blur(); 
     }
   });
 
   board.appendChild(note);
 }
+
+function saveNote(content) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content; 
+
+  fetch("/notes/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: `content=${encodeURIComponent(content)}`,
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to save note");
+      window.location.href = "/notes"; 
+    })
+    .catch((error) => {
+      console.error("Error saving note:", error);
+    });
+}
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".delete-note-button").forEach((button) => {
+    button.addEventListener("click", function (e) {
+      if (!confirm("Are you sure you want to delete this note?")) {
+        e.preventDefault(); 
+      }
+    });
+  });
+});
+
+
+function deleteNote(noteId) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+  fetch(`/notes/delete/${noteId}`, {
+    method: 'DELETE',
+    headers: {
+      'X-CSRF-Token': csrfToken
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      document.querySelector(`[data-note-id="${noteId}"]`).parentNode.remove(); 
+      alert('Note deleted successfully');
+    } else {
+      throw new Error('Failed to delete note');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting note:', error);
+  });
+}
+
 
 // Function to add a reply to a sticky note
 function addReply(note, replyText) {
@@ -144,15 +187,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const registerAlertFail = document.querySelector(".alert-registerfail");
 
   closeButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          document
-            .querySelectorAll(".auth-nav .auth-toggle-btn")
-            .forEach((btn) => {
-              btn.classList.remove("selected", "clicked");
-            });
-          authContainer.style.display = "none";
-          aboutSection.style.display = "flex";
-        });
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((btn) => {
+        btn.classList.remove("selected", "clicked");
+      });
+      authContainer.style.display = "none";
+      aboutSection.style.display = "flex";
+    });
   });
 
   function showSection(showAbout) {
