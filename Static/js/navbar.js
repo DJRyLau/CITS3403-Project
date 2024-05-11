@@ -217,9 +217,19 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// Side navbar
+const openSidebarButton = document.getElementById(
+  "boards-sidebar-arrow-button"
+);
+const closeSidebarButton = document.getElementById("close-sidebar");
+const boardsNavbar = document.getElementById("side-navbar");
+const draggableBar = document.getElementById("draggable-bar");
+
+let isResizing = false;
+
 // Event listeners for opening and closing the side navbar
-openSidebarButton.addEventListener('click', openSidenav);
-closeSidebarButton.addEventListener('click', closeSidenav);
+openSidebarButton.addEventListener("click", openSidenav);
+closeSidebarButton.addEventListener("click", closeSidenav);
 
 function openSidenav() {
   isNavbarOpen = true;
@@ -231,7 +241,7 @@ function closeSidenav() {
   boardsNavbar.style.width = "0";
 }
 
-draggableBar.addEventListener('mousedown', startResize);
+draggableBar.addEventListener("mousedown", startResize);
 
 function startResize(e) {
   e.preventDefault();
@@ -247,10 +257,10 @@ function startResize(e) {
 
   function stopResizeNavbar() {
     isResizing = false;
-    window.removeEventListener('mousemove', resizeNavbar);
-    window.removeEventListener('mouseup', stopResizeNavbar);
+    window.removeEventListener("mousemove", resizeNavbar);
+    window.removeEventListener("mouseup", stopResizeNavbar);
   }
 
-  window.addEventListener('mousemove', resizeNavbar);
-  window.addEventListener('mouseup', stopResizeNavbar);
+  window.addEventListener("mousemove", resizeNavbar);
+  window.addEventListener("mouseup", stopResizeNavbar);
 }
