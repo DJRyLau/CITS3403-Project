@@ -8,12 +8,14 @@ from models import User, db, Note
 from forms import LoginForm, RegisterForm, NoteForm
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 csrf = CSRFProtect(app)
 db.init_app(app)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'authentication'
@@ -137,6 +139,26 @@ def delete_note(note_id):
     db.session.commit()
     flash('Note deleted successfully!', 'alert-success')
     return redirect(url_for('get_notes'))
+
+from flask import Response
+
+@app.route('/notes/update/<int:note_id>', methods=['POST'])
+@login_required
+def update_note_position_and_size(note_id):
+    note = Note.query.get(note_id)
+    if note is None:
+        return Response("Note not found", status=404)
+    if note.user_id != current_user.id:
+        return Response("Unauthorized", status=403)
+
+    data = request.get_json()
+    note.position_x = data.get('position_x', note.position_x)
+    note.position_y = data.get('position_y', note.position_y)
+    note.width = data.get('width', note.width)
+    note.height = data.get('height', note.height)
+    db.session.commit()
+
+    return Response("Note updated successfully", status=200)
 
 
 if __name__ == '__main__':
