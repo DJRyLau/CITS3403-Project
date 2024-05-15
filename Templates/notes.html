@@ -58,7 +58,7 @@
       <h1>Your Notes</h1>
       <section id="board" class="board">
           {% for note in notes %}
-          <div class="sticky-note" style="background-color: {{ note.color }};">
+          <div class="sticky-note" id="note1" style="background-color: {{ note.color }};left: {{ note.position_x }}px; top: {{ note.position_y }}px; width: {{ note.width }}px; height: {{ note.height }}px;"data-id="{{ note.id }}">
               <div class="sticky-note-header">
                   <img src="user-photo.jpg" alt="Profile Photo">
                   <span>Name</span>

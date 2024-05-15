@@ -273,3 +273,126 @@ document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((button) => {
     button.classList.add("clicked");
   });
 });
+(function () {
+  let selectedNote = null,
+    offsetX = 0,
+    offsetY = 0,
+    isResizing = false;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const board = document.getElementById("board");
+    if (board) {
+      board.addEventListener("mousedown", function (e) {
+        if (
+          e.target.matches(".sticky-note") ||
+          e.target.closest(".sticky-note")
+        ) {
+          initiateDrag(e);
+        }
+      });
+    }
+  });
+
+function initiateDrag(e) {
+  const target = e.target.closest(".sticky-note");
+  if (!target) return;
+
+  selectedNote = target;
+  selectedNote.style.position = "absolute";
+  selectedNote.style.cursor = "grabbing";
+
+  const rect = selectedNote.getBoundingClientRect();
+  const computedStyle = window.getComputedStyle(selectedNote);
+  const borderTop = parseInt(computedStyle.borderTopWidth, 10);
+  const borderLeft = parseInt(computedStyle.borderLeftWidth, 10);
+
+  const resizeMargin = 10; 
+  const nearRightEdge = e.clientX >= rect.right - resizeMargin;
+  const nearBottomEdge = e.clientY >= rect.bottom - resizeMargin;
+
+  if (nearRightEdge || nearBottomEdge) {
+    isResizing = true;
+    selectedNote.style.cursor =
+      nearRightEdge && nearBottomEdge
+        ? "nwse-resize"
+        : nearRightEdge
+        ? "ew-resize"
+        : "ns-resize";
+    document.addEventListener("mousemove", resizeStickyNote);
+  } else {
+    // Correct the offsets by including the border widths
+    offsetX = e.clientX - (rect.left + borderLeft-32);
+    offsetY = e.clientY - (rect.top + borderTop-130);
+    document.addEventListener("mousemove", moveStickyNote);
+  }
+  document.addEventListener("mouseup", dropStickyNote);
+}
+
+  function resizeStickyNote(e) {
+    if (!selectedNote || !isResizing) return;
+
+    const minWidth = 50; // Minimum width of the note
+    const minHeight = 50; // Minimum height of the note
+
+    const rect = selectedNote.getBoundingClientRect();
+    const newWidth = e.clientX - rect.left;
+    const newHeight = e.clientY - rect.top;
+
+    if (newWidth > minWidth) selectedNote.style.width = `${newWidth}px`;
+    if (newHeight > minHeight) selectedNote.style.height = `${newHeight}px`;
+  }
+
+  function moveStickyNote(e) {
+    if (!selectedNote) return;
+
+    // Update the position of the selected note
+    selectedNote.style.left = `${e.clientX - offsetX}px`;
+    selectedNote.style.top = `${e.clientY - offsetY}px`;
+  }
+
+  function dropStickyNote() {
+    if (selectedNote) {
+      selectedNote.style.cursor = "grab";
+      document.removeEventListener("mousemove", moveStickyNote);
+      document.removeEventListener("mousemove", resizeStickyNote);
+      document.removeEventListener("mouseup", dropStickyNote);
+      saveNotePositionAndSize(selectedNote);
+      if (isResizing) {
+        saveNotePositionAndSize(selectedNote); // Save changes after resizing
+        isResizing = false;
+      }
+
+      selectedNote = null;
+    }
+  }
+
+})();
+
+function saveNotePositionAndSize(note) {
+  const id = note.dataset.id;
+  if (!id) {
+    console.error("Note ID is missing.");
+    return;
+  }
+  const rect = note.getBoundingClientRect();
+
+  fetch(`/notes/update/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify({
+      position_x: rect.left-32,
+      position_y: rect.top-130, 
+      width: rect.width,
+      height: rect.height,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to save note.");
+      return response.json();
+    })
+    .then((data) => console.log("Update successful", data))
+    .catch((error) => console.error("Error updating note:", error));
+}
