@@ -1,8 +1,8 @@
+# app/models.py
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-
-db = SQLAlchemy()
+from werkzeug.security import generate_password_hash, check_password_hash
+from . import db
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,7 +1,8 @@
+# app/forms.py
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from models import User
+from .models import User
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -18,7 +19,6 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email already registered.')
-
 
 class NoteForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
