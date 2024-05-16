@@ -22,7 +22,7 @@ def create_app(config_class=Config):
 
     login_manager.login_view = 'app.authentication'
 
-    from .models import User
+    from .models import User, Note #need to import all models here
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -30,5 +30,9 @@ def create_app(config_class=Config):
 
     from .routes import app as app_blueprint
     app.register_blueprint(app_blueprint)
+
+    #create any database tables (and file) if they don't exist:
+    with app.app_context():
+        db.create_all()
 
     return app
