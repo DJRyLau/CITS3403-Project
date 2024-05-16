@@ -36,9 +36,52 @@ function initializeSettingsTabs() {
 
   // Default to the first tab on initial load
   if (tabs.length > 0) {
-      tabs[0].click();
+    tabs[0].click();
   }
 }
+
+function savePreferences() {
+  const preferences = {
+    timezone: document.getElementById('timezone-selection').value,
+    enableEmailNotif: document.getElementById('toggle-notif').checked,
+    enableEmailNotifReply: document.getElementById('toggle-notif-reply').checked,
+    enableEmailNotifBoard: document.getElementById('toggle-notif-all-board').checked,
+    enableEmailNotifOwn: document.getElementById('toggle-notif-all-own').checked,
+    enableEmailNotifStar: document.getElementById('toggle-notif-all-star').checked,
+    privacy: document.getElementById('privacy-visibility').value,
+    profilePicture: document.getElementById('profile-picture').src,
+    username: document.getElementById('username').textContent,
+    lightDarkMode: document.getElementById('toggle-theme').checked,
+    noteColour: document.getElementById('note-colour-picker').value,
+  };
+
+  localStorage.setItem('preferences', JSON.stringify(preferences));
+}
+
+function loadPreferences() {
+  const preferences = JSON.parse(localStorage.getItem('preferences'));
+
+  if (preferences) {
+    document.getElementById('timezone-selection').value = preferences.timezone;
+    document.getElementById('toggle-notif').checked = preferences.enableEmailNotif;
+    document.getElementById('toggle-notif-reply').checked = preferences.enableEmailNotifReply;
+    document.getElementById('toggle-notif-all-board').checked = preferences.enableEmailNotifBoard;
+    document.getElementById('toggle-notif-all-own').checked = preferences.enableEmailNotifOwn;
+    document.getElementById('toggle-notif-all-star').checked = preferences.enableEmailNotifStar;
+    document.getElementById('privacy-visibility').value = preferences.privacy;
+    document.getElementById('profile-picture').src = preferences.profilePicture;
+    document.getElementById('username').textContent = preferences.username;
+    document.getElementById('toggle-theme').checked = preferences.lightDarkMode;
+    document.getElementById('note-colour-picker').value = preferences.noteColour;
+    document.querySelector('.note-sample').style.backgroundColor = preferences.noteColour;
+  } else {
+    savePreferences();
+    loadPreferences();
+  }
+}
+
+// Load preferences when the page loads
+loadPreferences();
 
 // Event listeners for pop-ups
 document.addEventListener("DOMContentLoaded", function () {
@@ -178,10 +221,10 @@ document.addEventListener("DOMContentLoaded", function () {
     changesMade = false;
     if (save) {
       unsavedChangesBar.classList.remove('display');
-      // Save Settings Logic
+      savePreferences()
     } else {
       unsavedChangesBar.classList.remove('display');
-      // Revert Settings Logic
+      loadPreferences()
     }
   }
 
@@ -190,6 +233,23 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('profile-revert-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', false));
   document.getElementById('settings-save-changes').addEventListener('click', () => saveChanges('settings-unsaved-changes-bar', true));
   document.getElementById('settings-revert-changes').addEventListener('click', () => saveChanges('settings-unsaved-changes-bar', false));
+  
+  inputs.forEach(input => {
+      input.addEventListener('change', function() {
+          document.querySelector('.unsaved-changes-bar').classList.add('display');
+      });
+  });
+
+  document.getElementById('save-changes').addEventListener('click', function() {
+      savePreferences();
+      document.querySelector('.unsaved-changes-bar').classList.remove('display');
+  });
+
+  document.getElementById('revert-changes').addEventListener('click', function() {
+      loadPreferences();
+      document.querySelector('.unsaved-changes-bar').classList.remove('display');
+  });
+
 });
 
 // File Upload
