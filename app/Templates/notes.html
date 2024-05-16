@@ -13,16 +13,19 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/notes.css') }}"> 
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/notes.css') }}"
-    /> 
+    />
   </head>
   <body>
     <div class="overlay"></div>
-
     <!-- OPTIONS NAVBAR -->
     <nav class="navbar">
+      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" onclick="openSidenav()" aria-label="Boards Sidebar">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
       <button class="nav-button" id="profile-button" aria-label="Profile">
         <i class="fa fa-user" aria-hidden="true"></i>
       </button>
@@ -32,32 +35,50 @@
       <button class="nav-button" id="settings-button" aria-label="Settings">
         <i class="fa fa-cog"></i>
       </button>
-      <a href="{{ url_for('logout') }}" class="nav-button" aria-label="Logout">
+      <a href="{{ url_for('app.logout') }}" class="nav-button" aria-label="Logout">
         <i class="fa fa-sign-out-alt"></i>
       </a>
     </nav>
-
+    
     <!-- BOARDS SIDEBAR -->
-    <nav class="boards-sidebar">
-      <button class="boards-sidebar-arrow-button" id="boards-sidebar-arrow-button" aria-label="Boards Sidebar">
-        <button
-        class="boards-sidebar-arrow-button"
-        id="boards-sidebar-arrow-button"
-        aria-label="Boards Sidebar"
-      >
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    </nav>
+    <div id="side-navbar" class="side-navbar">
+      <button class="close-sidebar" id="close-sidebar">&times;</button>
+      <div class="draggable-bar" id="draggable-bar"></div>
+      <div class="sidebar-title">Boards</div>
+      <div class="boards-container" id="boards-container">
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
+        <a class="navbar-board" href="#">Board4</a>
+      </div>
+    </div>
 
     <!-- BOARD -->
     <main>
-      <h1>Board Name Placeholder</h1>
-      <section id="board" class="board"></section>
+      <h1>Your Notes</h1>
+      <section id="board" class="board">
+          {% for note in notes %}
+          <div class="sticky-note" id="note1" style="background-color: {{ note.color }};left: {{ note.position_x }}px; top: {{ note.position_y }}px; width: {{ note.width }}px; height: {{ note.height }}px;"data-id="{{ note.id }}">
+              <div class="sticky-note-header">
+                  <img src="user-photo.jpg" alt="Profile Photo">
+                  <span>Name</span>
+                  <form action="{{ url_for('app.delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="delete-note-button">X</button>
+                  </form>
+              </div>
+              <div class="sticky-note-content">{{ note.content }}</div>
+              <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+          </div>
+          {% else %}
+          <p>No notes yet.</p>
+          {% endfor %}
+      </section>
       <button id="add-note-button" class="add-note-button">
-        <i class="fa-solid fa-note-sticky"></i>
+          <i class="fa-solid fa-note-sticky"></i>
       </button>
     </main>
-
+    
     <!-- PROFILE PAGE POP-UP -->
     <div id="profile-pop-up", class="profile-pop-up">
       <header class="profile-header">
@@ -352,7 +373,12 @@
         <button id="settings-save-changes">Save Changes</button>
       </div>
     </div>
-
+<script>
+    window.urls = {
+        addNote: '{{ url_for("app.add_note", _external=true) }}'
+    };
+    window.csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+</script>
     <script src="{{ url_for('static', filename='js/notes.js') }}"></script>
     <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
   </body>
