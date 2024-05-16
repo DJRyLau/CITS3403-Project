@@ -16,6 +16,13 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  position: relative;
+  width: 100%;
+  height: 600px;
+}
+
+.sticky-note:active {
+    cursor: grabbing;
 }
 
 .navbar {
@@ -572,14 +579,20 @@ h1 {
 }
 
 .sticky-note {
-  position: relative;
   background-color: #f8f8f8;
   border: 1px solid #ccc;
   border-radius: 10px;
-  padding: 15px;
   cursor: pointer;
   transition: transform 0.3s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+  position: absolute; 
+  resize: both; 
+  overflow: auto;
+  min-width: 100px;
+  min-height: 100px;
+  padding: 10px;
+  box-sizing: border-box;
+  cursor: grab;
 }
 
 .sticky-note:hover {

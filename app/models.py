@@ -1,8 +1,8 @@
+# app/models.py
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-
-db = SQLAlchemy()
+from werkzeug.security import generate_password_hash, check_password_hash
+from . import db
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,3 +16,7 @@ class Note(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     color = db.Column(db.String(7)) 
+    position_x = db.Column(db.Integer)
+    position_y = db.Column(db.Integer)
+    width = db.Column(db.Integer)
+    height = db.Column(db.Integer)
