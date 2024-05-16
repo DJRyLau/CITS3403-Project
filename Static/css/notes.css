@@ -53,8 +53,7 @@ body {
   font-size: 20px;
   border: none !important;
   background-color: transparent;
-  transition: background-color 0.3s ease, transform 0.3s ease,
-    border-radius 0.3s ease; /* Include border-radius in the transition */
+  transition: background-color 0.3s ease, transform 0.3s ease, border-radius 0.3s ease; /* Include border-radius in the transition */
   border-radius: 50%; /* Apply consistent border-radius */
   width: 30px;
   height: 30px;
@@ -172,6 +171,7 @@ body {
 .scrollable-content {
   max-height: 50vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .about-pop-up h1 .profile-pop-up h1 {
@@ -264,7 +264,6 @@ body {
 }
 
 .note-colour-picker::-webkit-color-swatch-wrapper {
-  border: none;
   background-color: white;
   padding: 0;
 }
@@ -401,13 +400,51 @@ body {
   display: block;
 }
 
-.settings-toggle {
+.settings-item {
   display: flex;
-  width: 100%;
+  width: 98%;
   align-items: center;
   justify-content: space-between;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.settings-button {
+  font-weight: bold;
+  background-color: white;
+  border-width: 1px;
+  border-color: #000000;
+  border-radius: 5px;
+  width: 140px;
+  height: 30px;
+  transition: background-color 0.3s ease, transform 0.3s ease, border-radius 0.3s ease;
+}
+
+.settings-button.red-outline {
+  border-color:rgb(255, 130, 130);
+  color:rgb(131, 20, 20);
+  border-width: 2px;
+}
+
+.settings-button:hover {
+  background-color: #e9e9e9;
+  transform: scale(1.05);
+}
+
+.settings-button:active {
+  background-color: #dbdbdb;
+  transform: scale(0.95);
+}
+
+.settings-dropdown {
+  font-weight: bold;
+  background-color: white;
+  border-width: 1px;
+  border-color: #000000;
+  border-radius: 5px;
+  width: 140px;
+  height: 30px;
+  transition: background-color 0.3s ease, transform 0.3s ease, border-radius 0.3s ease;
 }
 
 
