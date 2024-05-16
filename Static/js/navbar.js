@@ -40,47 +40,71 @@ function initializeSettingsTabs() {
   }
 }
 
-function savePreferences() {
+function savePreferences(csrfToken) {
   const preferences = {
-    timezone: document.getElementById('timezone-selection').value,
-    enableEmailNotif: document.getElementById('toggle-notif').checked,
-    enableEmailNotifReply: document.getElementById('toggle-notif-reply').checked,
-    enableEmailNotifBoard: document.getElementById('toggle-notif-all-board').checked,
-    enableEmailNotifOwn: document.getElementById('toggle-notif-all-own').checked,
-    enableEmailNotifStar: document.getElementById('toggle-notif-all-star').checked,
-    privacy: document.getElementById('privacy-visibility').value,
-    profilePicture: document.getElementById('profile-picture').src,
-    username: document.getElementById('username').textContent,
-    lightDarkMode: document.getElementById('toggle-theme').checked,
-    noteColour: document.getElementById('note-colour-picker').value,
+      timezone: document.getElementById('timezone-selection').value,
+      enableEmailNotif: document.getElementById('toggle-notif').checked,
+      enableEmailNotifReply: document.getElementById('toggle-notif-reply').checked,
+      enableEmailNotifBoard: document.getElementById('toggle-notif-all-board').checked,
+      enableEmailNotifOwn: document.getElementById('toggle-notif-all-own').checked,
+      enableEmailNotifStar: document.getElementById('toggle-notif-all-star').checked,
+      privacy: document.getElementById('privacy-visibility').value || 'Private',
+      profilePicture: document.getElementById('profile-picture').src,
+      username: document.getElementById('username').textContent,
+      lightDarkMode: document.getElementById('toggle-theme').checked,
+      noteColour: document.getElementById('note-colour-picker').value,
   };
 
-  localStorage.setItem('preferences', JSON.stringify(preferences));
+  console.log('Saving preferences:', preferences); // Debugging
+
+  fetch('/save_preferences', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken // Include CSRF token in the headers
+      },
+      body: JSON.stringify(preferences),
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+  })
+  .then(data => {
+      console.log('Success:', data);
+  })
+  .catch((error) => {
+      console.error('Error:', error);
+  });
 }
 
 function loadPreferences() {
-  const preferences = JSON.parse(localStorage.getItem('preferences'));
-
-  if (preferences) {
-    document.getElementById('timezone-selection').value = preferences.timezone;
-    document.getElementById('toggle-notif').checked = preferences.enableEmailNotif;
-    document.getElementById('toggle-notif-reply').checked = preferences.enableEmailNotifReply;
-    document.getElementById('toggle-notif-all-board').checked = preferences.enableEmailNotifBoard;
-    document.getElementById('toggle-notif-all-own').checked = preferences.enableEmailNotifOwn;
-    document.getElementById('toggle-notif-all-star').checked = preferences.enableEmailNotifStar;
-    document.getElementById('privacy-visibility').value = preferences.privacy;
-    document.getElementById('profile-picture').src = preferences.profilePicture;
-    document.getElementById('username').textContent = preferences.username;
-    document.getElementById('toggle-theme').checked = preferences.lightDarkMode;
-    document.getElementById('note-colour-picker').value = preferences.noteColour;
-    document.querySelector('.note-sample').style.backgroundColor = preferences.noteColour;
-  } else {
-    savePreferences();
-    loadPreferences();
-  }
+  fetch('/get_preferences')
+  .then(response => response.json())
+  .then(data => {
+    if (data) {
+      document.getElementById('timezone-selection').value = data.timezone;
+      document.getElementById('toggle-notif').checked = data.enableEmailNotif;
+      document.getElementById('toggle-notif-reply').checked = data.enableEmailNotifReply;
+      document.getElementById('toggle-notif-all-board').checked = data.enableEmailNotifBoard;
+      document.getElementById('toggle-notif-all-own').checked = data.enableEmailNotifOwn;
+      document.getElementById('toggle-notif-all-star').checked = data.enableEmailNotifStar;
+      document.getElementById('privacy-visibility').value = data.privacy;
+      document.getElementById('profile-picture').src = data.profilePicture;
+      document.getElementById('username').textContent = data.username;
+      document.getElementById('toggle-theme').checked = data.lightDarkMode;
+      document.getElementById('note-colour-picker').value = data.noteColour;
+      document.querySelector('.note-sample').style.backgroundColor = data.noteColour; // Update note sample color
+    }
+  })
+  .catch((error) => {
+      console.error('Error:', error);
+  });
 }
 
 // Load preferences when the page loads
+savePreferences();
 loadPreferences();
 
 // Event listeners for pop-ups
@@ -199,6 +223,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const profileUnsavedChangesBar = document.querySelector('.unsaved-changes-bar#profile-unsaved-changes-bar');
   const settingsUnsavedChangesBar = document.querySelector('.unsaved-changes-bar#settings-unsaved-changes-bar');
 
+  // Get CSRF token from meta tag
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
   //Detects any changes within the profile
   profileInputs.forEach(input => {
     input.addEventListener('change', function() {
@@ -214,14 +241,14 @@ document.addEventListener("DOMContentLoaded", function () {
       changesMade = true;
     }); 
   });
-
+  
   // Function to revert or save changes
   function saveChanges(barID, save) {
     const unsavedChangesBar = document.getElementById(barID);
     changesMade = false;
     if (save) {
       unsavedChangesBar.classList.remove('display');
-      savePreferences()
+      savePreferences(csrfToken)
     } else {
       unsavedChangesBar.classList.remove('display');
       loadPreferences()
@@ -233,23 +260,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('profile-revert-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', false));
   document.getElementById('settings-save-changes').addEventListener('click', () => saveChanges('settings-unsaved-changes-bar', true));
   document.getElementById('settings-revert-changes').addEventListener('click', () => saveChanges('settings-unsaved-changes-bar', false));
-  
-  inputs.forEach(input => {
-      input.addEventListener('change', function() {
-          document.querySelector('.unsaved-changes-bar').classList.add('display');
-      });
-  });
-
-  document.getElementById('save-changes').addEventListener('click', function() {
-      savePreferences();
-      document.querySelector('.unsaved-changes-bar').classList.remove('display');
-  });
-
-  document.getElementById('revert-changes').addEventListener('click', function() {
-      loadPreferences();
-      document.querySelector('.unsaved-changes-bar').classList.remove('display');
-  });
-
 });
 
 // File Upload
