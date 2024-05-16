@@ -255,18 +255,23 @@ body {
   margin-bottom: 30px;
 }
 
-.colour-selector {
+.note-colour-picker {
+  border: none;
+  background-color: white;
   width: 85px;
   height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  cursor: pointer;
 }
 
-.color-box {
-  width: 85px;
-  height: 30px;
-  border-radius: 4px;
+.note-colour-picker::-webkit-color-swatch-wrapper {
+  border: none;
+  background-color: white;
+  padding: 0;
+}
+
+.note-colour-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 10px;
 }
 
 .note-preview {

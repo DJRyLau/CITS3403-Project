@@ -152,6 +152,14 @@ document.addEventListener("DOMContentLoaded", function () {
     isEditingUsername = false;
   }
 
+  // Color Picker
+  const colorPicker = document.getElementById('note-colour-picker');
+  const noteSample = document.querySelector('.note-sample');
+
+  colorPicker.addEventListener('change', function() {
+      noteSample.style.backgroundColor = this.value;
+  });
+
   // Unsaved Changes Bar
   const profileInputs = document.querySelectorAll('.profile-pop-up input, .profile-pop-up select');
   const settingsInputs = document.querySelectorAll('.settings-pop-up input, .settings-pop-up select');
