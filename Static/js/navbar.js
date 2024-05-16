@@ -40,21 +40,10 @@ function initializeSettingsTabs() {
   }
 }
 
-// Function to revert or save changes
-function saveChanges(barID, save) {
-  const unsavedChangesBar = document.getElementById(barID);
-  if (save) {
-    unsavedChangesBar.classList.remove('display');
-    // Save Settings Logic
-  } else {
-    unsavedChangesBar.classList.remove('display');
-    // Revert Settings Logic
-  }
-}
-
 // Event listeners for pop-ups
 document.addEventListener("DOMContentLoaded", function () {
   let isEditingUsername = false;
+  let changesMade = false;
 
   // Tab Handling in Settings Pop-up
   initializeSettingsTabs();
@@ -95,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Overlay and Escape key listeners
   const overlay = document.querySelector(".overlay");
   overlay.addEventListener("click", function() {
-    if (!isEditingUsername) { // Only close pop-ups if not editing username
+    if (!isEditingUsername && !changesMade) { // Only close pop-ups if not editing username and no changes have been made
       document.querySelectorAll('.display-pop-up').forEach(popUp => {
         togglePopUp(`#${popUp.id}`, false);
       });
@@ -157,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const noteSample = document.querySelector('.note-sample');
 
   colorPicker.addEventListener('change', function() {
-      noteSample.style.backgroundColor = this.value;
+      noteSample.style.backgroundColor = this.value; // Set the note sample color
   });
 
   // Unsaved Changes Bar
@@ -171,6 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
   profileInputs.forEach(input => {
     input.addEventListener('change', function() {
       profileUnsavedChangesBar.classList.add('display');
+      changesMade = true;
     }); 
   });
 
@@ -178,8 +168,22 @@ document.addEventListener("DOMContentLoaded", function () {
   settingsInputs.forEach(input => {
     input.addEventListener('change', function() {
       settingsUnsavedChangesBar.classList.add('display');
+      changesMade = true;
     }); 
   });
+
+  // Function to revert or save changes
+  function saveChanges(barID, save) {
+    const unsavedChangesBar = document.getElementById(barID);
+    changesMade = false;
+    if (save) {
+      unsavedChangesBar.classList.remove('display');
+      // Save Settings Logic
+    } else {
+      unsavedChangesBar.classList.remove('display');
+      // Revert Settings Logic
+    }
+  }
 
   // Save or Revert Changes
   document.getElementById('profile-save-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', true));
