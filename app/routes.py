@@ -90,16 +90,20 @@ def unauthorized():
     flash('You must be logged in to view that page.', 'alert-error')
     return redirect(url_for('app.authentication'))
 
+
 @app.route('/notes/add', methods=['POST'])
 @login_required
 def add_note():
     content = request.form['content']
-    colour = request.form.get('color', '#ffffff')
+    color = request.form.get('color', '#ffffff')  
+    print("Received note content:", content)  
+    print("Received colour:", color) 
     if content:
-        note = Note(content=content, color=colour, user_id=current_user.id)
+        note = Note(content=content, color=color, user_id=current_user.id)
         db.session.add(note)
         db.session.commit()
         flash('Note added successfully!', 'alert-success')
+        return redirect(url_for('app.notes'))
     else:
         flash('Note content cannot be empty.', 'alert-error')
     return redirect(url_for('app.notes'))
@@ -127,18 +131,18 @@ def delete_note(note_id):
 def update_note_position_and_size(note_id):
     note = Note.query.get(note_id)
     if note is None:
-        return Response("Note not found", status=404)
+        return jsonify({"error": "Note not found"}), 404
     if note.user_id != current_user.id:
-        return Response("Unauthorized", status=403)
+        return jsonify({"error": "Unauthorized"}), 403
 
-    data = request.get_json()
+    data = request.get_json()  
+    print("Received update data:", data)  
     note.position_x = data.get('position_x', note.position_x)
     note.position_y = data.get('position_y', note.position_y)
     note.width = data.get('width', note.width)
     note.height = data.get('height', note.height)
     db.session.commit()
-
-    return Response("Note updated successfully", status=200)
+    return jsonify({"message": "Note updated successfully"}), 200
 
 
 @app.route('/boards/list')

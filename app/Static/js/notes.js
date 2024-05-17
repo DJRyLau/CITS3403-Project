@@ -18,13 +18,13 @@ function createStickyNote() {
   // Create and append the color picker
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
-  colorPicker.value = "#ffffff"; 
+  colorPicker.value = "#ffffff";
   colorPicker.style.position = "absolute";
   colorPicker.style.right = "5px";
   colorPicker.style.top = "5px";
 
   colorPicker.addEventListener("input", function () {
-    note.style.backgroundColor = colorPicker.value; 
+    note.style.backgroundColor = colorPicker.value;
   });
 
   note.appendChild(colorPicker);
@@ -32,7 +32,7 @@ function createStickyNote() {
   note.addEventListener("keypress", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      saveNote(note.textContent.trim(), colorPicker.value); 
+      saveNote(note.textContent.trim(), colorPicker.value);
       note.setAttribute("contenteditable", "false");
       note.removeChild(colorPicker);
       note.blur();
@@ -55,13 +55,12 @@ function saveNote(content, color) {
       color
     )}`,
   })
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to save note");
-      window.location.href = "/notes"; // Refresh the page to show all notes
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Note saved", data);
+      window.location.reload(); // Reload to see the new note
     })
-    .catch((error) => {
-      console.error("Error saving note:", error);
-    });
+    .catch((error) => console.error("Error saving note:", error));
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -74,29 +73,29 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
 function deleteNote(noteId) {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
   fetch(`/notes/delete/${noteId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'X-CSRF-Token': csrfToken
-    }
+      "X-CSRF-Token": csrfToken,
+    },
   })
-  .then(response => {
-    if (response.ok) {
-      document.querySelector(`[data-note-id="${noteId}"]`).parentNode.remove(); 
-      alert('Note deleted successfully');
-    } else {
-      throw new Error('Failed to delete note');
-    }
-  })
-  .catch(error => {
-    console.error('Error deleting note:', error);
-  });
+    .then((response) => {
+      if (response.ok) {
+        document
+          .querySelector(`[data-note-id="${noteId}"]`)
+          .parentNode.remove();
+        alert("Note deleted successfully");
+      } else {
+        throw new Error("Failed to delete note");
+      }
+    })
+    .catch((error) => {
+      console.error("Error deleting note:", error);
+    });
 }
-
 
 // Function to add a reply to a sticky note
 function addReply(note, replyText) {
@@ -293,40 +292,40 @@ document.querySelectorAll(".auth-nav .auth-toggle-btn").forEach((button) => {
     }
   });
 
-function initiateDrag(e) {
-  const target = e.target.closest(".sticky-note");
-  if (!target) return;
+  function initiateDrag(e) {
+    const target = e.target.closest(".sticky-note");
+    if (!target) return;
 
-  selectedNote = target;
-  selectedNote.style.position = "absolute";
-  selectedNote.style.cursor = "grabbing";
+    selectedNote = target;
+    selectedNote.style.position = "absolute";
+    selectedNote.style.cursor = "grabbing";
 
-  const rect = selectedNote.getBoundingClientRect();
-  const computedStyle = window.getComputedStyle(selectedNote);
-  const borderTop = parseInt(computedStyle.borderTopWidth, 10);
-  const borderLeft = parseInt(computedStyle.borderLeftWidth, 10);
+    const rect = selectedNote.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(selectedNote);
+    const borderTop = parseInt(computedStyle.borderTopWidth, 10);
+    const borderLeft = parseInt(computedStyle.borderLeftWidth, 10);
 
-  const resizeMargin = 10; 
-  const nearRightEdge = e.clientX >= rect.right - resizeMargin;
-  const nearBottomEdge = e.clientY >= rect.bottom - resizeMargin;
+    const resizeMargin = 10;
+    const nearRightEdge = e.clientX >= rect.right - resizeMargin;
+    const nearBottomEdge = e.clientY >= rect.bottom - resizeMargin;
 
-  if (nearRightEdge || nearBottomEdge) {
-    isResizing = true;
-    selectedNote.style.cursor =
-      nearRightEdge && nearBottomEdge
-        ? "nwse-resize"
-        : nearRightEdge
-        ? "ew-resize"
-        : "ns-resize";
-    document.addEventListener("mousemove", resizeStickyNote);
-  } else {
-    // Correct the offsets by including the border widths
-    offsetX = e.clientX - (rect.left + borderLeft-32);
-    offsetY = e.clientY - (rect.top + borderTop-130);
-    document.addEventListener("mousemove", moveStickyNote);
+    if (nearRightEdge || nearBottomEdge) {
+      isResizing = true;
+      selectedNote.style.cursor =
+        nearRightEdge && nearBottomEdge
+          ? "nwse-resize"
+          : nearRightEdge
+          ? "ew-resize"
+          : "ns-resize";
+      document.addEventListener("mousemove", resizeStickyNote);
+    } else {
+      // Correct the offsets by including the border widths
+      offsetX = e.clientX - (rect.left + borderLeft - 32);
+      offsetY = e.clientY - (rect.top + borderTop - 130);
+      document.addEventListener("mousemove", moveStickyNote);
+    }
+    document.addEventListener("mouseup", dropStickyNote);
   }
-  document.addEventListener("mouseup", dropStickyNote);
-}
 
   function resizeStickyNote(e) {
     if (!selectedNote || !isResizing) return;
@@ -365,7 +364,6 @@ function initiateDrag(e) {
       selectedNote = null;
     }
   }
-
 })();
 
 function saveNotePositionAndSize(note) {
@@ -383,8 +381,8 @@ function saveNotePositionAndSize(note) {
       "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
     },
     body: JSON.stringify({
-      position_x: rect.left-32,
-      position_y: rect.top-130, 
+      position_x: rect.left - 32,
+      position_y: rect.top - 130,
       width: rect.width,
       height: rect.height,
     }),
