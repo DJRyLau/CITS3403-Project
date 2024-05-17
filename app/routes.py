@@ -1,8 +1,8 @@
 # app/routes.py
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, Response
+from flask import Blueprint, render_template, redirect, session, url_for, flash, request, jsonify, Response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Note
+from .models import User, Note, Board, Access
 from .forms import LoginForm, RegisterForm, NoteForm
 from . import db, login_manager
 
@@ -139,3 +139,66 @@ def update_note_position_and_size(note_id):
     db.session.commit()
 
     return Response("Note updated successfully", status=200)
+
+
+@app.route('/boards/list')
+@login_required
+def list_boards():
+    boards = Board.query.filter_by(owner_id=current_user.id).all()
+    return render_template('list_boards.html', boards=boards)
+
+@app.route('/boards/switch/<int:board_id>', methods=['POST'])
+@login_required
+def switch_board(board_id):
+    board = Board.query.get_or_404(board_id)
+    if board.owner_id != current_user.id:
+        flash('No Access', 'error')
+        return redirect(url_for('list_boards'))
+    session['active_board_id'] = board_id
+    flash('Board switched successfully', 'success')
+    return redirect(url_for('board_details', board_id=board_id))
+
+@app.route('/boards/share', methods=['POST'])
+@login_required
+def share_board():
+    board_id = request.form.get('board_id')
+    username = request.form.get('username')
+    board = Board.query.get_or_404(board_id)
+    if board.owner_id != current_user.id:
+        flash('No Access', 'error')
+        return redirect(url_for('board_details', board_id=board_id))
+
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        flash('User not found', 'error')
+        return redirect(url_for('board_details', board_id=board_id))
+    
+    access = Access.query.filter_by(user_id=user.id, board_id=board_id).first()
+    if access:
+        db.session.delete(access)
+        flash('Access revoked', 'success')
+    else:
+        new_access = Access(user_id=user.id, board_id=board_id, can_edit=True)
+        db.session.add(new_access)
+        flash('Access granted', 'success')
+    db.session.commit()
+    return redirect(url_for('board_details', board_id=board_id))
+
+@app.route('/boards/details/<int:board_id>')
+@login_required
+def board_details(board_id):
+    board = Board.query.get_or_404(board_id)
+    if board.owner_id != current_user.id:
+        flash('No Access', 'error')
+        return redirect(url_for('list_boards'))
+    return render_template('board_details.html', board=board)
+
+@app.route('/create_board', methods=['POST'])
+@login_required
+def create_board():
+    title = request.form['title']
+    new_board = Board(title=title, owner_id=current_user.id)
+    db.session.add(new_board)
+    db.session.commit()
+    flash('Board created successfully', 'success')
+    return redirect(url_for('list_boards'))
