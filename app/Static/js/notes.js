@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".note-color-picker").forEach((picker) => {
     picker.addEventListener("input", function () {
       const noteElement = this.closest(".sticky-note");
-      if (!noteElement) return; 
+      if (!noteElement) return;
 
       const noteId = noteElement.dataset.id;
       const newColor = this.value;
@@ -121,32 +121,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  document.querySelectorAll(".sticky-note").forEach((noteElement) => {
-    noteElement.addEventListener("keypress", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        const noteId = noteElement.dataset.id;
-        const updatedContent = noteElement.textContent;
-        const updatedColor = noteElement.style.backgroundColor; 
+  document
+    .querySelectorAll(".sticky-note-content")
+    .forEach((contentElement) => {
+      contentElement.addEventListener("keypress", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault(); 
+          const noteElement = this.closest(".sticky-note");
+          const noteId = noteElement.dataset.id;
+          const updatedContent = this.textContent;
+          const updatedColor = noteElement.style.backgroundColor;
 
-        updateNoteDetails(noteId, {
-          content: updatedContent,
-          color: updatedColor,
-        });
-
-        noteElement.blur();
-      }
+          updateNoteDetails(noteId, {
+            content: updatedContent,
+            color: updatedColor,
+          });
+          this.blur(); 
+        }
+      });
     });
-  });
-
 });
 
 function updateNoteDetails(noteId, details) {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-  const noteElement = document.querySelector(
-    `.sticky-note[data-id="${noteId}"]`
-  );
-
   fetch(`/notes/update/${noteId}`, {
     method: "POST",
     headers: {
@@ -161,17 +158,19 @@ function updateNoteDetails(noteId, details) {
     })
     .then((data) => {
       console.log("Note updated successfully", data);
+      const noteElement = document.querySelector(
+        `.sticky-note[data-id="${noteId}"]`
+      );
       if (noteElement) {
-        noteElement.style.backgroundColor = details.color; 
         noteElement.querySelector(".sticky-note-content").textContent =
-          details.content; // Update content
+          details.content;
+        noteElement.style.backgroundColor = details.color;
       }
     })
     .catch((error) => {
       console.error("Error updating note:", error);
     });
 }
-
 
 function updateNoteColor(noteId, newColor) {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
