@@ -6,7 +6,7 @@ function createStickyNote() {
   const note = document.createElement("div");
   note.classList.add("sticky-note");
   note.setAttribute("contenteditable", "true");
-  note.textContent = "Write your note here...";
+  note.textContent = "Write here...";
 
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
@@ -24,7 +24,7 @@ note.addEventListener("keypress", function (e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
     saveNote(note.textContent.trim(), colorPicker.value, note);
-    note.setAttribute("contenteditable", "false");
+    //note.setAttribute("contenteditable", "false");
     note.blur();
   }
 });
@@ -108,6 +108,93 @@ function deleteNote(noteId) {
       console.error("Error deleting note:", error);
     });
 }
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".note-color-picker").forEach((picker) => {
+    picker.addEventListener("input", function () {
+      const noteElement = this.closest(".sticky-note");
+      if (!noteElement) return; 
+
+      const noteId = noteElement.dataset.id;
+      const newColor = this.value;
+      noteElement.style.backgroundColor = newColor;
+      updateNoteColor(noteId, newColor);
+    });
+  });
+
+  document.querySelectorAll(".sticky-note").forEach((noteElement) => {
+    noteElement.addEventListener("keypress", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        const noteId = noteElement.dataset.id;
+        const updatedContent = noteElement.textContent;
+        const updatedColor = noteElement.style.backgroundColor; 
+
+        updateNoteDetails(noteId, {
+          content: updatedContent,
+          color: updatedColor,
+        });
+
+        noteElement.blur();
+      }
+    });
+  });
+
+});
+
+function updateNoteDetails(noteId, details) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  const noteElement = document.querySelector(
+    `.sticky-note[data-id="${noteId}"]`
+  );
+
+  fetch(`/notes/update/${noteId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify(details),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to update note");
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Note updated successfully", data);
+      if (noteElement) {
+        noteElement.style.backgroundColor = details.color; 
+        noteElement.querySelector(".sticky-note-content").textContent =
+          details.content; // Update content
+      }
+    })
+    .catch((error) => {
+      console.error("Error updating note:", error);
+    });
+}
+
+
+function updateNoteColor(noteId, newColor) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  fetch(`/notes/update/color/${noteId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify({ color: newColor }),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to update color");
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Color updated", data);
+    })
+    .catch((error) => {
+      console.error("Error updating color:", error);
+    });
+}
+
 
 // Function to add a reply to a sticky note
 function addReply(note, replyText) {

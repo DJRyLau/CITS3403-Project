@@ -83,18 +83,20 @@
       <h1>{{ current_board_title }}</h1>
       <section id="board" class="board">
           {% for note in notes %}
-          <div class="sticky-note" id="note1" style="background-color: {{ note.color }};left: {{ note.position_x }}px; top: {{ note.position_y }}px; width: {{ note.width }}px; height: {{ note.height }}px;"data-id="{{ note.id }}">
-              <div class="sticky-note-header">
-                  <img src="user-photo.jpg" alt="Profile Photo">
-                  <span>Name</span>
-                  <form action="{{ url_for('app.delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
-                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                      <button type="submit" class="delete-note-button">X</button>
-                  </form>
-              </div>
-              <div class="sticky-note-content">{{ note.content }}</div>
-              <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
-          </div>
+          <div class="sticky-note" style="background-color: {{ note.color }}; left: {{ note.position_x }}px; top: {{ note.position_y }}px; width: {{ note.width }}px; height: {{ note.height }}px;" data-id="{{ note.id }}">
+    <div class="sticky-note-header">
+        <img src="user-photo.jpg" alt="Profile Photo">
+        <span>Name</span>
+        <form action="{{ url_for('app.delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="delete-note-button">X</button>
+        </form>
+    </div>
+    <div class="sticky-note-content" contenteditable="true">{{ note.content }}</div>
+    <input type="color" class="note-color-picker" value="{{ note.color }}" style="position: absolute; right: 5px; top: 5px;">
+    <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+</div>
+
           {% else %}
           <p>No notes yet.</p>
           {% endfor %}

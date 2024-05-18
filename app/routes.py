@@ -165,8 +165,28 @@ def update_note_position_and_size(note_id):
     note.position_y = data.get('position_y', note.position_y)
     note.width = data.get('width', note.width)
     note.height = data.get('height', note.height)
+    if 'color' in data:
+        note.color = data['color']
+    if 'content' in data:
+        note.content = data['content']
+
     db.session.commit()
     return jsonify({"message": "Note updated successfully"}), 200
+
+@app.route('/notes/update/color/<int:note_id>', methods=['POST'])
+@login_required
+def update_note_color(note_id):
+    note = Note.query.get(note_id)
+    if note is None:
+        return jsonify({"error": "Note not found"}), 404
+
+    if note.user_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.get_json()
+    note.color = data.get('color', note.color)
+    db.session.commit()
+    return jsonify({"message": "Note color updated successfully"}), 200
 
 @app.route('/boards/list', methods=['GET'])
 @login_required
