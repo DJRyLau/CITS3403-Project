@@ -1015,3 +1015,68 @@ button[type="submit"] {
     background-size: cover;
   }
 }
+
+
+
+.sidebar-title {
+
+    margin-bottom: 20px; 
+    color: #333; 
+    text-align: center; 
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+
+.grant-access-form {
+    margin-bottom: 10px; 
+}
+
+#grant-access-form .form-group,
+#create-board-form .form-group {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+#grant-access-form input[type="text"],
+#create-board-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.grant-access-button,
+.create-board-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #c300ffb4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.grant-access-button:hover,
+.create-board-button:hover {
+    background-color: #9800b3;
+}
+
+.grant-access-form h3,
+.create-board-form h3 {
+    text-align: center;
+    color: #333;
+}
+
+.create-board-form {
+    margin-top: 10px;
+}

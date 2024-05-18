@@ -394,3 +394,205 @@ function saveNotePositionAndSize(note) {
     .then((data) => console.log("Update successful", data))
     .catch((error) => console.error("Error updating note:", error));
 }
+function createNoteElement(note) {
+  const noteElement = document.createElement("div");
+  noteElement.classList.add("sticky-note");
+  noteElement.style.backgroundColor = note.color;
+  noteElement.style.left = `${note.position_x}px`;
+  noteElement.style.top = `${note.position_y}px`;
+  noteElement.style.width = `${note.width}px`;
+  noteElement.style.height = `${note.height}px`;
+  noteElement.dataset.id = note.id;
+
+  const noteHeader = document.createElement("div");
+  noteHeader.classList.add("sticky-note-header");
+
+  const profileImage = document.createElement("img");
+  profileImage.src = "user-photo.jpg"; // Update this with actual profile image if available
+  profileImage.alt = "Profile Photo";
+  noteHeader.appendChild(profileImage);
+
+  const nameSpan = document.createElement("span");
+  nameSpan.textContent = "Name"; // Replace with actual name 
+  noteHeader.appendChild(nameSpan);
+
+  const deleteForm = document.createElement("form");
+  deleteForm.classList.add("delete-note-form");
+  deleteForm.action = `/notes/delete/${note.id}`;
+  deleteForm.method = "POST";
+
+  const csrfInput = document.createElement("input");
+  csrfInput.type = "hidden";
+  csrfInput.name = "csrf_token";
+  csrfInput.value = document.querySelector('meta[name="csrf-token"]').content;
+  deleteForm.appendChild(csrfInput);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "submit";
+  deleteButton.classList.add("delete-note-button");
+  deleteButton.textContent = "X";
+  deleteForm.appendChild(deleteButton);
+
+  noteHeader.appendChild(deleteForm);
+  noteElement.appendChild(noteHeader);
+
+  const noteContent = document.createElement("div");
+  noteContent.classList.add("sticky-note-content");
+  noteContent.textContent = note.content;
+  noteElement.appendChild(noteContent);
+
+  const noteFooter = document.createElement("div");
+  noteFooter.classList.add("note-footer");
+  noteFooter.textContent = new Date(note.created_at).toLocaleString();
+  noteElement.appendChild(noteFooter);
+
+  return noteElement;
+}
+
+function fetchNotesForBoard(boardId) {
+  console.log("Fetching notes for board ID:", boardId); // Debug 
+
+  fetch(`/notes/get_by_board/${boardId}`)
+    .then((response) => response.json())
+    .then((notes) => {
+      const boardElement = document.getElementById("board");
+      boardElement.innerHTML = ""; // Clear existing notes
+      console.log("Fetched notes:", notes); // Debug 
+      notes.forEach((note) => {
+        const noteElement = createNoteElement(note);
+        boardElement.appendChild(noteElement);
+      });
+    })
+    .catch((error) => console.error("Error loading notes:", error));
+}
+
+
+function switchBoard(boardId) {
+  console.log("Attempting to switch to board:", boardId); // Debug 
+
+  fetch(`/boards/switch/${boardId}`, {
+    method: "POST",
+    headers: {
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("Switched to board:", boardId); // Debug 
+        fetchNotesForBoard(boardId);
+        window.location.reload();
+
+      } else {
+        console.error("Failed to switch board:", data.message);
+      }
+    })
+    .catch((error) => console.error("Error switching board:", error));
+}
+
+
+document
+  .getElementById("create-board-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    const title = document.getElementById("new-board-title").value;
+    if (!title) {
+      alert("Please provide a title for the board.");
+      return;
+    }
+    fetch("/create_board", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')
+          .content,
+      },
+      body: `title=${encodeURIComponent(title)}`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          updateBoardList(); 
+          alert("Board created successfully!");
+          switchBoard(data.board_id);
+        } else {
+          alert(`Failed to create board: ${data.message}`);
+        }
+      })
+      .catch((error) => console.error("Error creating board:", error));
+  });
+
+function updateBoardList() {
+  fetch("/boards/list")
+    .then((response) => response.json())
+    .then((data) => {
+      const boardsContainer = document.getElementById("boards-container");
+      boardsContainer.innerHTML = ""; 
+      data.forEach((board) => {
+        const boardLink = document.createElement("a");
+        boardLink.className = "navbar-board";
+        boardLink.textContent = board.title;
+        boardLink.href = "#";
+        boardLink.onclick = () => switchBoard(board.id);
+        boardsContainer.appendChild(boardLink);
+      });
+    })
+    .catch((error) => console.error("Error fetching boards:", error));
+}
+
+
+document
+  .getElementById("grant-access-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    const userEmail = document.getElementById("user-to-grant").value;
+    const boardId = document.body.getAttribute("board-id");
+
+    console.log("Grant Access - Board ID:", boardId); // Debug 
+    console.log("Grant Access - Email:", userEmail); // Debug 
+
+    fetch("/boards/share", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')
+          .content,
+      },
+      body: `email=${encodeURIComponent(
+        userEmail
+      )}&board_id=${encodeURIComponent(boardId)}`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Access granted successfully!");
+        } else {
+          alert(`Failed to grant access: ${data.message}`);
+        }
+      })
+      .catch((error) => console.error("Error granting access:", error));
+  });
+
+
+function grantAccess(username) {
+  const boardId = document.body.getAttribute("board-id");
+  const url = `/boards/share`; 
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: `email=${encodeURIComponent(userEmail)}&boardId=${boardId}`,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("Access granted to user:", username);
+      } else {
+        console.error("Failed to grant access:", data.message);
+      }
+    })
+    .catch((error) => console.error("Error granting access:", error));
+}

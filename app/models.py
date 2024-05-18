@@ -31,6 +31,5 @@ class Access(db.Model):
 class Board(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    public = db.Column(db.Boolean, default=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     notes = db.relationship('Note', backref='board', lazy=True)
