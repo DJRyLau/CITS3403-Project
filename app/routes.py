@@ -66,6 +66,14 @@ def process_login(form):
     user = User.query.filter_by(email=form.email.data).first()
     if user and check_password_hash(user.password, form.password.data):
         login_user(user, remember=True)
+        if not user.boards:
+            # Create a default board if the user has none
+            default_board = Board(title='Default Board', owner=user)
+            db.session.add(default_board)
+            db.session.commit()
+            session['active_board_id'] = default_board.id
+        else:
+            session['active_board_id'] = user.boards[0].id 
         flash('Login successful!', 'alert-success')
         return redirect(url_for('app.notes'))
     else:
@@ -95,18 +103,25 @@ def unauthorized():
 @login_required
 def add_note():
     content = request.form['content']
-    color = request.form.get('color', '#ffffff')  
+    color = request.form.get('color', '#ffffff')
     print("Received note content:", content)  
     print("Received colour:", color) 
+    board_id = session.get('active_board_id', None)  # Get the active board ID from session
+
+    if not board_id:
+        flash('No active board selected.', 'error')
+        return redirect(url_for('app.notes'))
+
     if content:
-        note = Note(content=content, color=color, user_id=current_user.id)
+        note = Note(content=content, color=color, user_id=current_user.id, board_id=board_id)
         db.session.add(note)
         db.session.commit()
-        flash('Note added successfully!', 'alert-success')
-        return redirect(url_for('app.notes'))
+        flash('Note added successfully!', 'success')
     else:
-        flash('Note content cannot be empty.', 'alert-error')
+        flash('Note content cannot be empty.', 'error')
+
     return redirect(url_for('app.notes'))
+
 
 @app.route('/notes')
 @login_required
@@ -156,11 +171,10 @@ def list_boards():
 def switch_board(board_id):
     board = Board.query.get_or_404(board_id)
     if board.owner_id != current_user.id:
-        flash('No Access', 'error')
-        return redirect(url_for('list_boards'))
+        return jsonify({'message': 'No Access'}), 403
     session['active_board_id'] = board_id
-    flash('Board switched successfully', 'success')
-    return redirect(url_for('board_details', board_id=board_id))
+    return jsonify({'message': 'Board switched successfully'})
+
 
 @app.route('/boards/share', methods=['POST'])
 @login_required
@@ -206,3 +220,9 @@ def create_board():
     db.session.commit()
     flash('Board created successfully', 'success')
     return redirect(url_for('list_boards'))
+
+@app.route('/debug/notes')
+def debug_notes():
+    notes = Note.query.all()  # Gets all notes
+    notes_data = [{'id': note.id, 'content': note.content, 'board_id': note.board_id} for note in notes]
+    return jsonify(notes_data) 
