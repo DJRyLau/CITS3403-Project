@@ -1,11 +1,4 @@
 // Function to create a new sticky note
-document.addEventListener("DOMContentLoaded", function () {
-  var addNoteButton = document.getElementById("add-note-button");
-  if (addNoteButton) {
-    addNoteButton.addEventListener("click", createStickyNote);
-  }
-});
-
 function createStickyNote() {
   const board = document.getElementById("board");
   if (!board) return;
@@ -15,34 +8,33 @@ function createStickyNote() {
   note.setAttribute("contenteditable", "true");
   note.textContent = "Write your note here...";
 
-  // Create and append the color picker
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
   colorPicker.value = "#ffffff";
   colorPicker.style.position = "absolute";
   colorPicker.style.right = "5px";
   colorPicker.style.top = "5px";
-
-  colorPicker.addEventListener("input", function () {
-    note.style.backgroundColor = colorPicker.value;
-  });
-
+  colorPicker.addEventListener(
+    "input",
+    () => (note.style.backgroundColor = colorPicker.value)
+  );
   note.appendChild(colorPicker);
 
-  note.addEventListener("keypress", function (e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      saveNote(note.textContent.trim(), colorPicker.value);
-      note.setAttribute("contenteditable", "false");
-      note.removeChild(colorPicker);
-      note.blur();
-    }
-  });
+note.addEventListener("keypress", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    saveNote(note.textContent.trim(), colorPicker.value, note);
+    note.setAttribute("contenteditable", "false");
+    note.blur();
+  }
+});
+
 
   board.appendChild(note);
 }
 
-function saveNote(content, color) {
+
+function saveNote(content, color, noteElement) {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
   fetch("/notes/add", {
@@ -55,12 +47,32 @@ function saveNote(content, color) {
       color
     )}`,
   })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Note saved", data);
-      window.location.reload(); // Reload to see the new note
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.text(); 
     })
-    .catch((error) => console.error("Error saving note:", error));
+    .then((text) => {
+      try {
+        const data = JSON.parse(text); 
+        console.log("Note saved", data);
+        noteElement.dataset.id = data.id; 
+      } catch (e) {
+        console.error("Error parsing JSON:", e);
+        console.error("Received text:", text);
+      }
+    })
+    .catch((error) => {
+      console.error("Error in fetch operation:", error);
+    });
+}
+
+function createFooterWithTimestamp(timestamp) {
+  const footer = document.createElement("div");
+  footer.classList.add("note-footer");
+  footer.textContent = new Date(timestamp).toLocaleString();
+  return footer;
 }
 
 document.addEventListener("DOMContentLoaded", function () {

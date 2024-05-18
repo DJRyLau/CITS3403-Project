@@ -117,23 +117,18 @@ def unauthorized():
 def add_note():
     content = request.form['content']
     color = request.form.get('color', '#ffffff')
-    print("Received note content:", content)  
-    print("Received colour:", color) 
     board_id = session.get('active_board_id', None)  # Get the active board ID from session
 
     if not board_id:
-        flash('No active board selected.', 'error')
-        return redirect(url_for('app.notes'))
+        return jsonify({'success': False, 'message': 'No active board selected.'}), 400
 
     if content:
         note = Note(content=content, color=color, user_id=current_user.id, board_id=board_id)
         db.session.add(note)
         db.session.commit()
-        flash('Note added successfully!', 'success')
+        return jsonify({'success': True, 'message': 'Note added successfully!', 'id': note.id}), 200
     else:
-        flash('Note content cannot be empty.', 'error')
-
-    return redirect(url_for('app.notes'))
+        return jsonify({'success': False, 'message': 'Note content cannot be empty.'}), 400
 
 @app.route('/notes')
 @login_required
