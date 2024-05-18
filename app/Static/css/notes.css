@@ -229,7 +229,7 @@ body {
 
 .profile-pop-up {
   max-width: 450px;
-  max-height: 360px;
+  max-height: 430px;
   width: 100%;
   padding: 20px;
   padding-top: 0px;
@@ -286,8 +286,10 @@ body {
   overflow-x: hidden;
 }
 
-.about-pop-up h1 .profile-pop-up h1 {
+.about-pop-up h1 {
   font-size: x-large;
+  text-align: center;
+  color: var(--popup-text-color);
   font-weight: 500;
 }
 
@@ -387,15 +389,12 @@ body {
 }
 
 .note-preview {
+  width: 250px;
+  height: 250px;
   max-width: 250px;
   max-height: 250px;
 }
 
-.note-sample {
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #f4f4f8;
-}
 
 
 /* Profile Picture */
@@ -645,6 +644,7 @@ h1 {
   min-width: 100px;
   min-height: 100px;
   padding: 10px;
+  padding-top: 70px;
   box-sizing: border-box;
   cursor: grab;
 }
@@ -654,13 +654,42 @@ h1 {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.sticky-note-header img {
+.sticky-note-header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.sticky-note-header-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.15); /* Black with low opacity */
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.sticky-note-profile-picture {
   width: 40px;
   height: 40px;
   border-radius: 50%;
 }
 
+.sticky-note-user-name {
+  color: black;
+  font-weight: bold;
+  padding-left: 10px;
+  margin-left: 10px;
+}
+
 .sticky-note-content {
+  color: black;
+  padding-top: 0px;
+  margin: 4px;
   min-height: 100px;
   overflow-y: auto;
 }
@@ -706,6 +735,28 @@ h1 {
 
 .delete-note-button:hover {
     color: darkred;
+}
+
+.color-picker-form {
+  margin-left: auto;
+}
+
+.color-picker {
+  background: none;
+  border: 2px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+  -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+  appearance: none; /* Remove default styling */
+}
+
+.color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+  border: none;
 }
 
 /* styles for authentication page */

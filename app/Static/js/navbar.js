@@ -40,6 +40,7 @@ function initializeSettingsTabs() {
   }
 }
 
+// Function to save preferences to file
 function savePreferences(csrfToken) {
   const preferences = {
     designTheme: document.getElementById('theme-selection').value,
@@ -82,6 +83,7 @@ function savePreferences(csrfToken) {
   });
 }
 
+// Function to load preferences from file
 function loadPreferences() {
   fetch('/get_preferences')
   .then(response => response.json())
@@ -98,10 +100,21 @@ function loadPreferences() {
       document.getElementById('toggle-notif-all-star').checked = data.enableEmailNotifStar;
       document.getElementById('privacy-visibility').value = data.privacy;
       document.getElementById('profile-picture').src = data.profilePicture;
+      document.getElementById('note-sample-profile-picture').src = data.profilePicture; // Load to example note
       document.getElementById('username').textContent = data.username;
+      document.getElementById('note-sample-user-name').textContent = data.username; // Load to example note
       document.getElementById('toggle-theme').checked = data.lightDarkMode;
       document.getElementById('note-colour-picker').value = data.noteColour;
-      document.querySelector('.note-sample').style.backgroundColor = data.noteColour; // Update note sample color
+      document.getElementById('note-sample').style.backgroundColor = data.noteColour; // Update note sample color
+
+      // Toggle Light/Dark mode
+      if (data.lightDarkMode) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light-mode');
+      }
     }
   })
   .catch((error) => {
@@ -110,7 +123,6 @@ function loadPreferences() {
 }
 
 // Load preferences when the page loads
-savePreferences();
 loadPreferences();
 
 // Event listeners for pop-ups

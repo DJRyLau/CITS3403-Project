@@ -85,12 +85,14 @@
           {% for item in notes %}
           <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">
               <div class="sticky-note-header">
-                  <img src="{{ item.user_photo }}" alt="Profile Photo">
-                  <span><b>{{ item.user_name }}</b></span>
+                <div class="sticky-note-header-background">
+                  <img src="{{ item.user_photo }}" alt="Profile Photo" class="sticky-note-profile-picture">
+                  <span class="sticky-note-user-name"><b>{{ item.user_name }}</b></span>
                   <form action="{{ url_for('app.delete_note', note_id=item.note.id) }}" method="POST" class="delete-note-form">
                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                       <button type="submit" class="delete-note-button">X</button>
                   </form>
+                </div>
               </div>
               <div class="sticky-note-content">{{ item.note.content }}</div>
               <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
@@ -140,9 +142,15 @@
             <input type="color" id="note-colour-picker" class="note-colour-picker" value="#ff5c5c">
           </div>
           <div class="note-preview">
-            <label>Note preview:</label>
-            <div class="note-sample"> 
-              <p class="note-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <div class="sticky-note" id="note-sample" style="width: 250px; padding-top: 4px;">
+              <div class="sticky-note-header">
+                <div class="sticky-note-header-background">
+                  <img src="{{url_for('static',filename='images/default-avatar.jpg')}}" alt="Profile Picture" class="sticky-note-profile-picture" id="note-sample-profile-picture">
+                  <span class="sticky-note-user-name" id="note-sample-user-name"><b>User</b></span>
+                </div>
+              </div> 
+              <div class="sticky-note-content"><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br><br><br></div>
+              <div class="note-footer" style="color: black;">0000-01-01 12:34:56</div>
             </div> 
           </div>
         </div>
