@@ -1,3 +1,87 @@
+// Helper function to handle color darkening
+// ^ reference: https://chatgpt.com/share/00cdf3c9-be0f-4032-b7a7-49206b88e222
+function darkenColor(hex, factor) { //factor of 0.6 would be 60% darker
+  // Convert hex to RGB
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+
+  // Then to HSL
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  // Reduce lightness
+  l = Math.max(0, l * factor);
+  return `hsl(${(h * 360).toFixed(1)}, ${(s * 100).toFixed(1)}%, ${(l * 100).toFixed(1)}%)`;
+}
+
+// Helper function to convert HSL to hex:
+// ^ reference: https://css-tricks.com/converting-color-spaces-in-javascript/
+function hslToHex(h,s,l) {
+  s /= 100;
+  l /= 100;
+
+  let c = (1 - Math.abs(2 * l - 1)) * s,
+      x = c * (1 - Math.abs((h / 60) % 2 - 1)),
+      m = l - c/2,
+      r = 0,
+      g = 0, 
+      b = 0; 
+
+  if (0 <= h && h < 60) {
+    r = c; g = x; b = 0;
+  } else if (60 <= h && h < 120) {
+    r = x; g = c; b = 0;
+  } else if (120 <= h && h < 180) {
+    r = 0; g = c; b = x;
+  } else if (180 <= h && h < 240) {
+    r = 0; g = x; b = c;
+  } else if (240 <= h && h < 300) {
+    r = x; g = 0; b = c;
+  } else if (300 <= h && h < 360) {
+    r = c; g = 0; b = x;
+  }
+  // Having obtained RGB, convert channels to hex
+  r = Math.round((r + m) * 255).toString(16);
+  g = Math.round((g + m) * 255).toString(16);
+  b = Math.round((b + m) * 255).toString(16);
+
+  // Prepend 0s, if necessary
+  if (r.length == 1)
+    r = "0" + r;
+  if (g.length == 1)
+    g = "0" + g;
+  if (b.length == 1)
+    b = "0" + b;
+
+  return "#" + r + g + b;
+}
+
+// Helper function to generate random colors with 50% saturation
+function generateRandomColor() {
+  const h = Math.floor(Math.random() * 360); // Hue from 0 to 359 degrees
+  const s = 90; // Saturation set to 90%
+  const l = 65; // Lightness set to 50%
+  return hslToHex(h, s, l);
+}
+
 // Function to create a new sticky note
 function createStickyNote() {
   const board = document.getElementById("board");
@@ -6,17 +90,39 @@ function createStickyNote() {
   const note = document.createElement("div");
   note.classList.add("sticky-note");
   note.setAttribute("contenteditable", "true");
-  note.textContent = "Write here...";
+
+  const noteHeader = document.createElement("div");
+  noteHeader.classList.add("sticky-note-header");
+  note.appendChild(noteHeader);
+
+  const noteImg = document.createElement("img");
+  // noteImg.src = "https://images.assetsdelivery.com/compings_v2/ekapanova/ekapanova2307/ekapanova230700006.jpg";
+  noteImg.src = "https://i.pinimg.com/736x/5a/2c/6b/5a2c6b852d22c9b4573f5bf058e1ef5d.jpg";
+  noteHeader.appendChild(noteImg);
+
+  const noteContent = document.createElement("div");
+  noteContent.classList.add("sticky-note-content");
+  noteContent.textContent = "Write here...";
+  note.appendChild(noteContent);
 
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
-  colorPicker.value = "#ffffff";
+  let startingColor = generateRandomColor();
+  // let startingColor = "#ffffff"
+  colorPicker.value = startingColor;
+  noteContent.style.backgroundColor = colorPicker.value;
+  let darkerColor = darkenColor(colorPicker.value, 0.6);
+  noteHeader.style.backgroundColor = darkerColor;
   colorPicker.style.position = "absolute";
   colorPicker.style.right = "5px";
   colorPicker.style.top = "5px";
   colorPicker.addEventListener(
     "input",
-    () => (note.style.backgroundColor = colorPicker.value)
+    () => {
+      noteContent.style.backgroundColor = colorPicker.value;
+      let darkerColor = darkenColor(colorPicker.value, 0.6);
+      noteHeader.style.backgroundColor = darkerColor;
+    }
   );
   note.appendChild(colorPicker);
 

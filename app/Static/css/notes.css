@@ -1,6 +1,16 @@
 :root {
   /* CSS variables */
-  --boards-sidebar-width: 32px;
+  --note-scale: 2.5; 
+  --note-margin-width: 1em;
+  --note-header-height: 1.1em;
+  --note-img-size: 1em; /* 1 x 1 */
+  --note-img-margin: 0.05em; /* 0.05 per side */
+  --note-border-width: 0.1em;
+  --note-border-radius: 0.1em;
+  /* --note-min-width: 2.2em; */
+  --note-min-height: 5.1em;
+  --note-min-width: 4.5em;
+  --note-content-padding: 0.5em;
 }
 
 body {
@@ -12,7 +22,6 @@ body {
 }
 
 .board {
-  margin-left: var(--boards-sidebar-width);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
@@ -21,8 +30,8 @@ body {
   height: 600px;
 }
 
-.sticky-note:active {
-    cursor: grabbing;
+.board p {
+  margin-left: calc(var(--note-margin-width) * var(--note-scale));
 }
 
 .navbar {
@@ -579,7 +588,27 @@ h1 {
 }
 
 .sticky-note {
-  background-color: #f8f8f8;
+  margin: calc(var(--note-margin-width) * var(--note-scale));
+
+  position: absolute;
+  resize: both;
+  overflow: auto;
+  min-width: calc(var(--note-min-width) * var(--note-scale));
+  min-height: calc(var(--note-min-height) * var(--note-scale));
+  /* padding: 10px; */
+  box-sizing: border-box;
+  cursor: grab;
+  border-style: solid;
+  border-color: #333;
+  border-width: calc(var(--note-border-width) * var(--note-scale));
+  border-radius: calc(var(--note-border-radius) * var(--note-scale));
+
+
+  /* Ensure the note's contents scale and stay positioned correctly */
+  display: flex;
+  flex-direction: column;
+
+  /* background-color: #f8f8f8;
   border: 1px solid #ccc;
   border-radius: 10px;
   cursor: pointer;
@@ -592,7 +621,7 @@ h1 {
   min-height: 100px;
   padding: 10px;
   box-sizing: border-box;
-  cursor: grab;
+  cursor: grab; */
 }
 
 .sticky-note:hover {
@@ -600,15 +629,53 @@ h1 {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+.sticky-note:active {
+  cursor: grabbing;
+}
+
+.sticky-note-header {
+  width: 100%; /* header takes full width */
+  height: calc(var(--note-header-height) * var(--note-scale));
+  position: absolute;
+  top: 0; /* positioned in the top left of the note */
+  left: 0;
+  background-color: #888
+  /* border-style: solid; */
+  /* border-color: #333; */
+  /* border-top: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-left: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-right: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-bottom: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-radius: calc(var(--note-border-radius) * var(--note-scale)); */
+}
+
 .sticky-note-header img {
-  width: 40px;
-  height: 40px;
+  width: calc(var(--note-img-size) * var(--note-scale));
+  height: calc(var(--note-img-size) * var(--note-scale));
+  margin: calc(var(--note-img-margin) * var(--note-scale));
   border-radius: 50%;
 }
 
 .sticky-note-content {
-  min-height: 100px;
+
+  width: 100%; /* Content takes full width */
+  /* flex-grow: 1; */ /* Content takes the remaining space */
+  /* height: calc(100% * ((var(--note-min-height) - var(--note-header-height)) / var(--note-min-height))); */
+  height: calc(100% - (var(--note-header-height) * var(--note-scale)));
+  position: absolute;
+  top: calc(var(--note-header-height) * var(--note-scale)); /* positioned below the header */
   overflow-y: auto;
+  background-color: #ccc;
+  padding-bottom: calc(var(--note-content-padding) * var(--note-scale));
+  /* border-style: solid; */
+  /* border-color: #333; */
+  /* border-top: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-left: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-right: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-bottom: calc(var(--note-border-width) * var(--note-scale)); */
+  /* border-radius: calc(var(--note-border-radius) * var(--note-scale)); */
+  /* min-height: 100px;
+  overflow-y: auto; */
 }
 
 .add-note-button {
