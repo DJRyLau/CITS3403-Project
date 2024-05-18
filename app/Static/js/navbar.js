@@ -91,7 +91,9 @@ function loadPreferences() {
     if (data) {
       document.getElementById('theme-selection').value = data.designTheme;
       document.getElementById('back-color-selection').value = data.designBackColor;
+      document.body.style.backgroundColor = data.designBackColor; // Load to background
       document.getElementById('panel-color-selection').value = data.designSideBarColor;
+      document.getElementById("side-navbar").style.backgroundColor = data.designSideBarColor; // Load to side navbar
       document.getElementById('timezone-selection').value = data.timezone;
       document.getElementById('toggle-notif').checked = data.enableEmailNotif;
       document.getElementById('toggle-notif-reply').checked = data.enableEmailNotifReply;
@@ -203,10 +205,18 @@ document.addEventListener("DOMContentLoaded", function () {
   editInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       username.textContent = editInput.value;
+      document.getElementById('note-sample-user-name').textContent = editInput.value; // Load to example note
       exitEditMode();
     } else if (e.key === 'Escape') {
       exitEditMode();
     }
+  });
+
+  // Save changes when the input loses focus
+  editInput.addEventListener('blur', function() {
+    username.textContent = editInput.value;
+    document.getElementById('note-sample-user-name').textContent = editInput.value; // Load to example note
+    exitEditMode();
   });
 
   function enterEditMode() {
@@ -228,10 +238,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Color Picker
   const colorPicker = document.getElementById('note-colour-picker');
-  const noteSample = document.querySelector('.note-sample');
+  const noteSample = document.getElementById('note-sample');
 
-  colorPicker.addEventListener('change', function() {
-    noteSample.style.backgroundColor = this.value; // Set the note sample color
+  colorPicker.addEventListener('input', function() {
+    noteSample.style.backgroundColor = this.value; // Update note sample color
   });
 
   // Unsaved Changes Bar
@@ -272,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loadPreferences()
     }
   }
-
+  
   // Save or Revert Changes
   document.getElementById('profile-save-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', true));
   document.getElementById('profile-revert-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', false));
@@ -308,6 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           };
           img.src = e.target.result;
+          document.getElementById('note-sample-profile-picture').src = e.target.result; // Load to example note
         };
         reader.readAsDataURL(file);
     } else {
@@ -336,52 +347,65 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Side navbar
-const openSidebarButton = document.getElementById(
-  "boards-sidebar-arrow-button"
-);
-const closeSidebarButton = document.getElementById("close-sidebar");
-const boardsNavbar = document.getElementById("side-navbar");
-const draggableBar = document.getElementById("draggable-bar");
+    // Side navbar
+  const openSidebarButton = document.getElementById(
+    "boards-sidebar-arrow-button"
+  );
+  const closeSidebarButton = document.getElementById("close-sidebar");
+  const boardsNavbar = document.getElementById("side-navbar");
+  const draggableBar = document.getElementById("draggable-bar");
 
-let isResizing = false;
+  let isResizing = false;
 
-// Event listeners for opening and closing the side navbar
-openSidebarButton.addEventListener("click", openSidenav);
-closeSidebarButton.addEventListener("click", closeSidenav);
+  // Event listeners for opening and closing the side navbar
+  openSidebarButton.addEventListener("click", openSidenav);
+  closeSidebarButton.addEventListener("click", closeSidenav);
 
-function openSidenav() {
-  isNavbarOpen = true;
-  boardsNavbar.style.width = "250px";
-}
-
-function closeSidenav() {
-  isNavbarOpen = false;
-  boardsNavbar.style.width = "0";
-}
-
-draggableBar.addEventListener("mousedown", startResize);
-
-function startResize(e) {
-  e.preventDefault();
-  isResizing = true;
-  const minWidth = 140; // Minimum width
-  const startX = e.clientX;
-  const startWidth = boardsNavbar.offsetWidth;
-
-  function resizeNavbar(e) {
-    const newWidth = startWidth + e.clientX - startX;
-    boardsNavbar.style.width = `${Math.max(minWidth, newWidth)}px`;
+  function openSidenav() {
+    isNavbarOpen = true;
+    boardsNavbar.style.width = "250px";
   }
 
-  function stopResizeNavbar() {
-    isResizing = false;
-    window.removeEventListener("mousemove", resizeNavbar);
-    window.removeEventListener("mouseup", stopResizeNavbar);
+  function closeSidenav() {
+    isNavbarOpen = false;
+    boardsNavbar.style.width = "0";
   }
 
-  window.addEventListener("mousemove", resizeNavbar);
-  window.addEventListener("mouseup", stopResizeNavbar);
-}
+  draggableBar.addEventListener("mousedown", startResize);
 
+  function startResize(e) {
+    e.preventDefault();
+    isResizing = true;
+    const minWidth = 140; // Minimum width
+    const startX = e.clientX;
+    const startWidth = boardsNavbar.offsetWidth;
+
+    function resizeNavbar(e) {
+      const newWidth = startWidth + e.clientX - startX;
+      boardsNavbar.style.width = `${Math.max(minWidth, newWidth)}px`;
+    }
+
+    function stopResizeNavbar() {
+      isResizing = false;
+      window.removeEventListener("mousemove", resizeNavbar);
+      window.removeEventListener("mouseup", stopResizeNavbar);
+    }
+
+    window.addEventListener("mousemove", resizeNavbar);
+    window.addEventListener("mouseup", stopResizeNavbar);
+  }
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const backColorPicker = document.getElementById("back-color-selection");
+  const panelColorPicker = document.getElementById("panel-color-selection");
+
+  backColorPicker.addEventListener("input", function () {
+    document.body.style.backgroundColor = backColorPicker.value;
+  });
+
+  panelColorPicker.addEventListener("input", function () {
+    document.getElementById("side-navbar").style.backgroundColor = panelColorPicker.value;
+  });
 });

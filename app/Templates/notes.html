@@ -82,24 +82,26 @@
     <main>
       <h1>{{ current_board_title }}</h1>
       <section id="board" class="board">
-          {% for item in notes %}
-          <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">
-              <div class="sticky-note-header">
-                <div class="sticky-note-header-background">
-                  <img src="{{ item.user_photo }}" alt="Profile Photo" class="sticky-note-profile-picture">
-                  <span class="sticky-note-user-name"><b>{{ item.user_name }}</b></span>
-                  <form action="{{ url_for('app.delete_note', note_id=item.note.id) }}" method="POST" class="delete-note-form">
-                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                      <button type="submit" class="delete-note-button">X</button>
-                  </form>
-                </div>
-              </div>
-              <div class="sticky-note-content">{{ item.note.content }}</div>
-              <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+        {% for item in notes %}
+        <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">
+          <div class="sticky-note-header">
+            <div class="sticky-note-header-background">
+              <img src="{{ item.user_photo }}" alt="Profile Photo" class="sticky-note-profile-picture">
+              <span class="sticky-note-user-name"><b>{{ item.user_name }}</b></span>
+              {% if item.note.user_id == user_id %}
+              <form action="{{ url_for('app.delete_note', note_id=item.note.id) }}" method="POST" class="delete-note-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="delete-note-button">X</button>
+              </form>
+              {% endif %}
+            </div>
           </div>
-          {% else %}
-          <p>No notes yet.</p>
-          {% endfor %}
+          <div class="sticky-note-content">{{ item.note.content }}</div>
+          <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+        </div>
+        {% else %}
+        <p>No notes yet.</p>
+        {% endfor %}
       </section>
       <button id="add-note-button" class="add-note-button">
           <i class="fa-solid fa-note-sticky"></i>

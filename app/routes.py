@@ -83,7 +83,7 @@ def notes():
         for note in notes
     ]
         
-    return render_template('notes.html', notes=notes_with_user_data, form=form, boards=boards, current_board_title=current_board_title)
+    return render_template('notes.html', notes=notes_with_user_data, form=form, boards=boards, current_board_title=current_board_title, user_id=current_user.id)
 
 
 def process_login(form):
@@ -154,7 +154,7 @@ def delete_note(note_id):
     if note.user_id != current_user.id:
         flash('Permission denied', 'alert-error')
         return redirect(url_for('get_notes'))
-    db.session.delete(note)
+    db.session.delete(note) 
     db.session.commit()
     flash('Note deleted successfully!', 'alert-success')
     return redirect(url_for('app.notes'))

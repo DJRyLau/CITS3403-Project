@@ -65,6 +65,7 @@ function createStickyNote() {
       saveNote(noteContent.textContent.trim(), colorPicker.value, note);
       noteContent.setAttribute("contenteditable", "false");
       noteContent.blur();
+      colorPicker.remove();
     }
   });
 
@@ -595,6 +596,17 @@ function createNoteElement(note) {
 
   return noteElement;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const noteFooters = document.querySelectorAll('.note-footer');
+  noteFooters.forEach(footer => {
+    const createdAt = footer.getAttribute('data-created-at');
+    if (createdAt) {
+      const date = new Date(createdAt);
+      footer.textContent = date.toLocaleString();
+    }
+  });
+});
 
 function fetchNotesForBoard(boardId) {
   console.log("Fetching notes for board ID:", boardId); // Debug 
