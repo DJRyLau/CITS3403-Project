@@ -5,17 +5,17 @@ function togglePopUp(popUpId, isOpen) {
   const overlay = document.querySelector(".overlay");
   
   if (isOpen) {
-      overlay.style.display = "block";
-      setTimeout(() => {
-          overlay.style.opacity = "1";
-          popUp.classList.add("display-pop-up");
-      }, 10);
+    overlay.style.display = "block";
+    setTimeout(() => {
+      overlay.style.opacity = "1";
+      popUp.classList.add("display-pop-up");
+    }, 10);
   } else {
-      popUp.classList.remove("display-pop-up");
-      overlay.style.opacity = "0";
-      setTimeout(() => {
-          overlay.style.display = "none";
-      }, 300);
+    popUp.classList.remove("display-pop-up");
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 300);
   }
 }
 
@@ -42,40 +42,43 @@ function initializeSettingsTabs() {
 
 function savePreferences(csrfToken) {
   const preferences = {
-      timezone: document.getElementById('timezone-selection').value,
-      enableEmailNotif: document.getElementById('toggle-notif').checked,
-      enableEmailNotifReply: document.getElementById('toggle-notif-reply').checked,
-      enableEmailNotifBoard: document.getElementById('toggle-notif-all-board').checked,
-      enableEmailNotifOwn: document.getElementById('toggle-notif-all-own').checked,
-      enableEmailNotifStar: document.getElementById('toggle-notif-all-star').checked,
-      privacy: document.getElementById('privacy-visibility').value || 'Private',
-      profilePicture: document.getElementById('profile-picture').src,
-      username: document.getElementById('username').textContent,
-      lightDarkMode: document.getElementById('toggle-theme').checked,
-      noteColour: document.getElementById('note-colour-picker').value,
+    designTheme: document.getElementById('theme-selection').value,
+    designBackColor: document.getElementById('back-color-selection').value,
+    designSideBarColor: document.getElementById('panel-color-selection').value,
+    timezone: document.getElementById('timezone-selection').value,
+    enableEmailNotif: document.getElementById('toggle-notif').checked,
+    enableEmailNotifReply: document.getElementById('toggle-notif-reply').checked,
+    enableEmailNotifBoard: document.getElementById('toggle-notif-all-board').checked,
+    enableEmailNotifOwn: document.getElementById('toggle-notif-all-own').checked,
+    enableEmailNotifStar: document.getElementById('toggle-notif-all-star').checked,
+    privacy: document.getElementById('privacy-visibility').value,
+    profilePicture: document.getElementById('profile-picture').src,
+    username: document.getElementById('username').textContent,
+    lightDarkMode: document.getElementById('toggle-theme').checked,
+    noteColour: document.getElementById('note-colour-picker').value,
   };
 
   console.log('Saving preferences:', preferences); // Debugging
 
   fetch('/save_preferences', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken // Include CSRF token in the headers
-      },
-      body: JSON.stringify(preferences),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken // Include CSRF token in the headers
+    },
+    body: JSON.stringify(preferences),
   })
   .then(response => {
-      if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-      }
-      return response.json();
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json();
   })
   .then(data => {
-      console.log('Success:', data);
+    console.log('Success:', data);
   })
   .catch((error) => {
-      console.error('Error:', error);
+    console.error('Error:', error);
   });
 }
 
@@ -84,6 +87,9 @@ function loadPreferences() {
   .then(response => response.json())
   .then(data => {
     if (data) {
+      document.getElementById('theme-selection').value = data.designTheme;
+      document.getElementById('back-color-selection').value = data.designBackColor;
+      document.getElementById('panel-color-selection').value = data.designSideBarColor;
       document.getElementById('timezone-selection').value = data.timezone;
       document.getElementById('toggle-notif').checked = data.enableEmailNotif;
       document.getElementById('toggle-notif-reply').checked = data.enableEmailNotifReply;
@@ -213,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const noteSample = document.querySelector('.note-sample');
 
   colorPicker.addEventListener('change', function() {
-      noteSample.style.backgroundColor = this.value; // Set the note sample color
+    noteSample.style.backgroundColor = this.value; // Set the note sample color
   });
 
   // Unsaved Changes Bar
@@ -297,9 +303,28 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-});
 
-// Side navbar
+  const toggleThemeCheckbox = document.getElementById('toggle-theme');
+
+  // Load theme from localStorage
+  const currentTheme = localStorage.getItem('theme');
+  if (currentTheme) {
+    document.body.classList.add(currentTheme);
+    toggleThemeCheckbox.checked = currentTheme === 'dark-mode';
+  }
+
+  // Toggle theme
+  toggleThemeCheckbox.addEventListener('change', function() {
+    if (toggleThemeCheckbox.checked) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light-mode');
+    }
+  });
+
+  // Side navbar
 const openSidebarButton = document.getElementById(
   "boards-sidebar-arrow-button"
 );
@@ -346,3 +371,5 @@ function startResize(e) {
   window.addEventListener("mousemove", resizeNavbar);
   window.addEventListener("mouseup", stopResizeNavbar);
 }
+
+});

@@ -57,18 +57,18 @@
     <main>
       <h1>Your Notes</h1>
       <section id="board" class="board">
-          {% for note in notes %}
-          <div class="sticky-note" id="note1" style="background-color: {{ note.color }};left: {{ note.position_x }}px; top: {{ note.position_y }}px; width: {{ note.width }}px; height: {{ note.height }}px;"data-id="{{ note.id }}">
+          {% for item in notes %}
+          <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">
               <div class="sticky-note-header">
-                  <img src="user-photo.jpg" alt="Profile Photo">
-                  <span>Name</span>
-                  <form action="{{ url_for('app.delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
+                  <img src="{{ item.user_photo }}" alt="Profile Photo">
+                  <span><b>{{ item.user_name }}</b></span>
+                  <form action="{{ url_for('app.delete_note', note_id=item.note.id) }}" method="POST" class="delete-note-form">
                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                       <button type="submit" class="delete-note-button">X</button>
                   </form>
               </div>
-              <div class="sticky-note-content">{{ note.content }}</div>
-              <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+              <div class="sticky-note-content">{{ item.note.content }}</div>
+              <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
           </div>
           {% else %}
           <p>No notes yet.</p>
@@ -244,9 +244,30 @@
       <div class="settings-tab-content active" id="general-tab">
         <h2>General Settings</h2>
         <div class="scrollable-content" style="min-height: 250px;">
+          
           <div class="settings-item">
-            <label for="theme-selection">Theme/Appearance</label>
-            <button id="theme-selection" class="settings-button">Select Theme</button>
+            <label for="theme-selection">Theme/Pattern</label>
+            <select id="theme-selection" class="settings-dropdown">
+              <option value="default">Default</option>
+              <option value="stripes">Stripes</option>
+              <option value="squiggly">Squiggly</option>
+              <option value="dotted">Dotted</option>
+              <option value="serene">Serene</option>
+              <option value="festive">Festive</option>
+              <option value="spooky">Spooky</option>
+            </select>
+          </div>
+
+          <div class="settings-item">
+            <label for="back-color-selection">Background Colour</label>
+            <input type="color" id="back-color-selection" class="note-colour-picker" value="#ff5c5c">
+            </select>
+          </div>
+
+          <div class="settings-item">
+            <label for="panel-color-selection">Side Panel Colour</label>
+            <input type="color" id="panel-color-selection" class="note-colour-picker" value="#ff5c5c">
+            </select>
           </div>
 
           <div class="settings-item">
