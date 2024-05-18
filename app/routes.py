@@ -171,9 +171,12 @@ def list_boards():
 def switch_board(board_id):
     board = Board.query.get_or_404(board_id)
     if board.owner_id != current_user.id:
-        return jsonify({'message': 'No Access'}), 403
+        flash('No Access', 'error')
+        return redirect(url_for('list_boards'))
     session['active_board_id'] = board_id
-    return jsonify({'message': 'Board switched successfully'})
+    flash('Board switched successfully', 'success')
+    return redirect(url_for('app.notes'))
+
 
 
 @app.route('/boards/share', methods=['POST'])
@@ -181,14 +184,14 @@ def switch_board(board_id):
 def share_board():
     board_id = request.form.get('board_id')
     username = request.form.get('username')
-    board = Board.query.get_or_404(board_id)
-    if board.owner_id != current_user.id:
-        flash('No Access', 'error')
-        return redirect(url_for('board_details', board_id=board_id))
-
     user = User.query.filter_by(username=username).first()
     if not user:
         flash('User not found', 'error')
+        return redirect(url_for('board_details', board_id=board_id))
+
+    board = Board.query.get_or_404(board_id)
+    if board.owner_id != current_user.id:
+        flash('No Access', 'error')
         return redirect(url_for('board_details', board_id=board_id))
     
     access = Access.query.filter_by(user_id=user.id, board_id=board_id).first()
@@ -202,6 +205,7 @@ def share_board():
     db.session.commit()
     return redirect(url_for('board_details', board_id=board_id))
 
+
 @app.route('/boards/details/<int:board_id>')
 @login_required
 def board_details(board_id):
@@ -214,12 +218,12 @@ def board_details(board_id):
 @app.route('/create_board', methods=['POST'])
 @login_required
 def create_board():
-    title = request.form['title']
+    title = request.form.get('title', 'New Board')
     new_board = Board(title=title, owner_id=current_user.id)
     db.session.add(new_board)
     db.session.commit()
-    flash('Board created successfully', 'success')
-    return redirect(url_for('list_boards'))
+    flash('Board created successfully!', 'success')
+    return redirect(url_for('app.list_boards'))
 
 @app.route('/debug/notes')
 def debug_notes():
