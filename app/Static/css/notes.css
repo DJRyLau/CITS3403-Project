@@ -1069,3 +1069,95 @@ button[type="submit"] {
     background-size: cover;
   }
 }
+
+
+.sidebar-title {
+
+    margin-bottom: 20px; 
+    color: #333; 
+    text-align: center; 
+}
+.grant-access-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+#grant-access-form .form-group {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+#grant-access-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.grant-access-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #c300ffb4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.grant-access-button:hover {
+    background-color: #9800b3;
+}
+
+.grant-access-form-container h3 {
+    text-align: center;
+    color: #333;
+}
+
+.create-board-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 10px; 
+}
+
+#create-board-form .form-group {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+#create-board-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.create-board-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #c300ffb4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-board-button:hover {
+    background-color: #9800b3;
+}
+
+.create-board-form-container h3 {
+    text-align: center;
+    color: #333;
+}

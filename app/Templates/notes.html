@@ -19,7 +19,7 @@
       href="{{ url_for('static', filename='css/notes.css') }}"
     />
   </head>
-  <body>
+  <body board-id="{{ session.get('active_board_id', 'none') }}">
     <div class="overlay"></div>
     <!-- OPTIONS NAVBAR -->
     <nav class="navbar">
@@ -40,22 +40,47 @@
       </a>
     </nav>
     
-    <!-- BOARDS SIDEBAR -->
-    <div id="side-navbar" class="side-navbar">
-      <button class="close-sidebar" id="close-sidebar">&times;</button>
-      <div class="draggable-bar" id="draggable-bar"></div>
-      <div class="sidebar-title">Boards</div>
-      <div class="boards-container" id="boards-container">
-        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
-        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
-        <a class="navbar-board" href="#">Lorem ipsum dolor sit amet</a>
-        <a class="navbar-board" href="#">Board4</a>
-      </div>
+<!-- BOARDS SIDEBAR -->
+<div id="side-navbar" class="side-navbar">
+    <button class="close-sidebar" id="close-sidebar">&times;</button>
+    <div class="draggable-bar" id="draggable-bar"></div>
+    <div class="sidebar-title">Boards</div>
+<div class="grant-access-form-container">
+    <form id="grant-access-form">
+        <h3>Grant Access</h3>
+        <div class="form-group">
+            <input type="text" id="user-to-grant" placeholder="Enter user email" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="grant-access-button">Grant Access</button>
+        </div>
+    </form>
+</div>
+
+<div class="create-board-form-container">
+    <form id="create-board-form">
+        <h3>Create Board</h3>
+        <div class="form-group">
+            <input type="text" id="new-board-title" placeholder="Enter board title" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="create-board-button">Create Board</button>
+        </div>
+    </form>
+</div>
+
+
+
+    <div class="boards-container" id="boards-container">
+        {% for board in boards %}
+        <a class="navbar-board" href="#" onclick="switchBoard({{ board.id }})">{{ board.title }}</a>
+        {% endfor %}
     </div>
+</div>
 
     <!-- BOARD -->
     <main>
-      <h1>Your Notes</h1>
+      <h1>{{ current_board_title }}</h1>
       <section id="board" class="board">
           {% for item in notes %}
           <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">

@@ -22,7 +22,7 @@ def create_app(config_class=Config):
 
     login_manager.login_view = 'app.authentication'
 
-    from .models import User
+    from .models import User, Note, Board, Access #need to import all models here
 
     @app.before_request
     def before_request():
@@ -39,5 +39,9 @@ def create_app(config_class=Config):
     
     with app.app_context():
         db.create_all() # Generate all tables if they do not exist
+
+    #create any database tables (and file) if they don't exist:
+    with app.app_context():
+        db.create_all()
 
     return app

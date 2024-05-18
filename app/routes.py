@@ -1,8 +1,8 @@
 # app/routes.py
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, Response, session
+from flask import Blueprint, render_template, redirect, session, url_for, flash, request, jsonify, Response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Note, UserPreferences
+from .models import User, Note, Board, Access, UserPreferences
 from .forms import LoginForm, RegisterForm, NoteForm
 from . import db, login_manager
 
@@ -53,13 +53,25 @@ def authentication():
 @login_required
 def notes():
     form = NoteForm()
+    board_id = session.get('active_board_id')
+    print(f"Current active board ID: {board_id}")  # Debug statement
+
+    owned_boards = Board.query.filter_by(owner_id=current_user.id)
+    granted_access_boards = Board.query.join(Access).filter(Access.user_id == current_user.id)
+    boards = owned_boards.union(granted_access_boards).all()
+    current_board = Board.query.get(board_id) if board_id else None
+    current_board_title = current_board.title if current_board else "Your Notes"
+
     if request.method == 'POST' and form.validate_on_submit():
-        new_note = Note(content=form.content.data, user_id=current_user.id)
-        db.session.add(new_note)
-        db.session.commit()
-        flash('Note added successfully!', 'alert-success')
-        return redirect(url_for('app.notes'))
-    notes = Note.query.filter_by(user_id=current_user.id).all()
+        if board_id:
+            new_note = Note(content=form.content.data, user_id=current_user.id, board_id=board_id)
+            db.session.add(new_note)
+            db.session.commit()
+            flash('Note added successfully!', 'alert-success')
+        else:
+            flash('No board selected.', 'error')
+            
+    notes = Note.query.filter_by(board_id=board_id).all() if board_id else []
     
     # Fetch user information for formatting
     notes_with_user_data = [
@@ -70,13 +82,22 @@ def notes():
         }
         for note in notes
     ]
-    
-    return render_template('notes.html', notes=notes_with_user_data, form=form)
+        
+    return render_template('notes.html', notes=notes_with_user_data, form=form, boards=boards, current_board_title=current_board_title)
+
 
 def process_login(form):
     user = User.query.filter_by(email=form.email.data).first()
     if user and check_password_hash(user.password, form.password.data):
         login_user(user, remember=True)
+        if not user.boards:
+            # Create a default board if the user has none
+            default_board = Board(title='Default Board', owner=user)
+            db.session.add(default_board)
+            db.session.commit()
+            session['active_board_id'] = default_board.id
+        else:
+            session['active_board_id'] = user.boards[0].id 
         flash('Login successful!', 'alert-success')
         return redirect(url_for('app.notes'))
     else:
@@ -101,19 +122,24 @@ def unauthorized():
     flash('You must be logged in to view that page.', 'alert-error')
     return redirect(url_for('app.authentication'))
 
+
 @app.route('/notes/add', methods=['POST'])
 @login_required
 def add_note():
     content = request.form['content']
-    colour = request.form.get('color', '#ffffff')
+    color = request.form.get('color', '#ffffff')
+    board_id = session.get('active_board_id', None)  # Get the active board ID from session
+
+    if not board_id:
+        return jsonify({'success': False, 'message': 'No active board selected.'}), 400
+
     if content:
-        note = Note(content=content, color=colour, user_id=current_user.id)
+        note = Note(content=content, color=color, user_id=current_user.id, board_id=board_id)
         db.session.add(note)
         db.session.commit()
-        flash('Note added successfully!', 'alert-success')
+        return jsonify({'success': True, 'message': 'Note added successfully!', 'id': note.id}), 200
     else:
-        flash('Note content cannot be empty.', 'alert-error')
-    return redirect(url_for('app.notes'))
+        return jsonify({'success': False, 'message': 'Note content cannot be empty.'}), 400
 
 @app.route('/notes')
 @login_required
@@ -138,18 +164,25 @@ def delete_note(note_id):
 def update_note_position_and_size(note_id):
     note = Note.query.get(note_id)
     if note is None:
-        return Response("Note not found", status=404)
-    if note.user_id != current_user.id:
-        return Response("Unauthorized", status=403)
+        return jsonify({"error": "Note not found"}), 404
+    
+    board = Board.query.get(note.board_id)
+    access = Access.query.filter_by(user_id=current_user.id, board_id=note.board_id).first()
+    if board.owner_id != current_user.id and (access is None or not access.can_edit):
+        return jsonify({"error": "Unauthorized"}), 403
 
     data = request.get_json()
     note.position_x = data.get('position_x', note.position_x)
     note.position_y = data.get('position_y', note.position_y)
     note.width = data.get('width', note.width)
     note.height = data.get('height', note.height)
-    db.session.commit()
+    if 'color' in data:
+        note.color = data['color']
+    if 'content' in data:
+        note.content = data['content']
 
-    return Response("Note updated successfully", status=200)
+    db.session.commit()
+    return jsonify({"message": "Note updated successfully"}), 200
 
 @app.route('/save_preferences', methods=['POST'])
 def save_preferences():
@@ -241,3 +274,148 @@ def get_preferences():
         'lightDarkMode': preferences.light_dark_mode,
         'noteColour': preferences.note_colour
     }), 200
+
+@app.route('/notes/update/color/<int:note_id>', methods=['POST'])
+@login_required
+def update_note_color(note_id):
+    note = Note.query.get(note_id)
+    if note is None:
+        return jsonify({"error": "Note not found"}), 404
+
+    if note.user_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.get_json()
+    note.color = data.get('color', note.color)
+    db.session.commit()
+    return jsonify({"message": "Note color updated successfully"}), 200
+
+@app.route('/boards/list', methods=['GET'])
+@login_required
+def list_boards():
+    boards = Board.query.filter_by(owner_id=current_user.id).all()
+    return render_template('notes.html', boards=boards)
+
+@app.route('/boards/switch/<int:board_id>', methods=['POST'])
+@login_required
+def switch_board(board_id):
+    board = Board.query.get_or_404(board_id)
+    access = Access.query.filter_by(user_id=current_user.id, board_id=board_id).first()
+
+    if board.owner_id != current_user.id and not access:
+        return jsonify({'success': False, 'message': 'No Access'}), 403
+
+    session['active_board_id'] = board_id
+    print(f"Switched to board ID: {session['active_board_id']}")  # Debug 
+    return jsonify({'success': True, 'board_id': board_id})
+
+@app.route('/boards/share', methods=['POST'])
+@login_required
+def share_board():
+    try:
+        board_id = request.form.get('board_id')
+        email = request.form.get('email')
+
+        print(f"Debug: Board ID = {board_id}, Email = {email}")  # Debug 
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            print("Debug: No user found with that email.")  # Debug 
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+
+        board = Board.query.get(board_id)
+        if not board:
+            print("Debug: No board found with that ID.")  # Debug 
+            return jsonify({'success': False, 'message': 'Board not found'}), 404
+
+        if board.owner_id != current_user.id:
+            print("Debug: Current user does not own the board.")  # Debug 
+            return jsonify({'success': False, 'message': 'No access to this board'}), 403
+
+        access = Access.query.filter_by(user_id=user.id, board_id=board_id).first()
+        if access:
+            db.session.delete(access)
+            db.session.commit()
+            print("Debug: Access revoked.")  # Debug 
+            return jsonify({'success': True, 'message': 'Access revoked'}), 200
+        else:
+            new_access = Access(user_id=user.id, board_id=board_id, can_edit=True) 
+            db.session.add(new_access)
+            db.session.commit()
+            print("Debug: Access granted.")  # Debug 
+            return jsonify({'success': True, 'message': 'Access granted'}), 200
+
+    except Exception as e:
+        print(f"Error: {str(e)}")  # Exception output
+        return jsonify({'success': False, 'message': 'Internal Server Error', 'error': str(e)}), 500
+
+@app.route('/boards/details/<int:board_id>', methods=['GET'])
+@login_required
+def board_details(board_id):
+    board = Board.query.get_or_404(board_id)
+    access = Access.query.filter_by(user_id=current_user.id, board_id=board_id).first()
+
+    if board.owner_id != current_user.id and not access:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    return jsonify({'id': board.id, 'title': board.title})
+
+@app.route('/create_board', methods=['POST'])
+@login_required
+def create_board():
+    title = request.form.get('title', 'New Board').strip()
+    if not title:
+        return jsonify({'success': False, 'message': 'Board title is required'}), 400
+
+    try:
+        new_board = Board(title=title, owner_id=current_user.id)
+        db.session.add(new_board)
+        db.session.commit()
+        return jsonify({'success': True, 'board_id': new_board.id, 'title': new_board.title}), 201
+    except Exception as e:
+        db.session.rollback() 
+        print("Error creating board:", str(e)) 
+        return jsonify({'success': False, 'message': 'Failed to create the board', 'error': str(e)}), 500
+
+@app.route('/notes/get_by_board/<int:board_id>', methods=['GET'])
+@login_required
+def get_notes_by_board(board_id):
+    board = Board.query.get(board_id)
+    access = Access.query.filter_by(user_id=current_user.id, board_id=board_id).first()
+
+    if board.owner_id != current_user.id and not access:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    notes = Note.query.filter_by(board_id=board_id).all()
+    notes_data = [{'id': note.id, 'content': note.content, 'color': note.color, 
+                   'position_x': note.position_x, 'position_y': note.position_y, 
+                   'width': note.width, 'height': note.height} for note in notes]
+    return jsonify(notes_data)
+
+@app.route('/debug/notes')
+def debug_notes():
+    notes = Note.query.all()  # Gets all notes
+    notes_data = [{'id': note.id, 'content': note.content, 'board_id': note.board_id} for note in notes]
+    return jsonify(notes_data) 
+@app.route('/debug/boards')
+def debug_boards():
+    boards = Board.query.all()  # Gets all boards
+    boards_data = [{'id': board.id, 'title': board.title, 'owner_id': board.owner_id} for board in boards]
+    return jsonify(boards_data)
+
+@app.route('/debug/user_boards')
+@login_required
+def debug_user_boards():
+    users_data = []
+    users = User.query.all()
+    for user in users:
+        accessed_boards = Board.query.join(Access, Access.board_id == Board.id).filter(Access.user_id == user.id).all()
+        accessed_boards = [{'board_id': board.id, 'title': board.title, 'type': 'access_granted'} for board in accessed_boards]
+
+        users_data.append({
+            'user_id': user.id,
+            'username': user.email,
+            'boards': accessed_boards  # Only show boards where access has been granted
+        })
+
+    return jsonify(users_data)
