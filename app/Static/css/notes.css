@@ -785,14 +785,20 @@ h1 {
 /* styles for authentication page */
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,900;1,900&display=swap");
 
-body.auth-background {
-  background: url("../images/3dnotes.webp");
-
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+html, body {
+    height: 100%;  /* Ensures they take full viewport height */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
-  
+
+body.auth-background {
+    background: url("../images/3dnotes.webp") no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    overflow-y: auto; /* Allows scrolling */
+    min-height: 100vh; /* Minimum height */
+}
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -989,7 +995,8 @@ button[type="submit"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
+  position: relative;  /* Use fixed to keep it centered regardless of scrolling */
+  overflow-y: auto;  /* Keep for scrollability inside the section */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(5px);
@@ -999,8 +1006,6 @@ button[type="submit"] {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  transform: translateY(0);
-  opacity: 1;
   max-width: 550px;
   border: 1px solid rgb(255, 255, 255);
   top: 50%;
@@ -1008,7 +1013,11 @@ button[type="submit"] {
   transform: translate(-50%, -50%);
   opacity: 0;
   animation: fadeInScale 0.5s ease forwards;
+  margin-top: 200px;
+  margin-left:0px;
+  margin-bottom:50px;
 }
+
 
 .close-btn {
   position: absolute;
@@ -1134,6 +1143,8 @@ button[type="submit"] {
   }
 
   .form-container {
+     position: relative;
+     overflow-y: auto;
     width: 90%;
     max-width: none;
     padding: 10px;
@@ -1141,6 +1152,8 @@ button[type="submit"] {
   body.auth-background {
     background-position: center center;
     background-size: cover;
+    position: relative;
+     overflow-y: auto;
   }
 }
 
