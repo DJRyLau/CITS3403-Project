@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Authentication</title>
+    <title>TaskHub</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/wizard-hat-favicon.ico') }}">
     <link
       href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
       rel="stylesheet"
@@ -34,11 +35,12 @@
     {% endwith %}
     <div class="about-section">
       <div class="content">
-        <h2>About TaskHub</h2>
+        <h2>Work on your to-do's, on your own, or together.</h2>
         <p>
-          Welcome to TaskHub. Here you can collaborate with others to complete
-          your tasks in the most efficient way possible.
+          Keep track of important information, share ideas with colleagues, organise your todos into boards. The possibilities are endless.
         </p>
+        <img src="{{ url_for('static', filename='images/product-use-example.png') }}" width="800px">
+        <p>Try today! Click the button up the top to create an account and get started!</p>
       </div>
     </div>
 
