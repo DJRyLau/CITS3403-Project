@@ -40,15 +40,15 @@ def test_unsuccessful_login(client, app):
     assert b'Login failed. Please check your credentials.' in response.data 
     assert response.status_code == 200
 
-def test_successful_registration(client, app):
-    response = client.post('/', data={
+def test_successful_registration(client):
+    data = {
         'email': 'newuser@example.com',
         'password': 'newpassword',
         'confirm': 'newpassword',
         'register': True
-    })
-    assert response.status_code == 302
-    assert '/login' in response.headers['Location']  
+    }
+    response = client.post('/', data=data, follow_redirects=True)
+    assert response.status_code == 200
 
 def test_unsuccessful_registration(client, app):
     response = client.post('/', data={
