@@ -44,7 +44,7 @@ function createStickyNote() {
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
   colorPicker.value = userPreferences.noteColour || "#ffffff";
-  colorPicker.classList.add("color-picker");
+  colorPicker.classList.add("note-color-picker");
 
   colorPicker.addEventListener("input", () => (note.style.backgroundColor = colorPicker.value));
   colorPickerForm.appendChild(colorPicker);
@@ -63,7 +63,7 @@ function createStickyNote() {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       saveNote(noteContent.textContent.trim(), colorPicker.value, note);
-      noteContent.setAttribute("contenteditable", "false");
+      noteContent.setAttribute("contenteditable", "true");
       noteContent.blur();
       colorPicker.remove();
     }

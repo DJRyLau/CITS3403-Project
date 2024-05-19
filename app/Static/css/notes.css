@@ -1212,3 +1212,26 @@ button[type="submit"] {
     text-align: center;
     color: #333;
 }
+.note-color-picker {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  padding: 0;
+  margin-left: 10px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;  
+  background: transparent;
+  transition: background-color 0.5s, color 0.5s;
+
+}
+
+.note-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.note-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
