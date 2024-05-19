@@ -2,6 +2,13 @@
 
 explanation of design/use
 
+**Testing Process**
+1. run the application:
+flask run
+
+2. run the tests:
+pytest
+
 **Group members**
 | UWA ID   | Name               | Github username   |
 | -------- | ------------------ | ----------------- |
