@@ -754,3 +754,47 @@ function grantAccess(username) {
     })
     .catch((error) => console.error("Error granting access:", error));
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".sticky-note").forEach((note) => {
+    const noteId = note.dataset.id;
+    fetch(`/notes/${noteId}/replies`)
+      .then((response) => response.json())
+      .then((replies) => {
+        replies.forEach((reply) => displayReply(reply, noteId));
+      })
+      .catch((error) => console.error("Error loading replies:", error));
+  });
+});
+
+function addReply(button, noteId) {
+  const replyInput = button.previousElementSibling;
+  const replyText = replyInput.value.trim();
+  if (replyText === "") return;
+
+  const data = { content: replyText };
+  fetch(`/notes/${noteId}/add_reply`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((reply) => {
+      displayReply(reply, noteId);
+      replyInput.value = "";
+    })
+    .catch((error) => console.error("Error adding reply:", error));
+}
+
+function displayReply(reply, noteId) {
+  const noteElement = document.querySelector(`#note${noteId}`);
+  const repliesContainer = noteElement.querySelector(".replies-container");
+  const replyDiv = document.createElement("div");
+  replyDiv.className = "reply";
+  replyDiv.innerHTML = `<strong>${reply.username}</strong>: ${reply.content}
+                          <div class="reply-timestamp">${reply.timestamp}</div>`;
+  repliesContainer.appendChild(replyDiv);
+}

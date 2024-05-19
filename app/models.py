@@ -53,3 +53,21 @@ class Board(db.Model):
     title = db.Column(db.String(100), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     notes = db.relationship('Note', backref='board', lazy=True)
+
+class Reply(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(1000), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    note_id = db.Column(db.Integer, db.ForeignKey('note.id'), nullable=False)
+
+    user = db.relationship('User', backref='replies')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'content': self.content,
+            'username': self.user.preferences.username if self.user.preferences else 'No Username', 
+            'timestamp': self.created_at.strftime('%Y-%m-%d %H:%M:%S'), 
+            'note_id': self.note_id
+        }

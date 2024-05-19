@@ -97,8 +97,17 @@
           {% endif %}
         </div>
       </div>
-      <div class="sticky-note-content" contenteditable="true">{{ item.note.content }}</div>
-      <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+      <div class="sticky-note-content" contenteditable="true">
+    {{ item.note.content }}
+    <div class="note-footer">
+        {{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+    </div>
+</div>
+<div class="replies-container"></div>
+    <div class="reply-input-container">
+        <input type="text" class="reply-input" placeholder="Write a reply...">
+        <button class="reply-button" onclick="addReply(this, '{{ item.note.id }}')">Reply</button>
+    </div>
     </div>
     {% else %}
     <p>No notes yet.</p>
