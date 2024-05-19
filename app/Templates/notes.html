@@ -82,24 +82,26 @@
     <main>
       <h1>{{ current_board_title }}</h1>
       <section id="board" class="board">
-          {% for note in notes %}
-          <div class="sticky-note" style="background-color: {{ note.color }}; left: {{ note.position_x }}px; top: {{ note.position_y }}px; width: {{ note.width }}px; height: {{ note.height }}px;" data-id="{{ note.id }}">
-    <div class="sticky-note-header">
-        <img src="user-photo.jpg" alt="Profile Photo">
-        <span>Name</span>
-        <form action="{{ url_for('app.delete_note', note_id=note.id) }}" method="POST" class="delete-note-form">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="delete-note-button">X</button>
-        </form>
-    </div>
-    <div class="sticky-note-content" contenteditable="true">{{ note.content }}</div>
-    <input type="color" class="note-color-picker" value="{{ note.color }}" style="position: absolute; right: 5px; top: 5px;">
-    <div class="note-footer">{{ note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
-</div>
-
-          {% else %}
-          <p>No notes yet.</p>
-          {% endfor %}
+        {% for item in notes %}
+        <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">
+          <div class="sticky-note-header">
+            <div class="sticky-note-header-background">
+              <img src="{{ item.user_photo }}" alt="Profile Photo" class="sticky-note-profile-picture">
+              <span class="sticky-note-user-name"><b>{{ item.user_name }}</b></span>
+              {% if item.note.user_id == user_id %}
+              <form action="{{ url_for('app.delete_note', note_id=item.note.id) }}" method="POST" class="delete-note-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="delete-note-button">X</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+          <div class="sticky-note-content">{{ item.note.content }}</div>
+          <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+        </div>
+        {% else %}
+        <p>No notes yet.</p>
+        {% endfor %}
       </section>
       <button id="add-note-button" class="add-note-button">
           <i class="fa-solid fa-note-sticky"></i>
@@ -117,15 +119,15 @@
       <div class="edit-profile-content">
         <div class="profile-info">
           <div class="profile-picture-container">
-            <img src="{{ url_for('static', filename='images/default-avatar.jpg') }}" alt="Profile Picture" class="profile-picture">
+            <img src="{{url_for('static',filename='images/default-avatar.jpg')}}" alt="Profile Picture" class="profile-picture" id="profile-picture">
             <div class="profile-picture-overlay">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </div>
             <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
           </div>
           <div class="username-container">
-            <span class="username" tabindex="0">User</span>
-            <input type="text" class="username-edit" value="User" style="display: none;">
+            <span class="username" id="username" tabindex="0">User</span>
+            <input type="text" class="username-edit" id="edit-usename" value="User" style="display: none;">
             <i class="fa fa-pencil username-edit-icon" aria-hidden="true"></i>
           </div>
         </div>
@@ -138,19 +140,20 @@
                   <span class="toggle-inner"></span>
               </label>
             </div>
-            <label for="note-colour"><b>Note colour</b></label>
-            <div class="note-colour">
-              <div class="colour-selector">
-                <div class="color-box blue" style="background-color: #ff5c5c;"></div>
-              </div>
-
-            </div>
+            <label for="note-colour-picker"><b>Note colour</b></label>
+            <input type="color" id="note-colour-picker" class="note-colour-picker" value="#ff5c5c">
           </div>
           <div class="note-preview">
-            <label>Note preview:</label>
-            <div class="note-sample">
-              <p class="note-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
+            <div class="sticky-note" id="note-sample" style="width: 250px; padding-top: 4px;">
+              <div class="sticky-note-header">
+                <div class="sticky-note-header-background">
+                  <img src="{{url_for('static',filename='images/default-avatar.jpg')}}" alt="Profile Picture" class="sticky-note-profile-picture" id="note-sample-profile-picture">
+                  <span class="sticky-note-user-name" id="note-sample-user-name"><b>User</b></span>
+                </div>
+              </div> 
+              <div class="sticky-note-content"><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br><br><br></div>
+              <div class="note-footer" style="color: black;">0000-01-01 12:34:56</div>
+            </div> 
           </div>
         </div>
       </div>
@@ -275,62 +278,147 @@
       <!-- SETTINGS CONTENT -->
       <div class="settings-tab-content active" id="general-tab">
         <h2>General Settings</h2>
-        <div class="scrollable-content">
-          <p>Theme</p>
-          <p>Timezone</p>
+        <div class="scrollable-content" style="min-height: 250px;">
+          
+          <div class="settings-item">
+            <label for="theme-selection">Theme/Pattern</label>
+            <select id="theme-selection" class="settings-dropdown">
+              <option value="default">Default</option>
+              <option value="stripes">Stripes</option>
+              <option value="squiggly">Squiggly</option>
+              <option value="dotted">Dotted</option>
+              <option value="serene">Serene</option>
+              <option value="festive">Festive</option>
+              <option value="spooky">Spooky</option>
+            </select>
+          </div>
+
+          <div class="settings-item">
+            <label for="back-color-selection">Background Colour</label>
+            <input type="color" id="back-color-selection" class="note-colour-picker" value="#ff5c5c">
+            </select>
+          </div>
+
+          <div class="settings-item">
+            <label for="panel-color-selection">Side Panel Colour</label>
+            <input type="color" id="panel-color-selection" class="note-colour-picker" value="#ff5c5c">
+            </select>
+          </div>
+
+          <div class="settings-item">
+            <label for="timezone-selection">Timezone</label>
+            <select id="timezone-selection" class="settings-dropdown" style="width: 200px;">
+              <option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+              <option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
+              <option value="-10:00">(GMT -10:00) Hawaii</option>
+              <option value="-09:50">(GMT -9:30) Taiohae</option>
+              <option value="-09:00">(GMT -9:00) Alaska</option>
+              <option value="-08:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+              <option value="-07:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+              <option value="-06:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+              <option value="-05:00">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+              <option value="-04:50">(GMT -4:30) Caracas</option>
+              <option value="-04:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+              <option value="-03:50">(GMT -3:30) Newfoundland</option>
+              <option value="-03:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+              <option value="-02:00">(GMT -2:00) Mid-Atlantic</option>
+              <option value="-01:00">(GMT -1:00) Azores, Cape Verde Islands</option>
+              <option value="+00:00" selected="selected">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+              <option value="+01:00">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+              <option value="+02:00">(GMT +2:00) Kaliningrad, South Africa</option>
+              <option value="+03:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+              <option value="+03:50">(GMT +3:30) Tehran</option>
+              <option value="+04:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+              <option value="+04:50">(GMT +4:30) Kabul</option>
+              <option value="+05:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+              <option value="+05:50">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+              <option value="+05:75">(GMT +5:45) Kathmandu, Pokhara</option>
+              <option value="+06:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+              <option value="+06:50">(GMT +6:30) Yangon, Mandalay</option>
+              <option value="+07:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+              <option value="+08:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+              <option value="+08:75">(GMT +8:45) Eucla</option>
+              <option value="+09:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+              <option value="+09:50">(GMT +9:30) Adelaide, Darwin</option>
+              <option value="+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+              <option value="+10:50">(GMT +10:30) Lord Howe Island</option>
+              <option value="+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+              <option value="+11:50">(GMT +11:30) Norfolk Island</option>
+              <option value="+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+              <option value="+12:75">(GMT +12:45) Chatham Islands</option>
+              <option value="+13:00">(GMT +13:00) Apia, Nukualofa</option>
+              <option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <div class="settings-tab-content" id="notifications-tab">
         <h2>Notification Settings</h2>
-        <div class="settings-toggle">
-          <label for="toggle-notif">Enable Email Notifications</label>
-          <input type="checkbox" id="toggle-notif" class="toggle-checkbox">
-          <label class="toggle-label" for="toggle-notif">
-              <span class="toggle-inner"></span>
-          </label>
-        </div>
+        <div class="scrollable-content" style="min-height: 250px;">
+          <div class="settings-item">
+            <label for="toggle-notif">Enable Email Notifications</label>
+            <input type="checkbox" id="toggle-notif" class="toggle-checkbox">
+            <label class="toggle-label" for="toggle-notif">
+                <span class="toggle-inner"></span>
+            </label>
+          </div>
 
-        <div class="settings-toggle">
-          <label for="toggle-notif-reply">Notification on Replies</label>
-          <input type="checkbox" id="toggle-notif-reply" class="toggle-checkbox">
-          <label class="toggle-label" for="toggle-notif-reply">
-              <span class="toggle-inner"></span>
-          </label>
-        </div>
+          <div class="settings-item">
+            <label for="toggle-notif-reply">Notification on Replies</label>
+            <input type="checkbox" id="toggle-notif-reply" class="toggle-checkbox">
+            <label class="toggle-label" for="toggle-notif-reply">
+                <span class="toggle-inner"></span>
+            </label>
+          </div>
 
-        <div class="settings-toggle">
-          <label for="toggle-notif-all-board">Notification on All Board Changes</label>
-          <input type="checkbox" id="toggle-notif-all-board" class="toggle-checkbox">
-          <label class="toggle-label" for="toggle-notif-all-board">
-              <span class="toggle-inner"></span>
-          </label>
-        </div>
+          <div class="settings-item">
+            <label for="toggle-notif-all-board">Notification on All Board Changes</label>
+            <input type="checkbox" id="toggle-notif-all-board" class="toggle-checkbox">
+            <label class="toggle-label" for="toggle-notif-all-board">
+                <span class="toggle-inner"></span>
+            </label>
+          </div>
 
-        <div class="settings-toggle">
-          <label for="toggle-notif-all-own">Notification on Owned Board Changes</label>
-          <input type="checkbox" id="toggle-notif-all-own" class="toggle-checkbox">
-          <label class="toggle-label" for="toggle-notif-all-own">
-              <span class="toggle-inner"></span>
-          </label>
-        </div>
+          <div class="settings-item">
+            <label for="toggle-notif-all-own">Notification on Owned Board Changes</label>
+            <input type="checkbox" id="toggle-notif-all-own" class="toggle-checkbox">
+            <label class="toggle-label" for="toggle-notif-all-own">
+                <span class="toggle-inner"></span>
+            </label>
+          </div>
 
-        <div class="settings-toggle">
-          <label for="toggle-notif-all-star">Notification on Starred Board Changes</label>
-          <input type="checkbox" id="toggle-notif-all-star" class="toggle-checkbox">
-          <label class="toggle-label" for="toggle-notif-all-star">
-              <span class="toggle-inner"></span>
-          </label>
+          <div class="settings-item">
+            <label for="toggle-notif-all-star">Notification on Starred Board Changes</label>
+            <input type="checkbox" id="toggle-notif-all-star" class="toggle-checkbox">
+            <label class="toggle-label" for="toggle-notif-all-star">
+                <span class="toggle-inner"></span>
+            </label>
+          </div>
         </div>
       </div>
       
       <div class="settings-tab-content" id="account-tab">
         <h2>Account Settings</h2>
-        <div class="scrollable-content">
-          <p>Change Password</p>
-          <p>Privacy/Profile Visibility</p>
-          <p>Log Out</p>
-          <p>Delete Account</p>
+        <div class="scrollable-content" style="min-height: 250px;">
+          <div class="settings-item">
+            <label for="change-password">Change Password</label>
+            <button id="change-password" class="settings-button">Change Password</button>
+          </div>
+
+          <div class="settings-item">
+            <label for="privacy-visibility">Privacy/Profile Visibility</label>
+            <select id="privacy-visibility" class="settings-dropdown">
+              <option value="private">Private</option>
+              <option value="followed">Followed Only</option>
+              <option value="public">Public</option>
+            </select>
+          </div>
+
+          <div class="settings-item">
+            <label for="delete-account">Delete Account</label>
+            <button id="delete-account" class="settings-button red-outline">Delete Account</button>
+          </div>
         </div>
       </div>
 
@@ -340,7 +428,6 @@
         <button id="settings-revert-changes">Revert</button>
         <button id="settings-save-changes">Save Changes</button>
       </div>
-
     </div>
 <script>
     window.urls = {

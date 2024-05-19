@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, redirect, session, url_for, flash, request, jsonify, Response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Note, Board, Access
+from .models import User, Note, Board, Access, UserPreferences
 from .forms import LoginForm, RegisterForm, NoteForm
 from . import db, login_manager
 
@@ -34,7 +34,7 @@ def authentication():
             existing_user = User.query.filter_by(email=register_form.email.data).first()
             if existing_user:
                 flash('Email already registered. Please log in or use a different email.', 'alert-registerfail')
-                return render_template('authentication.html', login_form=login_form, register_form=register_form, form_type='register')
+                return render_template('authentication.html', login_form=LoginForm(), register_form=register_form, form_type='register')
             
             if register_form.validate_on_submit():
                 response = register_user(register_form)
@@ -70,9 +70,20 @@ def notes():
             flash('Note added successfully!', 'alert-success')
         else:
             flash('No board selected.', 'error')
-
+            
     notes = Note.query.filter_by(board_id=board_id).all() if board_id else []
-    return render_template('notes.html', notes=notes, form=form, boards=boards, current_board_title=current_board_title)
+    
+    # Fetch user information for formatting
+    notes_with_user_data = [
+        {
+            'note': note,
+            'user_name': note.user.preferences.username if note.user.preferences else note.user.email,
+            'user_photo': note.user.preferences.profile_picture if note.user.preferences and note.user.preferences.profile_picture else url_for('static', filename='images/default-avatar.jpg')
+        }
+        for note in notes
+    ]
+        
+    return render_template('notes.html', notes=notes_with_user_data, form=form, boards=boards, current_board_title=current_board_title, user_id=current_user.id)
 
 
 def process_login(form):
@@ -143,7 +154,7 @@ def delete_note(note_id):
     if note.user_id != current_user.id:
         flash('Permission denied', 'alert-error')
         return redirect(url_for('get_notes'))
-    db.session.delete(note)
+    db.session.delete(note) 
     db.session.commit()
     flash('Note deleted successfully!', 'alert-success')
     return redirect(url_for('app.notes'))
@@ -172,6 +183,97 @@ def update_note_position_and_size(note_id):
 
     db.session.commit()
     return jsonify({"message": "Note updated successfully"}), 200
+
+@app.route('/save_preferences', methods=['POST'])
+def save_preferences():
+    if not current_user.is_authenticated:
+        return jsonify({"message": "User not logged in"}), 401
+
+    try:
+        data = request.get_json()
+        print("Received data:", data)
+
+        # Validate the JSON payload
+        if not data:
+            return jsonify({"message": "No data provided"}), 400
+
+        required_fields = [
+            'designTheme', 'designBackColor', 'designSideBarColor',
+            'timezone', 'enableEmailNotif', 'enableEmailNotifReply', 
+            'enableEmailNotifBoard', 'enableEmailNotifOwn', 'enableEmailNotifStar',
+            'privacy', 'profilePicture', 'username', 'lightDarkMode', 'noteColour'
+        ]
+        
+        # Check for missing fields
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            print(f"Missing fields: {missing_fields}")
+            return jsonify({"message": f"Missing fields: {missing_fields}"}), 400
+
+        user_id = current_user.id
+        preferences = UserPreferences.query.filter_by(user_id=user_id).first()
+
+        if not preferences:
+            preferences = UserPreferences(user_id=user_id)
+
+        # Assign preferences
+        preferences.designTheme = data['designTheme']
+        preferences.designBackColor = data['designBackColor']
+        preferences.designSideBarColor = data['designSideBarColor']
+        preferences.timezone = data['timezone']
+        preferences.enable_email_notif = data['enableEmailNotif']
+        preferences.enable_email_notif_reply = data['enableEmailNotifReply']
+        preferences.enable_email_notif_board = data['enableEmailNotifBoard']
+        preferences.enable_email_notif_own = data['enableEmailNotifOwn']
+        preferences.enable_email_notif_star = data['enableEmailNotifStar']
+        preferences.privacy = data['privacy']
+        preferences.profile_picture = data['profilePicture']
+        preferences.username = data['username']
+        preferences.light_dark_mode = data['lightDarkMode']
+        preferences.note_colour = data['noteColour']
+
+        db.session.add(preferences)
+        db.session.commit()
+        return jsonify({"message": "Preferences saved successfully"}), 200
+    except Exception as e:
+        print("Error:", e)  # Debugging
+        return jsonify({"message": "Failed to save preferences", "error": str(e)}), 400
+
+@app.route('/get_preferences', methods=['GET'])
+def get_preferences():
+    if not current_user.is_authenticated:
+        return jsonify({"message": "User not logged in"}), 401
+
+    user_id = current_user.id
+    preferences = UserPreferences.query.filter_by(user_id=user_id).first()
+    
+    # Create default preferences if not found
+    if not preferences:
+        preferences = UserPreferences(user_id=user_id)
+        db.session.add(preferences)
+        db.session.commit()
+
+    # Fix profile picture URL bug
+    profile_picture = preferences.profile_picture
+    if not profile_picture:
+        profile_picture = url_for('static', filename='images/default-avatar.jpg')
+
+    return jsonify({
+        'designTheme': preferences.designTheme,
+        'designBackColor': preferences.designBackColor,
+        'designSideBarColor': preferences.designSideBarColor,
+        'timezone': preferences.timezone,
+        'enableEmailNotif': preferences.enable_email_notif,
+        'enableEmailNotifReply': preferences.enable_email_notif_reply,
+        'enableEmailNotifBoard': preferences.enable_email_notif_board,
+        'enableEmailNotifOwn': preferences.enable_email_notif_own,
+        'enableEmailNotifStar': preferences.enable_email_notif_star,
+        'privacy': preferences.privacy,
+        'profilePicture': profile_picture,
+        'username': preferences.username,
+        'lightDarkMode': preferences.light_dark_mode,
+        'noteColour': preferences.note_colour
+    }), 200
 
 @app.route('/notes/update/color/<int:note_id>', methods=['POST'])
 @login_required

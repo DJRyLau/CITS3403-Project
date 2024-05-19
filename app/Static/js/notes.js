@@ -1,3 +1,20 @@
+let userPreferences = {};
+
+// Fetch user preferences
+function fetchUserPreferences() {
+  fetch('/get_preferences')
+    .then(response => response.json())
+    .then(data => {
+      userPreferences = data;
+    })
+    .catch(error => console.error('Error fetching user preferences:', error));
+}
+
+// Call this function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  fetchUserPreferences();
+});
+
 // Function to create a new sticky note
 function createStickyNote() {
   const board = document.getElementById("board");
@@ -5,30 +22,60 @@ function createStickyNote() {
 
   const note = document.createElement("div");
   note.classList.add("sticky-note");
-  note.setAttribute("contenteditable", "true");
-  note.textContent = "Write here...";
+  note.style.backgroundColor = userPreferences.noteColour || "#ffffff"; // Use user's default note color
 
+  const noteHeader = document.createElement("div");
+  noteHeader.classList.add("sticky-note-header");
+
+  const headerBackground = document.createElement("div");
+  headerBackground.classList.add("sticky-note-header-background");
+
+  const profileImage = document.createElement("img");
+  profileImage.src = userPreferences.profilePicture || "default-avatar.jpg"; // Use the user's profile picture
+  profileImage.alt = "Profile Photo";
+  profileImage.classList.add("sticky-note-profile-picture");
+
+  const nameSpan = document.createElement("span");
+  nameSpan.classList.add("sticky-note-user-name");
+  nameSpan.innerHTML = `<b>${userPreferences.username || "User"}</b>`; // Use the user's name
+
+  const colorPickerForm = document.createElement("form");
+  colorPickerForm.classList.add("color-picker-form");
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
-  colorPicker.value = "#ffffff";
-  colorPicker.style.position = "absolute";
-  colorPicker.style.right = "5px";
-  colorPicker.style.top = "5px";
-  colorPicker.addEventListener(
-    "input",
-    () => (note.style.backgroundColor = colorPicker.value)
-  );
-  note.appendChild(colorPicker);
+  colorPicker.value = userPreferences.noteColour || "#ffffff";
+  colorPicker.classList.add("color-picker");
 
-note.addEventListener("keypress", function (e) {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    saveNote(note.textContent.trim(), colorPicker.value, note);
-    //note.setAttribute("contenteditable", "false");
-    note.blur();
-  }
-});
+  colorPicker.addEventListener("input", () => (note.style.backgroundColor = colorPicker.value));
+  colorPickerForm.appendChild(colorPicker);
 
+  headerBackground.appendChild(profileImage);
+  headerBackground.appendChild(nameSpan);
+  headerBackground.appendChild(colorPickerForm);
+  noteHeader.appendChild(headerBackground);
+
+  const noteContent = document.createElement("div");
+  noteContent.classList.add("sticky-note-content");
+  noteContent.setAttribute("contenteditable", "true");
+  noteContent.textContent = "Write here...";
+
+  noteContent.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      saveNote(noteContent.textContent.trim(), colorPicker.value, note);
+      noteContent.setAttribute("contenteditable", "false");
+      noteContent.blur();
+      colorPicker.remove();
+    }
+  });
+
+  const noteFooter = document.createElement("div");
+  noteFooter.classList.add("note-footer");
+  noteFooter.textContent = new Date().toLocaleString(); // Set current date and time
+
+  note.appendChild(noteHeader);
+  note.appendChild(noteContent);
+  note.appendChild(noteFooter);
 
   board.appendChild(note);
 }
@@ -58,6 +105,7 @@ function saveNote(content, color, noteElement) {
         const data = JSON.parse(text); 
         console.log("Note saved", data);
         noteElement.dataset.id = data.id; 
+        saveNotePositionAndSize(noteElement)
       } catch (e) {
         console.error("Error parsing JSON:", e);
         console.error("Received text:", text);
@@ -108,6 +156,7 @@ function deleteNote(noteId) {
       console.error("Error deleting note:", error);
     });
 }
+
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".note-color-picker").forEach((picker) => {
     picker.addEventListener("input", function () {
@@ -506,12 +555,12 @@ function createNoteElement(note) {
   noteHeader.classList.add("sticky-note-header");
 
   const profileImage = document.createElement("img");
-  profileImage.src = "user-photo.jpg"; // Update this with actual profile image if available
+  profileImage.src = "user-photo.jpg"; // Updates automatically
   profileImage.alt = "Profile Photo";
   noteHeader.appendChild(profileImage);
 
   const nameSpan = document.createElement("span");
-  nameSpan.textContent = "Name"; // Replace with actual name 
+  nameSpan.textContent = "Name"; // Updates automatically
   noteHeader.appendChild(nameSpan);
 
   const deleteForm = document.createElement("form");
@@ -546,6 +595,17 @@ function createNoteElement(note) {
 
   return noteElement;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const noteFooters = document.querySelectorAll('.note-footer');
+  noteFooters.forEach(footer => {
+    const createdAt = footer.getAttribute('data-created-at');
+    if (createdAt) {
+      const date = new Date(createdAt);
+      footer.textContent = date.toLocaleString();
+    }
+  });
+});
 
 function fetchNotesForBoard(boardId) {
   console.log("Fetching notes for board ID:", boardId); // Debug 
@@ -693,4 +753,4 @@ function grantAccess(username) {
       }
     })
     .catch((error) => console.error("Error granting access:", error));
-}
+};

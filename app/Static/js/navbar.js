@@ -5,17 +5,17 @@ function togglePopUp(popUpId, isOpen) {
   const overlay = document.querySelector(".overlay");
   
   if (isOpen) {
-      overlay.style.display = "block";
-      setTimeout(() => {
-          overlay.style.opacity = "1";
-          popUp.classList.add("display-pop-up");
-      }, 10);
+    overlay.style.display = "block";
+    setTimeout(() => {
+      overlay.style.opacity = "1";
+      popUp.classList.add("display-pop-up");
+    }, 10);
   } else {
-      popUp.classList.remove("display-pop-up");
-      overlay.style.opacity = "0";
-      setTimeout(() => {
-          overlay.style.display = "none";
-      }, 300);
+    popUp.classList.remove("display-pop-up");
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 300);
   }
 }
 
@@ -36,25 +36,101 @@ function initializeSettingsTabs() {
 
   // Default to the first tab on initial load
   if (tabs.length > 0) {
-      tabs[0].click();
+    tabs[0].click();
   }
 }
 
-// Function to revert or save changes
-function saveChanges(barID, save) {
-  const unsavedChangesBar = document.getElementById(barID);
-  if (save) {
-    unsavedChangesBar.classList.remove('display');
-    // Save Settings Logic
-  } else {
-    unsavedChangesBar.classList.remove('display');
-    // Revert Settings Logic
-  }
+// Function to save preferences to file
+function savePreferences(csrfToken) {
+  const preferences = {
+    designTheme: document.getElementById('theme-selection').value,
+    designBackColor: document.getElementById('back-color-selection').value,
+    designSideBarColor: document.getElementById('panel-color-selection').value,
+    timezone: document.getElementById('timezone-selection').value,
+    enableEmailNotif: document.getElementById('toggle-notif').checked,
+    enableEmailNotifReply: document.getElementById('toggle-notif-reply').checked,
+    enableEmailNotifBoard: document.getElementById('toggle-notif-all-board').checked,
+    enableEmailNotifOwn: document.getElementById('toggle-notif-all-own').checked,
+    enableEmailNotifStar: document.getElementById('toggle-notif-all-star').checked,
+    privacy: document.getElementById('privacy-visibility').value,
+    profilePicture: document.getElementById('profile-picture').src,
+    username: document.getElementById('username').textContent,
+    lightDarkMode: document.getElementById('toggle-theme').checked,
+    noteColour: document.getElementById('note-colour-picker').value,
+  };
+
+  console.log('Saving preferences:', preferences); // Debugging
+
+  fetch('/save_preferences', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken // Include CSRF token in the headers
+    },
+    body: JSON.stringify(preferences),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
+
+// Function to load preferences from file
+function loadPreferences() {
+  fetch('/get_preferences')
+  .then(response => response.json())
+  .then(data => {
+    if (data) {
+      document.getElementById('theme-selection').value = data.designTheme;
+      document.getElementById('back-color-selection').value = data.designBackColor;
+      document.body.style.backgroundColor = data.designBackColor; // Load to background
+      document.getElementById('panel-color-selection').value = data.designSideBarColor;
+      document.getElementById("side-navbar").style.backgroundColor = data.designSideBarColor; // Load to side navbar
+      document.getElementById('timezone-selection').value = data.timezone;
+      document.getElementById('toggle-notif').checked = data.enableEmailNotif;
+      document.getElementById('toggle-notif-reply').checked = data.enableEmailNotifReply;
+      document.getElementById('toggle-notif-all-board').checked = data.enableEmailNotifBoard;
+      document.getElementById('toggle-notif-all-own').checked = data.enableEmailNotifOwn;
+      document.getElementById('toggle-notif-all-star').checked = data.enableEmailNotifStar;
+      document.getElementById('privacy-visibility').value = data.privacy;
+      document.getElementById('profile-picture').src = data.profilePicture;
+      document.getElementById('note-sample-profile-picture').src = data.profilePicture; // Load to example note
+      document.getElementById('username').textContent = data.username;
+      document.getElementById('note-sample-user-name').textContent = data.username; // Load to example note
+      document.getElementById('toggle-theme').checked = data.lightDarkMode;
+      document.getElementById('note-colour-picker').value = data.noteColour;
+      document.getElementById('note-sample').style.backgroundColor = data.noteColour; // Update note sample color
+
+      // Toggle Light/Dark mode
+      if (data.lightDarkMode) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light-mode');
+      }
+    }
+  })
+  .catch((error) => {
+      console.error('Error:', error);
+  });
+}
+
+// Load preferences when the page loads
+loadPreferences();
 
 // Event listeners for pop-ups
 document.addEventListener("DOMContentLoaded", function () {
   let isEditingUsername = false;
+  let changesMade = false;
 
   // Tab Handling in Settings Pop-up
   initializeSettingsTabs();
@@ -95,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Overlay and Escape key listeners
   const overlay = document.querySelector(".overlay");
   overlay.addEventListener("click", function() {
-    if (!isEditingUsername) { // Only close pop-ups if not editing username
+    if (!isEditingUsername && !changesMade) { // Only close pop-ups if not editing username and no changes have been made
       document.querySelectorAll('.display-pop-up').forEach(popUp => {
         togglePopUp(`#${popUp.id}`, false);
       });
@@ -129,10 +205,18 @@ document.addEventListener("DOMContentLoaded", function () {
   editInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       username.textContent = editInput.value;
+      document.getElementById('note-sample-user-name').textContent = editInput.value; // Load to example note
       exitEditMode();
     } else if (e.key === 'Escape') {
       exitEditMode();
     }
+  });
+
+  // Save changes when the input loses focus
+  editInput.addEventListener('blur', function() {
+    username.textContent = editInput.value;
+    document.getElementById('note-sample-user-name').textContent = editInput.value; // Load to example note
+    exitEditMode();
   });
 
   function enterEditMode() {
@@ -152,6 +236,14 @@ document.addEventListener("DOMContentLoaded", function () {
     isEditingUsername = false;
   }
 
+  // Color Picker
+  const colorPicker = document.getElementById('note-colour-picker');
+  const noteSample = document.getElementById('note-sample');
+
+  colorPicker.addEventListener('input', function() {
+    noteSample.style.backgroundColor = this.value; // Update note sample color
+  });
+
   // Unsaved Changes Bar
   const profileInputs = document.querySelectorAll('.profile-pop-up input, .profile-pop-up select');
   const settingsInputs = document.querySelectorAll('.settings-pop-up input, .settings-pop-up select');
@@ -159,10 +251,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const profileUnsavedChangesBar = document.querySelector('.unsaved-changes-bar#profile-unsaved-changes-bar');
   const settingsUnsavedChangesBar = document.querySelector('.unsaved-changes-bar#settings-unsaved-changes-bar');
 
+  // Get CSRF token from meta tag
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
   //Detects any changes within the profile
   profileInputs.forEach(input => {
     input.addEventListener('change', function() {
       profileUnsavedChangesBar.classList.add('display');
+      changesMade = true;
     }); 
   });
 
@@ -170,9 +266,23 @@ document.addEventListener("DOMContentLoaded", function () {
   settingsInputs.forEach(input => {
     input.addEventListener('change', function() {
       settingsUnsavedChangesBar.classList.add('display');
+      changesMade = true;
     }); 
   });
-
+  
+  // Function to revert or save changes
+  function saveChanges(barID, save) {
+    const unsavedChangesBar = document.getElementById(barID);
+    changesMade = false;
+    if (save) {
+      unsavedChangesBar.classList.remove('display');
+      savePreferences(csrfToken)
+    } else {
+      unsavedChangesBar.classList.remove('display');
+      loadPreferences()
+    }
+  }
+  
   // Save or Revert Changes
   document.getElementById('profile-save-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', true));
   document.getElementById('profile-revert-changes').addEventListener('click', () => saveChanges('profile-unsaved-changes-bar', false));
@@ -208,6 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           };
           img.src = e.target.result;
+          document.getElementById('note-sample-profile-picture').src = e.target.result; // Load to example note
         };
         reader.readAsDataURL(file);
     } else {
@@ -215,52 +326,86 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+
+  const toggleThemeCheckbox = document.getElementById('toggle-theme');
+
+  // Load theme from localStorage
+  const currentTheme = localStorage.getItem('theme');
+  if (currentTheme) {
+    document.body.classList.add(currentTheme);
+    toggleThemeCheckbox.checked = currentTheme === 'dark-mode';
+  }
+
+  // Toggle theme
+  toggleThemeCheckbox.addEventListener('change', function() {
+    if (toggleThemeCheckbox.checked) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light-mode');
+    }
+  });
+
+    // Side navbar
+  const openSidebarButton = document.getElementById(
+    "boards-sidebar-arrow-button"
+  );
+  const closeSidebarButton = document.getElementById("close-sidebar");
+  const boardsNavbar = document.getElementById("side-navbar");
+  const draggableBar = document.getElementById("draggable-bar");
+
+  let isResizing = false;
+
+  // Event listeners for opening and closing the side navbar
+  openSidebarButton.addEventListener("click", openSidenav);
+  closeSidebarButton.addEventListener("click", closeSidenav);
+
+  function openSidenav() {
+    isNavbarOpen = true;
+    boardsNavbar.style.width = "250px";
+  }
+
+  function closeSidenav() {
+    isNavbarOpen = false;
+    boardsNavbar.style.width = "0";
+  }
+
+  draggableBar.addEventListener("mousedown", startResize);
+
+  function startResize(e) {
+    e.preventDefault();
+    isResizing = true;
+    const minWidth = 140; // Minimum width
+    const startX = e.clientX;
+    const startWidth = boardsNavbar.offsetWidth;
+
+    function resizeNavbar(e) {
+      const newWidth = startWidth + e.clientX - startX;
+      boardsNavbar.style.width = `${Math.max(minWidth, newWidth)}px`;
+    }
+
+    function stopResizeNavbar() {
+      isResizing = false;
+      window.removeEventListener("mousemove", resizeNavbar);
+      window.removeEventListener("mouseup", stopResizeNavbar);
+    }
+
+    window.addEventListener("mousemove", resizeNavbar);
+    window.addEventListener("mouseup", stopResizeNavbar);
+  }
+
 });
 
-// Side navbar
-const openSidebarButton = document.getElementById(
-  "boards-sidebar-arrow-button"
-);
-const closeSidebarButton = document.getElementById("close-sidebar");
-const boardsNavbar = document.getElementById("side-navbar");
-const draggableBar = document.getElementById("draggable-bar");
+document.addEventListener("DOMContentLoaded", function () {
+  const backColorPicker = document.getElementById("back-color-selection");
+  const panelColorPicker = document.getElementById("panel-color-selection");
 
-let isResizing = false;
+  backColorPicker.addEventListener("input", function () {
+    document.body.style.backgroundColor = backColorPicker.value;
+  });
 
-// Event listeners for opening and closing the side navbar
-openSidebarButton.addEventListener("click", openSidenav);
-closeSidebarButton.addEventListener("click", closeSidenav);
-
-function openSidenav() {
-  isNavbarOpen = true;
-  boardsNavbar.style.width = "250px";
-}
-
-function closeSidenav() {
-  isNavbarOpen = false;
-  boardsNavbar.style.width = "0";
-}
-
-draggableBar.addEventListener("mousedown", startResize);
-
-function startResize(e) {
-  e.preventDefault();
-  isResizing = true;
-  const minWidth = 140; // Minimum width
-  const startX = e.clientX;
-  const startWidth = boardsNavbar.offsetWidth;
-
-  function resizeNavbar(e) {
-    const newWidth = startWidth + e.clientX - startX;
-    boardsNavbar.style.width = `${Math.max(minWidth, newWidth)}px`;
-  }
-
-  function stopResizeNavbar() {
-    isResizing = false;
-    window.removeEventListener("mousemove", resizeNavbar);
-    window.removeEventListener("mouseup", stopResizeNavbar);
-  }
-
-  window.addEventListener("mousemove", resizeNavbar);
-  window.addEventListener("mouseup", stopResizeNavbar);
-}
+  panelColorPicker.addEventListener("input", function () {
+    document.getElementById("side-navbar").style.backgroundColor = panelColorPicker.value;
+  });
+});
