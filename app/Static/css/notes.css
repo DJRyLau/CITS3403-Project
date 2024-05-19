@@ -922,7 +922,7 @@ button[type="submit"] {
   font-style: normal;
   font-weight: 200;
   font-size: 4rem;
-  position: fixed;
+  position: relative;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -1013,7 +1013,7 @@ button[type="submit"] {
   transform: translate(-50%, -50%);
   opacity: 0;
   animation: fadeInScale 0.5s ease forwards;
-  margin-top: 200px;
+  margin-top: 50px;
   margin-left:0px;
   margin-bottom:50px;
 }
