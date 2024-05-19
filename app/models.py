@@ -57,7 +57,7 @@ class Board(db.Model):
 class Reply(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(1000), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     note_id = db.Column(db.Integer, db.ForeignKey('note.id'), nullable=False)
 
