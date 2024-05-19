@@ -22,7 +22,7 @@ def create_app(config_class=Config):
 
     login_manager.login_view = 'app.authentication'
 
-    from .models import User, Note, Board, Access #need to import all models here
+    from .models import User, Note, Board, Access, Reply #need to import all models here
 
     @app.before_request
     def before_request():

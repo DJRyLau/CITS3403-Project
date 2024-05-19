@@ -80,7 +80,9 @@
 
     <!-- BOARD -->
 <main>
-  <h1>{{ current_board_title }}</h1>
+<header class="page-header">
+    <h1>{{ current_board_title }}</h1>
+</header>
   <section id="board" class="board">
     {% for item in notes %}
     <div class="sticky-note" id="note{{ item.note.id }}" style="background-color: {{ item.note.color }}; left: {{ item.note.position_x }}px; top: {{ item.note.position_y }}px; width: {{ item.note.width }}px; height: {{ item.note.height }}px;" data-id="{{ item.note.id }}">
@@ -97,8 +99,17 @@
           {% endif %}
         </div>
       </div>
-      <div class="sticky-note-content" contenteditable="true">{{ item.note.content }}</div>
-      <div class="note-footer">{{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+      <div class="sticky-note-content" contenteditable="true">
+    {{ item.note.content }}
+    <div class="note-footer">
+        {{ item.note.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+    </div>
+</div>
+<div class="replies-container"></div>
+    <div class="reply-input-container">
+        <input type="text" class="reply-input" placeholder="Write a reply...">
+        <button class="reply-button" onclick="addReply(this, '{{ item.note.id }}')">Reply</button>
+    </div>
     </div>
     {% else %}
     <p>No notes yet.</p>

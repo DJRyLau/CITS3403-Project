@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-<link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Authentication</title>
     <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/notes.css') }}"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notes.css') }}" />
+    <script src="https://kit.fontawesome.com/f50ff10f1d.js" crossorigin="anonymous"></script>
   </head>
   <body class="auth-background">
-    <h1 class="page-title"><i
-class="fa-solid fa-hat-wizard"
-></i>TaskHub</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
+    <h1 class="page-title"><i class="fa-solid fa-hat-wizard"></i> TaskHub</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
     <div id="flash-messages">
       {% for category, message in messages %}
       <div class="alert {{ category }}" style="display: block">
@@ -31,7 +30,8 @@ class="fa-solid fa-hat-wizard"
       </div>
       {% endfor %}
     </div>
-    {% endif %} {% endwith %}
+    {% endif %}
+    {% endwith %}
     <div class="about-section">
       <div class="content">
         <h2>About TaskHub</h2>
@@ -58,12 +58,9 @@ class="fa-solid fa-hat-wizard"
           </div>
           <div class="form-group">
             <ion-icon name="lock-closed-outline"></ion-icon>
-            {{ login_form.password(class='form-control', placeholder='Password')
-            }}
+            {{ login_form.password(class='form-control', placeholder='Password') }}
           </div>
-          <button type="submit" name="login" class="glow-on-hover">
-            Sign In
-          </button>
+          <button type="submit" name="login" class="glow-on-hover">Sign In</button>
           <p class="form-footer">
             Don't have an account?
             <a href="#" id="show-create">Click here to sign up</a>
@@ -82,13 +79,11 @@ class="fa-solid fa-hat-wizard"
           </div>
           <div class="form-group">
             <ion-icon name="lock-closed-outline"></ion-icon>
-            {{ register_form.password(class='form-control',
-            placeholder='Password') }}
+            {{ register_form.password(class='form-control', placeholder='Password') }}
           </div>
           <div class="form-group">
             <ion-icon name="lock-closed-outline"></ion-icon>
-            {{ register_form.confirm_password(class='form-control',
-            placeholder='Confirm Password') }}
+            {{ register_form.confirm_password(class='form-control', placeholder='Confirm Password') }}
           </div>
           <button type="submit" name="register" class="glow-on-hover">
             Create Account
@@ -109,6 +104,5 @@ class="fa-solid fa-hat-wizard"
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-<script src="https://kit.fontawesome.com/f50ff10f1d.js" crossorigin="anonymous"></script>
   </body>
 </html>

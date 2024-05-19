@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, redirect, session, url_for, flash, request, jsonify, Response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Note, Board, Access, UserPreferences
+from .models import User, Note, Board, Access, UserPreferences, Reply
 from .forms import LoginForm, RegisterForm, NoteForm
 from . import db, login_manager
 
@@ -419,3 +419,17 @@ def debug_user_boards():
         })
 
     return jsonify(users_data)
+@app.route('/notes/<int:note_id>/add_reply', methods=['POST'])
+@login_required
+def add_reply(note_id):
+    note = Note.query.get_or_404(note_id)
+    data = request.get_json()
+    reply = Reply(content=data['content'], user_id=current_user.id, note_id=note.id)
+    db.session.add(reply)
+    db.session.commit()
+    return jsonify(reply.to_dict()), 201
+
+@app.route('/notes/<int:note_id>/replies', methods=['GET'])
+def get_replies(note_id):
+    replies = Reply.query.filter_by(note_id=note_id).all()
+    return jsonify([reply.to_dict() for reply in replies])
