@@ -9,7 +9,6 @@ v1.3.0 - restructured repo to include flask and backend
 v1.3.1 - profile and settings pages formatting
 v1.3.2 - sidebar menu implementation with resizing
 v1.3.3 - save and delete notes implementation
-
-...
-...
-...
+v1.4.0 - boards sidebar addition of create and assign boards
+v1.4.1 - about page information added
+v1.4.2 - landing page information added
